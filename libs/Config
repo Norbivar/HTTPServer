@@ -1,0 +1,4 @@
+#pragma once
+
+#include "Config.hpp"
+#define theConfig Libs::Config::GetConfig()
