@@ -22,28 +22,37 @@ WebServer::WebServer(const boost::asio::ip::address& address, const uint16_t por
 
 void WebServer::Booststrap()
 {
+	theLog->info("Bootstrapping WebServer...");
 	// This holds the self-signed certificate used by the server
 	load_server_certificate(m_ctx);
 }
 
 int WebServer::Run()
 {
+	boost::beast::error_code ec;
+
+	theLog->info("Preparing WebServer...");
+
 	std::make_shared<listener>(m_ioc, m_ctx, boost::asio::ip::tcp::endpoint{ m_address, m_port }, m_doc_root)->run();
 
 	// Capture SIGINT and SIGTERM to perform a clean shutdown
 	boost::asio::signal_set signals(m_ioc, SIGINT, SIGTERM);
-	signals.async_wait([&](boost::beast::error_code const&, int) {
+	signals.async_wait([&](const boost::beast::error_code&, int) {
 		m_ioc.stop();
 	});
 
 	for (auto i = 1; i < m_desired_thread_number; ++i)
 		m_threads.emplace_back([this] { m_ioc.run(); });
 
+	theLog->info("WebServer runnning!");
+
 	m_ioc.run();
 
 	// Block until all the threads exit
 	for (auto& t : m_threads)
 		t.join();
+
+	theLog->info("WebServer stopped.");
 
 	return EXIT_SUCCESS;
 }

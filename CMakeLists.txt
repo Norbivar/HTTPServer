@@ -1,4 +1,4 @@
-project(HTTPServer)
+project(HTTPServer LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.16)
 
 ##############################################################################################################################################################
@@ -41,6 +41,8 @@ target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES})
 
 # Set the binary extension
 set(BINARY_SUFFIX "")
+
+set_property(TARGET HTTPServer PROPERTY CXX_STANDARD 17)
 if(UNIX)
     #target_link_libraries(client pthread)
     set(BINARY_SUFFIX ".out")

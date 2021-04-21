@@ -111,11 +111,17 @@ protected:
 
 public:
 	// Construct the session
-	http_session(boost::beast::flat_buffer buffer, std::shared_ptr<std::string const> const& doc_root) :
+	http_session(boost::beast::flat_buffer buffer, const std::shared_ptr<const std::string>& doc_root) :
 		doc_root_(doc_root),
 		queue_(*this),
 		buffer_(std::move(buffer))
-	{ }
+	{
+		theLog->error("DEBUG: HTTP Session constructed");
+	}
+	~http_session()
+	{
+		theLog->error("DEBUG: HTTP Session destruct");
+	}
 
 	void do_read()
 	{
@@ -127,8 +133,7 @@ public:
 		parser_->body_limit(10000);
 
 		// Set the timeout.
-		boost::beast::get_lowest_layer(derived().stream())
-			.expires_after(std::chrono::seconds(30));
+		boost::beast::get_lowest_layer(derived().stream()).expires_after(std::chrono::seconds(60));
 
 		// Read a request using the parser-oriented interface
 		boost::beast::http::async_read(derived().stream(), buffer_, *parser_, boost::beast::bind_front_handler(&http_session::on_read, derived().shared_from_this()));
@@ -146,7 +151,10 @@ public:
 			return theLog->error("[read]: {}", ec.message());
 
 		// See if it is a WebSocket Upgrade
-		if (boost::beast::websocket::is_upgrade(parser_->get())) {
+		if (boost::beast::websocket::is_upgrade(parser_->get())) 
+		{
+			theLog->info("Upgrading to WebSocket");
+
 			// Disable the timeout.
 			// The websocket::stream uses its own timeout settings.
 			boost::beast::get_lowest_layer(derived().stream()).expires_never();
@@ -171,14 +179,16 @@ public:
 		if (ec)
 			return theLog->error("[write]: {}", ec.message());
 
-		if (close) {
+		if (close) 
+		{
 			// This means we should close the connection, usually because
 			// the response indicated the "Connection: close" semantic.
 			return derived().do_eof();
 		}
 
 		// Inform the queue that a write completed
-		if (queue_.on_write()) {
+		if (queue_.on_write()) 
+		{
 			// Read another request
 			do_read();
 		}
@@ -192,11 +202,9 @@ class plain_http_session :
 	public http_session<plain_http_session>,
 	public std::enable_shared_from_this<plain_http_session> 
 {
-	boost::beast::tcp_stream stream_;
-
 public:
 	// Create the session
-	plain_http_session(boost::beast::tcp_stream&& stream, boost::beast::flat_buffer&& buffer, std::shared_ptr<std::string const> const& doc_root) : 
+	plain_http_session(boost::beast::tcp_stream&& stream, boost::beast::flat_buffer&& buffer, const std::shared_ptr<const std::string>& doc_root) : 
 		http_session<plain_http_session>(std::move(buffer), doc_root),
 		stream_(std::move(stream))
 	{}
@@ -219,6 +227,9 @@ public:
 
 		// At this point the connection is closed gracefully
 	}
+
+private:
+	boost::beast::tcp_stream stream_;
 };
 
 //------------------------------------------------------------------------------
@@ -228,21 +239,18 @@ class ssl_http_session :
 	public http_session<ssl_http_session>,
 	public std::enable_shared_from_this<ssl_http_session> 
 {
-	boost::beast::ssl_stream<boost::beast::tcp_stream> stream_;
-
 public:
 	// Create the http_session
-	ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer, std::shared_ptr<std::string const> const& doc_root) :
+	ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer, const std::shared_ptr<const std::string>& doc_root) :
 		http_session<ssl_http_session>(std::move(buffer), doc_root), 
 		stream_(std::move(stream), ctx)
-	{
-	}
+	{ }
 
 	// Start the session
 	void run()
 	{
 		// Set the timeout.
-		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(30));
+		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(5));
 
 		// Perform the SSL handshake
 		// Note, this is the buffered version of the handshake.
@@ -265,11 +273,10 @@ public:
 	void do_eof()
 	{
 		// Set the timeout.
-		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(30));
+		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(5));
 
 		// Perform the SSL shutdown
-		stream_.async_shutdown(boost::beast::bind_front_handler(
-			&ssl_http_session::on_shutdown, shared_from_this()));
+		stream_.async_shutdown(boost::beast::bind_front_handler(&ssl_http_session::on_shutdown, shared_from_this()));
 	}
 
 private:
@@ -291,4 +298,6 @@ private:
 
 		// At this point the connection is closed gracefully
 	}
+
+	boost::beast::ssl_stream<boost::beast::tcp_stream> stream_;
 };

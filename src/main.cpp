@@ -3,22 +3,20 @@
 
 #include <boost/asio/ip/address.hpp>
 
+#include <Logging>
+#include <Config>
 #include "WebServer.hpp"
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char* /*argv*/[])
 {
-	std::cout <<"asd";
-	std::cout.flush();
-	// Check command line arguments.
-	if (argc != 2)
-	{
-		std::cerr << "Usage: server <doc_root>\n";
-		return EXIT_FAILURE;
-	}
-	const auto address = boost::asio::ip::make_address("0.0.0.0");
-	const auto port = 80;
-	const auto doc_root = std::make_shared<std::string>(argv[1]);
-	const auto threads = 3;
+	theLog->info("Startup in progress");
+	// Mandatory:
+	const auto doc_root = std::make_shared<std::string>(theConfig->Get<Configs::doc_root>());
+
+	// Optional:
+	const auto address = boost::asio::ip::make_address(theConfig->Get<Configs::bind_ip>("0.0.0.0"));
+	const auto port    = theConfig->Get<Configs::port>(80);
+	const auto threads = theConfig->Get<Configs::threads>(3);
 
 	WebServer server{ address, port, doc_root, threads };
 	server.Booststrap();

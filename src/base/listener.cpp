@@ -75,13 +75,12 @@ detect_session::detect_session(boost::asio::ip::tcp::socket&& socket, boost::asi
 	stream_(std::move(socket)),
 	ctx_(ctx),
 	doc_root_(doc_root)
-{
-}
+{ }
 
 void detect_session::run()
 {
 	// Set the timeout.
-	stream_.expires_after(std::chrono::hours(1));
+	stream_.expires_after(std::chrono::seconds(5));
 
 	boost::beast::async_detect_ssl(
 		stream_, buffer_,
@@ -97,12 +96,10 @@ void detect_session::on_detect(boost::beast::error_code ec, boost::tribool resul
 	if (result)
 	{
 		// Launch SSL session
-		std::make_shared<ssl_http_session>(std::move(stream_), ctx_,
-			std::move(buffer_), doc_root_)->run();
+		std::make_shared<ssl_http_session>(std::move(stream_), ctx_, std::move(buffer_), doc_root_)->run();
 		return;
 	}
 
 	// Launch plain session
-	std::make_shared<plain_http_session>(std::move(stream_), std::move(buffer_),
-		doc_root_)->run();
+	std::make_shared<plain_http_session>(std::move(stream_), std::move(buffer_), doc_root_)->run();
 }

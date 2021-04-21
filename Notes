@@ -1,0 +1,4 @@
+
+
+
+curl -i -H --http1.1 "Accept: application/json" -H "Content-Type: application/json" -H "connection: upgrade" -H "upgrade: websocket" -H "Sec-WebSocket-Key: 2pGeTR0DsE4dfZs2pH+8MA==" -H "Sec-WebSocket-Version: 13" http://norbinet.asuscomm.com

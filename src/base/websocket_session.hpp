@@ -89,6 +89,15 @@ class websocket_session
 	}
 
 public:
+	websocket_session()
+	{
+		theLog->error("DEBUG: websocket session created!");
+	}
+	~websocket_session()
+	{
+		theLog->error("DEBUG: websocket session destroyed!");
+	}
+
 	// Start the asynchronous operation
 	template <class Body, class Allocator>
 	void run(boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>> req)
