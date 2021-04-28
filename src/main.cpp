@@ -5,7 +5,7 @@
 
 #include <Logging>
 #include <Config>
-#include "WebServer.hpp"
+#include "webserver.hpp"
 
 int main(int /*argc*/, char* /*argv*/[])
 {
@@ -15,10 +15,10 @@ int main(int /*argc*/, char* /*argv*/[])
 
 	// Optional:
 	const auto address = boost::asio::ip::make_address(theConfig->Get<Configs::bind_ip>("0.0.0.0"));
-	const auto port    = theConfig->Get<Configs::port>(80);
+	const auto port    = theConfig->Get<Configs::port>(443); 
 	const auto threads = theConfig->Get<Configs::threads>(3);
 
-	WebServer server{ address, port, doc_root, threads };
-	server.Booststrap();
-	return server.Run();
+	webserver server{ address, port, doc_root, threads };
+	server.bootstrap();
+	return server.run();
 }

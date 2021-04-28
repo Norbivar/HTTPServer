@@ -18,6 +18,7 @@
 #include <Logging>
 #include "handle_request.hpp"
 #include "websocket_session.hpp"
+#include "../webserver.hpp"
 
 template <class Derived>
 class http_session 
@@ -99,7 +100,7 @@ class http_session
 		}
 	};
 
-	std::shared_ptr<std::string const> doc_root_;
+	const webserver& server;
 	queue queue_;
 
 	// The parser is stored in an optional container so we can
@@ -111,17 +112,12 @@ protected:
 
 public:
 	// Construct the session
-	http_session(boost::beast::flat_buffer buffer, const std::shared_ptr<const std::string>& doc_root) :
-		doc_root_(doc_root),
+	http_session(boost::beast::flat_buffer buffer, const webserver& s) :
+		server(s),
 		queue_(*this),
 		buffer_(std::move(buffer))
-	{
-		theLog->error("DEBUG: HTTP Session constructed");
-	}
-	~http_session()
-	{
-		theLog->error("DEBUG: HTTP Session destruct");
-	}
+	{ }
+	~http_session() { }
 
 	void do_read()
 	{
@@ -165,7 +161,7 @@ public:
 		}
 
 		// Send the response
-		handle_request(*doc_root_, parser_->release(), queue_);
+		handle_request(server.get_routing_table(), server.get_doc_root(), parser_->release(), queue_);
 
 		// If we aren't at the queue limit, try to pipeline another request
 		if (!queue_.is_full())
@@ -204,8 +200,8 @@ class plain_http_session :
 {
 public:
 	// Create the session
-	plain_http_session(boost::beast::tcp_stream&& stream, boost::beast::flat_buffer&& buffer, const std::shared_ptr<const std::string>& doc_root) : 
-		http_session<plain_http_session>(std::move(buffer), doc_root),
+	plain_http_session(boost::beast::tcp_stream&& stream, boost::beast::flat_buffer&& buffer, const webserver& s) : 
+		http_session<plain_http_session>(std::move(buffer), s),
 		stream_(std::move(stream))
 	{}
 
@@ -241,8 +237,8 @@ class ssl_http_session :
 {
 public:
 	// Create the http_session
-	ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer, const std::shared_ptr<const std::string>& doc_root) :
-		http_session<ssl_http_session>(std::move(buffer), doc_root), 
+	ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer, const webserver& s) :
+		http_session<ssl_http_session>(std::move(buffer), s), 
 		stream_(std::move(stream), ctx)
 	{ }
 
@@ -287,6 +283,13 @@ private:
 
 		// Consume the portion of the buffer used by the handshake
 		buffer_.consume(bytes_used);
+
+		/*SSL_SESSION* session = SSL_get1_session(stream_.native_handle());
+		unsigned int ssl_id_length;
+		const unsigned char* ssl_id = SSL_SESSION_get_id(session, &ssl_id_length);
+		std::string ssl_id_str{ reinterpret_cast<const char*>(ssl_id), ssl_id_length };
+		const auto reused = SSL_session_reused(stream_.native_handle());
+		theLog->error("			VN: SSL id: {}, reused: {}", ssl_id_str, reused);*/
 
 		do_read();
 	}

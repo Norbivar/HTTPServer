@@ -5,12 +5,13 @@
 
 #include <Logging>
 #include "http_session.hpp"
+#include "../webserver.hpp"
 
-listener::listener(boost::asio::io_context& ioc, boost::asio::ssl::context& ctx, boost::asio::ip::tcp::endpoint endpoint, const std::shared_ptr<const std::string>& doc_root) : 
+listener::listener(boost::asio::io_context& ioc, boost::asio::ssl::context& ctx, boost::asio::ip::tcp::endpoint endpoint, const webserver& s) : 
 	ioc_(ioc), 
 	ctx_(ctx), 
 	acceptor_(boost::asio::make_strand(ioc)), 
-	doc_root_(doc_root)
+	server(s)
 {
 	boost::beast::error_code ec;
 
@@ -64,17 +65,17 @@ void listener::on_accept(boost::beast::error_code ec, boost::asio::ip::tcp::sock
 	else
 	{
 		// Create the detector http_session and run it
-		std::make_shared<detect_session>(std::move(socket), ctx_, doc_root_)->run();
+		std::make_shared<detect_session>(std::move(socket), ctx_, server)->run();
 	}
 
 	// Accept another connection
 	do_accept();
 }
 
-detect_session::detect_session(boost::asio::ip::tcp::socket&& socket, boost::asio::ssl::context& ctx, std::shared_ptr<std::string const> const& doc_root) :
+detect_session::detect_session(boost::asio::ip::tcp::socket&& socket, boost::asio::ssl::context& ctx, const webserver& s) :
 	stream_(std::move(socket)),
 	ctx_(ctx),
-	doc_root_(doc_root)
+	server(s)
 { }
 
 void detect_session::run()
@@ -96,10 +97,10 @@ void detect_session::on_detect(boost::beast::error_code ec, boost::tribool resul
 	if (result)
 	{
 		// Launch SSL session
-		std::make_shared<ssl_http_session>(std::move(stream_), ctx_, std::move(buffer_), doc_root_)->run();
+		std::make_shared<ssl_http_session>(std::move(stream_), ctx_, std::move(buffer_), server)->run();
 		return;
 	}
 
 	// Launch plain session
-	std::make_shared<plain_http_session>(std::move(stream_), std::move(buffer_), doc_root_)->run();
+	std::make_shared<plain_http_session>(std::move(stream_), std::move(buffer_), server)->run();
 }

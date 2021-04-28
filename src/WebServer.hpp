@@ -7,19 +7,19 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl/context.hpp>
 
-#include "base/handle_request.hpp"
-#include "base/websocket_session.hpp"
-#include "base/http_session.hpp"
+#include "routing_table.hpp"
 
-//#include "router.hpp"
-
-class WebServer
+class webserver
 {
 public:
-	WebServer(const boost::asio::ip::address& address, const std::uint16_t port, const std::shared_ptr<std::string>& doc_root, const std::uint8_t numthreads);
+	webserver(const boost::asio::ip::address& address, const std::uint16_t port, const std::shared_ptr<std::string>& doc_root, const std::uint8_t numthreads);
 
-	void Booststrap();
-	int Run();
+	void bootstrap();
+	int run();
+
+	const boost::beast::string_view get_doc_root() const { return *m_doc_root; }
+	const routing_table& get_routing_table() const { return m_routing_table; }
+
 private:
 	boost::asio::ip::address m_address;
 	std::uint16_t m_port;
@@ -29,5 +29,5 @@ private:
 	std::vector<std::thread> m_threads;
 	boost::asio::io_context m_ioc;
 	boost::asio::ssl::context m_ctx;
-	//RoutingTable m_routing_table;
+	routing_table m_routing_table;
 };
