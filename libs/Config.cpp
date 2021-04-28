@@ -3,18 +3,18 @@
 
 namespace Libs
 {
-	Config* Config::GetConfig()
+	config* config::get_config()
 	{
-		static Config c{ConfigSettings::cConfigFilesToReadInOrder};
+		static config c{ConfigSettings::cConfigFilesToReadInOrder};
 		return &c;
 	}
 
-	Config::~Config()
+	config::~config()
 	{
-		SaveAll();
+		save_all();
 	}
 
-	void Config::SaveAllConfigTo(const char* filename)
+	void config::save_all_to_file(const char* filename)
 	{
 		std::ofstream output(filename, std::ios::out);
 		if (output.good())
@@ -25,16 +25,16 @@ namespace Libs
 			}
 		}
 	}
-	void Config::SaveAll()
+	void config::save_all()
 	{
 		if (!ConfigSettings::cConfigFilesToReadInOrder.empty())
 		{
 			const char* filename = *ConfigSettings::cConfigFilesToReadInOrder.begin();
-			SaveAllConfigTo(filename);
+			save_all_to_file(filename);
 		}
 	}
 
-	bool Config::ReadFile(const char* filename)
+	bool config::read_file(const char* filename)
 	{
 		std::ifstream input(filename);
 		if (input.good())
