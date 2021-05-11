@@ -1,27 +1,32 @@
 #pragma once
 
-#include <iostream>
-
+#include <boost/variant.hpp>
 #include <boost/beast/http/verb.hpp>
 #include <boost/function.hpp>
 #include <boost/unordered_map.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace Routing
-{
-	bool all_access_predicate();
-}
+#include "base/http_session.hpp"
+
+class session_info;
 
 class routing_table
 {
-	 // TODO: add some sort of session parameter to these when I figure that out
-	using routing_access_predicate = boost::function<bool(void)>;
-	using routing_handler = boost::function<void(const boost::property_tree::ptree&, boost::property_tree::ptree&)>;
+	using routing_access_predicate = boost::variant<
+		boost::blank,
+		bool(*)(void),
+		bool(*)(const session_info&)
+	>;
+	using routing_handler = boost::variant< 
+		void(*)(const std::string&, const boost::property_tree::ptree&, boost::property_tree::ptree&), // ssl session id + input params/body + response body
+		void(*)(const boost::property_tree::ptree&, boost::property_tree::ptree&), // input params/body + response body
+		void(*)(session_info&, const boost::property_tree::ptree&, boost::property_tree::ptree&) // user session + input params/body + response body
+	>;
 
 	struct routing_entry
 	{
-		routing_handler handler = nullptr;
-		routing_access_predicate access_predicate = nullptr;
+		routing_handler handler;
+		routing_access_predicate access_predicate;
 	};
 	using table_t = boost::unordered_map<std::string, routing_entry>;
 
@@ -29,7 +34,7 @@ public:
 	routing_table() = default;
 
 	/** Registers a [HTTP Method, Path] pair with he given handler and an optional access predicate. Tables are created where needed. */
-	void register_path(boost::beast::http::verb verb, std::string&& path, routing_handler&& handler, routing_access_predicate&& pred = Routing::all_access_predicate);
+	void register_path(boost::beast::http::verb verb, std::string&& path, const routing_handler& handler, const routing_access_predicate& pred = routing_access_predicate{});
 
 	/** Looks up athe HTTP Method, and if a corresponding table can be found, looks up the path in there. 
 	* Returns a pair, where the boolean is true if the following iterator is valid. 

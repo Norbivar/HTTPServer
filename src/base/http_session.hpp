@@ -7,26 +7,30 @@
 #include <boost/beast/core/flat_buffer.hpp>
 #include <boost/beast/core/basic_stream.hpp>
 #include <boost/beast/core/tcp_stream.hpp>
-#include <boost/beast/core/stream_traits.hpp>
 #include <boost/beast/ssl/ssl_stream.hpp>
-#include <boost/beast/http/message.hpp>
 #include <boost/beast/http/parser.hpp>
 #include <boost/beast/http/string_body.hpp>
-#include <boost/beast/http/read.hpp>
-#include <boost/beast/websocket/rfc6455.hpp>
 
 #include <Logging>
-#include "handle_request.hpp"
-#include "websocket_session.hpp"
-#include "../webserver.hpp"
 
-template <class Derived>
-class http_session 
+
+// Handles an SSL HTTP connection
+class ssl_http_session : public std::enable_shared_from_this<ssl_http_session> 
 {
-	Derived& derived() { return static_cast<Derived&>(*this); }
+public:
+	// Create the http_session
+	ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer);
 
+	boost::beast::ssl_stream<boost::beast::tcp_stream>& stream() { return stream_; }
+
+	// Start the session
+	void run();
+
+	const std::string& get_ssl_sid();
+
+private:
 	// This queue is used for HTTP pipelining.
-	class queue 
+	class queue
 	{
 		// Maximum number of responses we will queue
 		enum {
@@ -39,11 +43,11 @@ class http_session
 			virtual void operator()() = 0;
 		};
 
-		http_session<Derived>& self_;
+		ssl_http_session& self_;
 		std::vector<std::unique_ptr<work>> items_;
 
 	public:
-		explicit queue(http_session<Derived>& self) : 
+		explicit queue(ssl_http_session& self) :
 			self_(self)
 		{
 			static_assert(limit > 0, "queue limit must be positive");
@@ -71,22 +75,21 @@ class http_session
 		{
 			// This holds a work item
 			struct work_impl : work {
-				http_session<Derived>& self_;
+				ssl_http_session& self_;
 				boost::beast::http::message<isRequest, Body, Fields> msg_;
 
-				work_impl(http_session& self,
-					boost::beast::http::message<isRequest, Body, Fields>&& msg) : 
+				work_impl(ssl_http_session& self,
+					boost::beast::http::message<isRequest, Body, Fields>&& msg) :
 					self_(self),
 					msg_(std::move(msg))
-				{
-				}
+				{ }
 
 				void operator()()
 				{
 					boost::beast::http::async_write(
-						self_.derived().stream(), msg_,
-						boost::beast::bind_front_handler(&http_session::on_write,
-							self_.derived().shared_from_this(),
+						self_.stream(), msg_,
+						boost::beast::bind_front_handler(&ssl_http_session::on_write,
+							self_.shared_from_this(),
 							msg_.need_eof()));
 				}
 			};
@@ -100,207 +103,31 @@ class http_session
 		}
 	};
 
-	const webserver& server;
+	// Called by the base class
+	boost::beast::ssl_stream<boost::beast::tcp_stream> release_stream() { return std::move(stream_); }
+
+	// Called by the base class
+	void do_eof();
+
+	void do_read();
+
+	void on_read(boost::beast::error_code ec, std::size_t bytes_transferred);
+
+	void on_write(bool close, boost::beast::error_code ec, std::size_t bytes_transferred);
+
+	void on_handshake(boost::beast::error_code ec, std::size_t bytes_used);
+
+	void on_shutdown(boost::beast::error_code ec);
+
 	queue queue_;
 
 	// The parser is stored in an optional container so we can
 	// construct it from scratch it at the beginning of each new message.
 	boost::optional<boost::beast::http::request_parser<boost::beast::http::string_body>> parser_;
 
-protected:
 	boost::beast::flat_buffer buffer_;
 
-public:
-	// Construct the session
-	http_session(boost::beast::flat_buffer buffer, const webserver& s) :
-		server(s),
-		queue_(*this),
-		buffer_(std::move(buffer))
-	{ }
-	~http_session() { }
-
-	void do_read()
-	{
-		// Construct a new parser for each message
-		parser_.emplace();
-
-		// Apply a reasonable limit to the allowed size
-		// of the body in bytes to prevent abuse.
-		parser_->body_limit(10000);
-
-		// Set the timeout.
-		boost::beast::get_lowest_layer(derived().stream()).expires_after(std::chrono::seconds(60));
-
-		// Read a request using the parser-oriented interface
-		boost::beast::http::async_read(derived().stream(), buffer_, *parser_, boost::beast::bind_front_handler(&http_session::on_read, derived().shared_from_this()));
-	}
-
-	void on_read(boost::beast::error_code ec, std::size_t bytes_transferred)
-	{
-		boost::ignore_unused(bytes_transferred);
-
-		// This means they closed the connection
-		if (ec == boost::beast::http::error::end_of_stream)
-			return derived().do_eof();
-
-		if (ec)
-			return theLog->error("[read]: {}", ec.message());
-
-		// See if it is a WebSocket Upgrade
-		if (boost::beast::websocket::is_upgrade(parser_->get())) 
-		{
-			theLog->info("Upgrading to WebSocket");
-
-			// Disable the timeout.
-			// The websocket::stream uses its own timeout settings.
-			boost::beast::get_lowest_layer(derived().stream()).expires_never();
-
-			// Create a websocket session, transferring ownership
-			// of both the socket and the HTTP request.
-			return make_websocket_session(derived().release_stream(), parser_->release());
-		}
-
-		// Send the response
-		handle_request(server.get_routing_table(), server.get_doc_root(), parser_->release(), queue_);
-
-		// If we aren't at the queue limit, try to pipeline another request
-		if (!queue_.is_full())
-			do_read();
-	}
-
-	void on_write(bool close, boost::beast::error_code ec, std::size_t bytes_transferred)
-	{
-		boost::ignore_unused(bytes_transferred);
-
-		if (ec)
-			return theLog->error("[write]: {}", ec.message());
-
-		if (close) 
-		{
-			// This means we should close the connection, usually because
-			// the response indicated the "Connection: close" semantic.
-			return derived().do_eof();
-		}
-
-		// Inform the queue that a write completed
-		if (queue_.on_write()) 
-		{
-			// Read another request
-			do_read();
-		}
-	}
-};
-
-//------------------------------------------------------------------------------
-
-// Handles a plain HTTP connection
-class plain_http_session : 
-	public http_session<plain_http_session>,
-	public std::enable_shared_from_this<plain_http_session> 
-{
-public:
-	// Create the session
-	plain_http_session(boost::beast::tcp_stream&& stream, boost::beast::flat_buffer&& buffer, const webserver& s) : 
-		http_session<plain_http_session>(std::move(buffer), s),
-		stream_(std::move(stream))
-	{}
-
-	// Start the session
-	void run() { this->do_read(); }
-
-	// Called by the base class
-	boost::beast::tcp_stream& stream() { return stream_; }
-
-	// Called by the base class
-	boost::beast::tcp_stream release_stream() { return std::move(stream_); }
-
-	// Called by the base class
-	void do_eof()
-	{
-		// Send a TCP shutdown
-		boost::beast::error_code ec;
-		stream_.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
-
-		// At this point the connection is closed gracefully
-	}
-
-private:
-	boost::beast::tcp_stream stream_;
-};
-
-//------------------------------------------------------------------------------
-
-// Handles an SSL HTTP connection
-class ssl_http_session : 
-	public http_session<ssl_http_session>,
-	public std::enable_shared_from_this<ssl_http_session> 
-{
-public:
-	// Create the http_session
-	ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer, const webserver& s) :
-		http_session<ssl_http_session>(std::move(buffer), s), 
-		stream_(std::move(stream), ctx)
-	{ }
-
-	// Start the session
-	void run()
-	{
-		// Set the timeout.
-		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(5));
-
-		// Perform the SSL handshake
-		// Note, this is the buffered version of the handshake.
-		stream_.async_handshake(
-			boost::asio::ssl::stream_base::server, buffer_.data(),
-			boost::beast::bind_front_handler(&ssl_http_session::on_handshake,
-				shared_from_this()));
-	}
-
-	// Called by the base class
-	boost::beast::ssl_stream<boost::beast::tcp_stream>& stream() { return stream_; }
-
-	// Called by the base class
-	boost::beast::ssl_stream<boost::beast::tcp_stream> release_stream()
-	{
-		return std::move(stream_);
-	}
-
-	// Called by the base class
-	void do_eof()
-	{
-		// Set the timeout.
-		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(5));
-
-		// Perform the SSL shutdown
-		stream_.async_shutdown(boost::beast::bind_front_handler(&ssl_http_session::on_shutdown, shared_from_this()));
-	}
-
-private:
-	void on_handshake(boost::beast::error_code ec, std::size_t bytes_used)
-	{
-		if (ec)
-			return theLog->error("[handshake]: {}", ec.message());
-
-		// Consume the portion of the buffer used by the handshake
-		buffer_.consume(bytes_used);
-
-		/*SSL_SESSION* session = SSL_get1_session(stream_.native_handle());
-		unsigned int ssl_id_length;
-		const unsigned char* ssl_id = SSL_SESSION_get_id(session, &ssl_id_length);
-		std::string ssl_id_str{ reinterpret_cast<const char*>(ssl_id), ssl_id_length };
-		const auto reused = SSL_session_reused(stream_.native_handle());
-		theLog->error("			VN: SSL id: {}, reused: {}", ssl_id_str, reused);*/
-
-		do_read();
-	}
-
-	void on_shutdown(boost::beast::error_code ec)
-	{
-		if (ec)
-			return theLog->error("[shutdown]: {}", ec.message());
-
-		// At this point the connection is closed gracefully
-	}
-
 	boost::beast::ssl_stream<boost::beast::tcp_stream> stream_;
+	
+	std::string ssl_id;
 };

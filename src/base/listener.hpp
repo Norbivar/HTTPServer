@@ -9,13 +9,11 @@
 #include <boost/beast/core/flat_buffer.hpp>
 #include <boost/beast/core/tcp_stream.hpp>
 
-class webserver;
-
 // Accepts incoming connections and launches the sessions
 class listener : public std::enable_shared_from_this<listener>
 {
 public:
-	listener(boost::asio::io_context& ioc, boost::asio::ssl::context& ctx, boost::asio::ip::tcp::endpoint endpoint, const webserver& server);
+	listener(boost::asio::io_context& ioc, boost::asio::ssl::context& ctx, boost::asio::ip::tcp::endpoint endpoint);
 
 	// Start accepting incoming connections
 	void run() { do_accept(); }
@@ -27,14 +25,13 @@ private:
 	boost::asio::io_context& ioc_;
 	boost::asio::ssl::context& ctx_;
 	boost::asio::ip::tcp::acceptor acceptor_;
-	const webserver& server;
 };
 
 // Detects SSL handshakes
 class detect_session : public std::enable_shared_from_this<detect_session>
 {
 public:
-	explicit detect_session(boost::asio::ip::tcp::socket&& socket, boost::asio::ssl::context& ctx, const webserver& server);
+	explicit detect_session(boost::asio::ip::tcp::socket&& socket, boost::asio::ssl::context& ctx);
 
 	// Launch the detector
 	void run();
@@ -43,6 +40,5 @@ public:
 private:
 	boost::beast::tcp_stream stream_;
 	boost::asio::ssl::context& ctx_;
-	const webserver& server;
 	boost::beast::flat_buffer buffer_;
 };

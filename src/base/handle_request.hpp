@@ -10,7 +10,56 @@
 
 #include <Logging>
 
-#include "../routing_table.hpp"
+#include "../webserver.hpp"
+#include "../session_tracker.hpp"
+
+namespace
+{
+	template<typename session_pair>
+	struct access_predicate_visitor : public boost::static_visitor<>
+	{
+		access_predicate_visitor(bool& out, const session_pair& in) : output{out}, sess_pair{in} {}
+
+		void operator()(boost::blank) const { }
+		void operator()(bool(handler)(void)) const { output = handler(); }
+		void operator()(bool(handler)(const session_info&)) const
+		{
+			if (sess_pair.first && sess_pair.second->info)
+				output = handler(*sess_pair.second->info);
+			else
+				theLog->error("Tried calling access predicate that requires session_info without one!");
+		}
+	private:
+		const session_pair& sess_pair; 
+		bool& output;
+	};
+
+	template<typename session_pair>
+	struct routing_handler_visitor : public boost::static_visitor<>
+	{
+		routing_handler_visitor(const std::string& ssl_sid, session_pair& session, const boost::property_tree::ptree& in, boost::property_tree::ptree& out) : 
+			ssl_sid{ssl_sid}, sess_pair{session}, in{in}, out{out} {}
+
+		void operator()(void(handler)(const boost::property_tree::ptree&, boost::property_tree::ptree&)) const { handler(in, out); }
+		void operator()(void(handler)(session_info&, const boost::property_tree::ptree&, boost::property_tree::ptree&)) const
+		{
+			if (sess_pair.first && sess_pair.second->info)
+				handler(*sess_pair.second->info, in, out);
+			else
+				theLog->error("Tried calling access predicate that requires session_info without one!");
+		}
+		void operator()(void(handler)(const std::string& ssl_sid, const boost::property_tree::ptree&, boost::property_tree::ptree&)) const
+		{
+			handler(ssl_sid, in, out);
+		}
+
+	private:
+		const std::string& ssl_sid;
+		const boost::property_tree::ptree& in;
+		boost::property_tree::ptree& out;
+		session_pair& sess_pair;
+	};
+}
 
 // Return a reasonable mime type based on the extension of a file.
 boost::beast::string_view mime_type(boost::beast::string_view path);
@@ -84,8 +133,7 @@ boost::beast::http::response<boost::beast::http::string_body> set_unauthorized(c
 
 template <class Body, class Allocator, class Send>
 void handle_request(
-	const routing_table& routing_tbl,
-	const boost::beast::string_view doc_root, 
+	const std::string& ssl_id,
 	boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>>&& req, 
 	Send&& send)
 {
@@ -94,7 +142,7 @@ void handle_request(
 		return send(set_bad_request(req, "Illegal request-target"));
 
 	// Build the path to the requested file
-	std::string path = path_cat(doc_root, req.target());
+	std::string path = path_cat(webserver::instance().get_doc_root(), req.target());
 	if (req.target().back() == '/')
 		path.append("index.html");
 
@@ -177,15 +225,23 @@ void handle_request(
 		}
 
 		theLog->debug("handle_request looking up: '{}'", req_target_stripped);
-		const auto [success, it] = routing_tbl.lookup(req.method(), req_target_stripped);
+		const auto [success, it] = webserver::instance().get_routing_table().lookup(req.method(), req_target_stripped);
 		if (!success)
 			return send(set_not_found(req));
 
-		if (it->second.access_predicate && !it->second.access_predicate())
-			return send(set_unauthorized(req));
+		auto session_pair = webserver::instance().get_session_tracker().find_by_ssl(ssl_id);
+		if (it->second.access_predicate.which() != 0)
+		{
+			bool result = false;
+			access_predicate_visitor visitor {result, session_pair};
+			it->second.access_predicate.apply_visitor(visitor);
+			if (!result)
+				return send(set_unauthorized(req));
+		}
 
 		boost::property_tree::ptree response;
-		it->second.handler(arguments, response);
+		routing_handler_visitor visitor {ssl_id, session_pair, arguments, response};
+		it->second.handler.apply_visitor(visitor);
 
 		std::stringstream ss;
 		boost::property_tree::write_json(ss, response, false);

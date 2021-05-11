@@ -10,13 +10,20 @@
 
 #include "../cert/server_certificate.hpp"
 
-webserver::webserver(const boost::asio::ip::address& address, const uint16_t port, const std::shared_ptr<std::string>& doc_root, std::uint8_t numthreads) :
+webserver::webserver() : webserver(
+	theConfig->get<Configs::doc_root>(),
+	boost::asio::ip::make_address(theConfig->get<Configs::bind_ip>("0.0.0.0")),
+	theConfig->get<Configs::port>(443),
+	theConfig->get<Configs::threads>(3))
+{ }
+
+webserver::webserver(std::string&& doc_root, const boost::asio::ip::address& address, const uint16_t port, std::uint8_t numthreads) :
 	m_address{address},
 	m_port{port},
-	m_doc_root{doc_root},
+	m_doc_root{std::move(doc_root)},
 	m_desired_thread_number{numthreads},
 	m_ioc{numthreads},
-	m_ctx{boost::asio::ssl::context::tlsv12}
+	m_ctx{boost::asio::ssl::context::tlsv13}
 {
 	assert(numthreads != 0);
 	m_threads.reserve(numthreads - 1);
@@ -39,7 +46,7 @@ int webserver::run()
 
 	theLog->info("Preparing WebServer...");
 
-	std::make_shared<listener>(m_ioc, m_ctx, boost::asio::ip::tcp::endpoint{ m_address, m_port }, *this)->run();
+	std::make_shared<listener>(m_ioc, m_ctx, boost::asio::ip::tcp::endpoint{ m_address, m_port })->run();
 
 	// Capture SIGINT and SIGTERM to perform a clean shutdown
 	boost::asio::signal_set signals(m_ioc, SIGINT, SIGTERM);
