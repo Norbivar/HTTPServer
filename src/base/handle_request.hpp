@@ -8,7 +8,7 @@
 #include <boost/algorithm/string/classification.hpp>
 
 #include <Logging>
-#include <nlohmann/json.hpp>
+#include <json.hpp>
 
 #include "../webserver.hpp"
 #include "../session_tracker.hpp"
@@ -222,10 +222,19 @@ void handle_request(
 		{
 			std::stringstream ss;
 			ss << req.body();
-			arguments = nlohmann::json::parse(ss);
+			try
+			{
+				arguments = nlohmann::json::parse(ss);
+			}
+			catch (const std::exception& e)
+			{
+				theLog->error("Json parse error: {}", e.what());
+				boost::beast::http::response<boost::beast::http::string_body> res{ boost::beast::http::status::bad_request, req.version() };
+				res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+				return send(std::move(res));
+			}
 		}
 
-		theLog->debug("handle_request looking up: '{}'", req_target_stripped);
 		const auto [success, it] = webserver::instance().get_routing_table().lookup(req.method(), req_target_stripped);
 		if (!success)
 			return send(set_not_found(req));
@@ -242,7 +251,17 @@ void handle_request(
 
 		nlohmann::json response;
 		routing_handler_visitor visitor {ssl_id, session_pair, arguments, response};
-		it->second.handler.apply_visitor(visitor);
+		try
+		{
+			it->second.handler.apply_visitor(visitor);
+		}
+		catch (const std::exception& e)
+		{
+			theLog->error("Root catched exception: {}", e.what());
+			boost::beast::http::response<boost::beast::http::string_body> res{ boost::beast::http::status::internal_server_error, req.version() };
+			res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
+			return send(std::move(res));
+		}
 
 		std::string response_str = response.dump();
 

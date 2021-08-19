@@ -14,6 +14,7 @@
 
          let base_url = "norbinet.asuscomm.com";
          let url = "https://" + base_url;
+         let sid = "";
          function myFunction() 
          {
             let socket = new WebSocket("wss://" + base_url);
@@ -46,16 +47,30 @@
          function login() 
          {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", url + "/test", true);
+            xhr.open("POST", url + "/login", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function () {
                if (xhr.readyState === 4 && xhr.status === 200) {
                   var json = JSON.parse(xhr.responseText);
-                  console.log(json.email + ", " + json.password);
+                  console.log("SID: " + json.sid);
+                  sid = json.sid;
                }
             };
             var data = JSON.stringify({"user": document.getElementById('user').value, "pass": document.getElementById('pass').value});
             xhr.send(data);
+         }
+         function testsess()
+         {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url + "/test_get_session", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  var json = JSON.parse(xhr.responseText);
+                  console.log("Name: " + json.nev);
+               }
+            };
+            xhr.send("{}");
          }
       </script>
 
@@ -63,6 +78,7 @@
       <button onclick="myFunction()">Open Websocket</button>
       <P>User: <input id="user"></input> Pass: <input id="pass"></input></P>
       <P><button onclick="login()">Login</button></P>
+      <P><button onclick="testsess()">Test Get Session</button></P>
 
       <img src="untitled.png" alt="Girl in a jacket" width="300" height="400">
       <img src="untitled2.png" alt="Girl in a jacket" width="800" height="400">

@@ -20,7 +20,7 @@ struct session_keys
 	const std::string session_id;
 	const std::string ssl_id;
 
-	mutable std::unique_ptr<session_info> info;
+	mutable std::shared_ptr<session_info> info; // atomic shared ptr?
 };
 
 using session_map = boost::multi_index::multi_index_container<
@@ -38,7 +38,7 @@ using session_map = boost::multi_index::multi_index_container<
 class session_tracker
 {
 public:
-	std::pair<bool, session_map::iterator> get_new_session(const std::string& ssl_id, std::uint32_t account_id);
+	std::pair<bool, session_map::iterator> create_new_session(const std::string& ssl_id, const std::uint32_t account_id);
 	std::pair<bool, session_map::nth_index<0>::type::iterator> find_by_session(const std::string& sid) const;
 	std::pair<bool, session_map::nth_index<1>::type::iterator> find_by_ssl(const std::string& ssl_id) const;
 

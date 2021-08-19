@@ -4,7 +4,7 @@
 #include <thread>
 
 #include <Logging>
-#include <nlohmann/json.hpp>
+#include <json.hpp>
 
 #include "session_tracker.hpp"
 #include "auth/auth.hpp"
@@ -18,11 +18,15 @@ void routing_table::register_all()
 	register_path(method::post, "/test", [](const nlohmann::json& req, nlohmann::json& resp) {
 		//std::this_thread::sleep_for(std::chrono::seconds(5));
 
-		const auto user = req["user"].get<std::string>();
-		const auto pass = req["pass"].get<std::string>();
-		theLog->error("Received that mofo GET test request! {} + {}", user, pass);
+		const auto user = json_get<std::string>(req, "user");
+		const auto pass = json_get_optional<std::string>(req, "pass");
+		theLog->error("Received that mofo GET test request! {} + {}", user, pass.get_value_or(""));
 
 		resp.emplace("ketszaz", "pluszafa");
+	});
+
+	register_path(method::post, "/test_get_session", [](session_info& info, const nlohmann::json& req, nlohmann::json& resp) {
+		resp.emplace("nev", info.acquire().data().name);
 	});
 
 	register_path(method::post, "/test_deny", [](const nlohmann::json& arguments, nlohmann::json& resp) { theLog->error("Received that mofo test deny request!"); }, []() { return false; });
