@@ -5,7 +5,7 @@
 #include <Logging>
 #include "../webserver.hpp"
 
-void authentication::on_login(const std::string& ssl_id, const boost::property_tree::ptree& arguments, boost::property_tree::ptree& resp)
+void authentication::on_login(const std::string& ssl_id, const nlohmann::json& arguments, nlohmann::json& resp)
 {
 	if (ssl_id.empty())
 	{

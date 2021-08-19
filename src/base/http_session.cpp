@@ -74,7 +74,7 @@ void ssl_http_session::on_read(boost::beast::error_code ec, std::size_t bytes_tr
 		return do_eof();
 
 	if (ec)
-		return theLog->error("[read]: {}", ec.message());
+		return theLog->error("[read]: ec: {} : {}", ec.value(), ec.message());
 
 	// See if it is a WebSocket Upgrade
 	if (boost::beast::websocket::is_upgrade(parser_->get()))
@@ -83,7 +83,7 @@ void ssl_http_session::on_read(boost::beast::error_code ec, std::size_t bytes_tr
 
 		// Disable the timeout.
 		// The websocket::stream uses its own timeout settings.
-		boost::beast::get_lowest_layer(stream_).expires_never();
+		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::minutes{30});
 
 		// Create a websocket session, transferring ownership
 		// of both the socket and the HTTP request.
@@ -103,7 +103,7 @@ void ssl_http_session::on_write(bool close, boost::beast::error_code ec, std::si
 	boost::ignore_unused(bytes_transferred);
 
 	if (ec)
-		return theLog->error("[write]: {}", ec.message());
+		return theLog->error("[write]: ec: {} : {}", ec.value(), ec.message());
 
 	if (close)
 	{
@@ -123,7 +123,7 @@ void ssl_http_session::on_write(bool close, boost::beast::error_code ec, std::si
 void ssl_http_session::on_handshake(boost::beast::error_code ec, std::size_t bytes_used)
 {
 	if (ec)
-		return theLog->error("[handshake]: {}", ec.message());
+		return theLog->error("[handshake]: code {} : {}", ec.value(), ec.message());
 
 	// Consume the portion of the buffer used by the handshake
 	buffer_.consume(bytes_used);
@@ -134,7 +134,7 @@ void ssl_http_session::on_handshake(boost::beast::error_code ec, std::size_t byt
 void ssl_http_session::on_shutdown(boost::beast::error_code ec)
 {
 	if (ec)
-		return theLog->error("[shutdown]: {}", ec.message());
+		return theLog->error("[shutdown]: code {} : {}", ec.value(), ec.message());
 
 	// At this point the connection is closed gracefully
 }

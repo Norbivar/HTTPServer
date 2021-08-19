@@ -3,12 +3,12 @@
 #include <boost/beast/version.hpp>
 #include <boost/beast/core/string_type.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
 #include <Logging>
+#include <nlohmann/json.hpp>
 
 #include "../webserver.hpp"
 #include "../session_tracker.hpp"
@@ -37,26 +37,26 @@ namespace
 	template<typename session_pair>
 	struct routing_handler_visitor : public boost::static_visitor<>
 	{
-		routing_handler_visitor(const std::string& ssl_sid, session_pair& session, const boost::property_tree::ptree& in, boost::property_tree::ptree& out) : 
+		routing_handler_visitor(const std::string& ssl_sid, session_pair& session, const nlohmann::json& in, nlohmann::json& out) : 
 			ssl_sid{ssl_sid}, sess_pair{session}, in{in}, out{out} {}
 
-		void operator()(void(handler)(const boost::property_tree::ptree&, boost::property_tree::ptree&)) const { handler(in, out); }
-		void operator()(void(handler)(session_info&, const boost::property_tree::ptree&, boost::property_tree::ptree&)) const
+		void operator()(void(handler)(const nlohmann::json&, nlohmann::json&)) const { handler(in, out); }
+		void operator()(void(handler)(session_info&, const nlohmann::json&, nlohmann::json&)) const
 		{
 			if (sess_pair.first && sess_pair.second->info)
 				handler(*sess_pair.second->info, in, out);
 			else
 				theLog->error("Tried calling access predicate that requires session_info without one!");
 		}
-		void operator()(void(handler)(const std::string& ssl_sid, const boost::property_tree::ptree&, boost::property_tree::ptree&)) const
+		void operator()(void(handler)(const std::string& ssl_sid, const nlohmann::json&, nlohmann::json&)) const
 		{
 			handler(ssl_sid, in, out);
 		}
 
 	private:
 		const std::string& ssl_sid;
-		const boost::property_tree::ptree& in;
-		boost::property_tree::ptree& out;
+		const nlohmann::json& in;
+		nlohmann::json& out;
 		session_pair& sess_pair;
 	};
 }
@@ -192,7 +192,8 @@ void handle_request(
 	else
 	{
 		auto req_target_stripped = req.target().to_string();
-		boost::property_tree::ptree arguments; // POST body OR get url parameters
+		nlohmann::json arguments; // POST body OR get url parameters
+
 		if (req.method() == boost::beast::http::verb::get)
 		{
 			const auto get_method_question_mark = req_target_stripped.find_first_of('?');
@@ -213,7 +214,7 @@ void handle_request(
 					if (lhs.empty() || rhs.empty())
 						return send(set_bad_request(req, "ill formed get"));
 
-					arguments.add(lhs, rhs);
+					arguments.push_back({lhs, rhs});
 				}
 			}
 		}
@@ -221,7 +222,7 @@ void handle_request(
 		{
 			std::stringstream ss;
 			ss << req.body();
-			boost::property_tree::read_json(ss, arguments);
+			arguments = nlohmann::json::parse(ss);
 		}
 
 		theLog->debug("handle_request looking up: '{}'", req_target_stripped);
@@ -239,13 +240,11 @@ void handle_request(
 				return send(set_unauthorized(req));
 		}
 
-		boost::property_tree::ptree response;
+		nlohmann::json response;
 		routing_handler_visitor visitor {ssl_id, session_pair, arguments, response};
 		it->second.handler.apply_visitor(visitor);
 
-		std::stringstream ss;
-		boost::property_tree::write_json(ss, response, false);
-		std::string response_str = ss.str();
+		std::string response_str = response.dump();
 
 		boost::beast::http::response<boost::beast::http::string_body> res{ boost::beast::http::status::ok, req.version() };
 		res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);

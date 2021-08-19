@@ -4,7 +4,8 @@
 #include <boost/beast/http/verb.hpp>
 #include <boost/function.hpp>
 #include <boost/unordered_map.hpp>
-#include <boost/property_tree/ptree.hpp>
+
+#include <nlohmann/json_fwd.hpp>
 
 #include "base/http_session.hpp"
 
@@ -18,9 +19,9 @@ class routing_table
 		bool(*)(const session_info&)
 	>;
 	using routing_handler = boost::variant< 
-		void(*)(const std::string&, const boost::property_tree::ptree&, boost::property_tree::ptree&), // ssl session id + input params/body + response body
-		void(*)(const boost::property_tree::ptree&, boost::property_tree::ptree&), // input params/body + response body
-		void(*)(session_info&, const boost::property_tree::ptree&, boost::property_tree::ptree&) // user session + input params/body + response body
+		void(*)(const std::string&, const nlohmann::json&, nlohmann::json&), // ssl session id + input params/body + response body
+		void(*)(const nlohmann::json&, nlohmann::json&), // input params/body + response body
+		void(*)(session_info&, const nlohmann::json&, nlohmann::json&) // user session + input params/body + response body
 	>;
 
 	struct routing_entry

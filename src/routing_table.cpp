@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <Logging>
+#include <nlohmann/json.hpp>
 
 #include "session_tracker.hpp"
 #include "auth/auth.hpp"
@@ -14,24 +15,17 @@ void routing_table::register_all()
 
 	register_path(method::post, "/login", authentication::on_login);
 
-	register_path(method::get, "/test", [](const boost::property_tree::ptree& req, boost::property_tree::ptree& resp) {
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		theLog->error("Received that mofo GET test request!");
-		for (const auto& arg : req)
-			theLog->error("Arg: {} : {}", arg.first, arg.second.data());
+	register_path(method::post, "/test", [](const nlohmann::json& req, nlohmann::json& resp) {
+		//std::this_thread::sleep_for(std::chrono::seconds(5));
 
-		resp.add("norbi", "yes please");
+		const auto user = req["user"].get<std::string>();
+		const auto pass = req["pass"].get<std::string>();
+		theLog->error("Received that mofo GET test request! {} + {}", user, pass);
+
+		resp.emplace("ketszaz", "pluszafa");
 	});
 
-	register_path(method::post, "/test", [](const boost::property_tree::ptree& arguments, boost::property_tree::ptree& resp) {
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		theLog->error("Received that mofo test request!");
-		for (const auto& arg : arguments)
-			theLog->error("Arg: {} : {}", arg.first, arg.second.data());
-
-	});
-
-	register_path(method::post, "/test_deny", [](const boost::property_tree::ptree& arguments, boost::property_tree::ptree& resp) { theLog->error("Received that mofo test deny request!"); }, []() { return false; });
+	register_path(method::post, "/test_deny", [](const nlohmann::json& arguments, nlohmann::json& resp) { theLog->error("Received that mofo test deny request!"); }, []() { return false; });
 
 }
 

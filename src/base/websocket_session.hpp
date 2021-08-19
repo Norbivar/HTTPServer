@@ -89,14 +89,8 @@ class websocket_session
 	}
 
 public:
-	websocket_session()
-	{
-		theLog->error("DEBUG: websocket session created!");
-	}
-	~websocket_session()
-	{
-		theLog->error("DEBUG: websocket session destroyed!");
-	}
+	websocket_session() { }
+	~websocket_session() { }
 
 	// Start the asynchronous operation
 	template <class Body, class Allocator>

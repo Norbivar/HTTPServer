@@ -25,6 +25,9 @@ find_package(Boost REQUIRED COMPONENTS filesystem date_time regex)
 
 find_package(OpenSSL REQUIRED) 
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake/")
+find_package(MySQL REQUIRED)
+
 file(GLOB_RECURSE All_SRC
     "src/*.cpp"
 )
@@ -36,8 +39,8 @@ file(GLOB_RECURSE Libs_SRC
 ###########################################################################
 add_executable(HTTPServer ${All_SRC} ${Libs_SRC})
 
-include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} "libs") 
-target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES})
+include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${MYSQL_INCLUDE_DIR} "libs") 
+target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${MYSQL_LIBRARIES})
 
 # Set the binary extension
 set(BINARY_SUFFIX "")

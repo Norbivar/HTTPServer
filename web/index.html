@@ -6,10 +6,68 @@
       <TITLE>My first HTML document</TITLE>
    </HEAD>
    <BODY>
+      <script>
+         var script = document.createElement('script');
+         script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+         script.type = 'text/javascript';
+         document.getElementsByTagName('head')[0].appendChild(script);
+
+         let base_url = "norbinet.asuscomm.com";
+         let url = "https://" + base_url;
+         function myFunction() 
+         {
+            let socket = new WebSocket("wss://" + base_url);
+
+            socket.onopen = function(e) {
+            alert("[open] Connection established");
+            alert("Sending to server");
+            socket.send("My name is John");
+            };
+
+            socket.onmessage = function(event) {
+            alert(`[message] Data received from server: ${event.data}`);
+            };
+
+            socket.onclose = function(event) {
+            if (event.wasClean) {
+               alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+            } else {
+               // e.g. server process killed or network down
+               // event.code is usually 1006 in this case
+               alert('[close] Connection died');
+            }
+            };
+
+            socket.onerror = function(error) {
+            alert(`[error] ${error.message}`);
+            };
+         }
+
+         function login() 
+         {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url + "/test", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  var json = JSON.parse(xhr.responseText);
+                  console.log(json.email + ", " + json.password);
+               }
+            };
+            var data = JSON.stringify({"user": document.getElementById('user').value, "pass": document.getElementById('pass').value});
+            xhr.send(data);
+         }
+      </script>
+
       <P>Szevasztok öcskösök! Itt lesz valami szar weboldal amivel milliomos leszek és majd mindenki bekaphatja a brét.</P>
-       <img src="untitled.png" alt="Girl in a jacket" width="300" height="400">
+      <button onclick="myFunction()">Open Websocket</button>
+      <P>User: <input id="user"></input> Pass: <input id="pass"></input></P>
+      <P><button onclick="login()">Login</button></P>
+
+      <img src="untitled.png" alt="Girl in a jacket" width="300" height="400">
       <img src="untitled2.png" alt="Girl in a jacket" width="800" height="400">
       <img src="sukar.png" alt="Girl in a jacket" width="200" height="400"> 
-      <iframe width="600" height="400" src="https://www.youtube.com/embed/0XFudmaObLI?list=RD0XFudmaObLI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <!-- <iframe width="600" height="400" src="https://www.youtube.com/embed/0XFudmaObLI?list=RD0XFudmaObLI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      -->
    </BODY>
 </HTML>

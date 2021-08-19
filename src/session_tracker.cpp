@@ -46,7 +46,6 @@ std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find
 	return find_by_ssl_impl(ssl_id);
 }
 
-
 std::pair<bool, session_map::nth_index<0>::type::iterator> session_tracker::find_by_session_impl(const std::string& sid) const
 {
 	std::pair<bool, session_map::nth_index<0>::type::iterator> result {false, nullptr};

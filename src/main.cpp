@@ -11,7 +11,7 @@ int main(int /*argc*/, char* /*argv*/[])
 {
 	theLog->info("Startup in progress");
 
-	auto& theServer = webserver::instance();
-	theServer.bootstrap();
-	return theServer.run();
+	auto& server = webserver::instance();
+	server.bootstrap();
+	return server.run();
 }
