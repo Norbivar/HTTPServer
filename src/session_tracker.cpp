@@ -1,11 +1,33 @@
 #include "session_tracker.hpp"
 
 #include <exception>
+#include <boost/random/random_device.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+
 #include <Logging>
+
+#include "session_info.hpp"
+
+constexpr std::uint32_t sid_length = 64;
 
 std::string generate_unique_http_session_id()
 {
-	return "qwertzuiopasdfghjkl";
+	constexpr std::array<char, 63> chars =
+	{
+		"abcdefghijklmnopqrstuvwxyz"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"1234567890"
+	};
+
+	std::string sid;
+	sid.reserve(sid_length);
+
+	boost::random::random_device rng;
+	boost::random::uniform_int_distribution<> index_dist(0, chars.size() - 1);
+	for (int i = 0; i < sid_length; ++i)
+		sid.push_back(chars[index_dist(rng)]);
+
+	return sid;
 }
 
 std::pair<bool, session_map::iterator> session_tracker::create_new_session(const std::string& ssl_id, const std::uint32_t account_id)
