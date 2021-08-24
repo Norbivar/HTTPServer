@@ -8,17 +8,18 @@
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
 
+#include "id_types.hpp"
 #include "session_info.hpp"
 
 struct session_keys
 {
-	session_keys(const std::string& sid, const std::string& sslid) : 
+	session_keys(const std::string& sid, const id::account& sslid) : 
 		session_id{sid},
-		ssl_id{sslid}
+		account_id{sslid}
 	{}
 	// Indexes:
 	const std::string session_id;
-	const std::string ssl_id;
+	const id::account account_id;
 
 	mutable std::shared_ptr<session_info> info; // atomic shared ptr?
 };
@@ -30,7 +31,7 @@ using session_map = boost::multi_index::multi_index_container<
 			BOOST_MULTI_INDEX_MEMBER(session_keys, const std::string, session_id)
 		>,
 		boost::multi_index::hashed_unique<
-			BOOST_MULTI_INDEX_MEMBER(session_keys, const std::string, ssl_id)
+			BOOST_MULTI_INDEX_MEMBER(session_keys, const id::account, account_id)
 		>
 	>
 >;
@@ -38,15 +39,17 @@ using session_map = boost::multi_index::multi_index_container<
 class session_tracker
 {
 public:
-	std::pair<bool, session_map::iterator> create_new_session(const std::string& ssl_id, const std::uint32_t account_id);
-	std::pair<bool, session_map::nth_index<0>::type::iterator> find_by_session(const std::string& sid) const;
-	std::pair<bool, session_map::nth_index<1>::type::iterator> find_by_ssl(const std::string& ssl_id) const;
+	std::pair<bool, session_map::iterator> create_new_session(const id::account account_id);
+	bool obliterate_session(const id::session& sid);
+
+	std::pair<bool, session_map::nth_index<0>::type::iterator> find_by_session_id(const id::session& sid) const;
+	std::pair<bool, session_map::nth_index<1>::type::iterator> find_by_account_id(const id::account account_id) const;
 
 private:
 	session_map m_session_container;
 
-	std::pair<bool, session_map::nth_index<0>::type::iterator> find_by_session_impl(const std::string& sid) const;
-	std::pair<bool, session_map::nth_index<1>::type::iterator> find_by_ssl_impl(const std::string& ssl_id) const;
+	std::pair<bool, session_map::nth_index<0>::type::iterator> find_by_session_id_impl(const id::session& sid) const;
+	std::pair<bool, session_map::nth_index<1>::type::iterator> find_by_account_id_impl(const id::account account_id) const;
 
 	mutable std::shared_mutex m_mutex;
 };

@@ -46,7 +46,7 @@ namespace
 			if (sess_pair.first && sess_pair.second->info)
 				handler(*sess_pair.second->info, in, out);
 			else
-				theLog->error("Tried calling access predicate that requires session_info without one!");
+				theLog->error("Tried calling routing handler that requires session_info without one!");
 		}
 		void operator()(void(handler)(const std::string& ssl_sid, const nlohmann::json&, nlohmann::json&)) const
 		{
