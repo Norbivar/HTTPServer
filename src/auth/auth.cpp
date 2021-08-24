@@ -1,11 +1,9 @@
 #include "auth.hpp"
 
-#include <json.hpp>
-
 #include <Logging>
 #include "../webserver.hpp"
 
-void authentication::on_login(const std::string& ssl_id, const nlohmann::json& req, nlohmann::json& resp)
+/*void authentication::on_login(const std::string& ssl_id, const nlohmann::json& req, nlohmann::json& resp)
 {
 	if (ssl_id.empty())
 	{
@@ -37,4 +35,4 @@ void authentication::on_login(const std::string& ssl_id, const nlohmann::json& r
 	{
 		resp.emplace("sid", new_it->session_id);
 	}
-}
+}*/

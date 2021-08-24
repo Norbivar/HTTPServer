@@ -28,18 +28,6 @@ void ssl_http_session::run()
 			shared_from_this()));
 }
 
-const std::string& ssl_http_session::get_ssl_sid()
-{
-	if (ssl_id.empty())
-	{
-		SSL_SESSION* session = SSL_get1_session(stream_.native_handle());
-		unsigned int ssl_id_length;
-		const unsigned char* ssl_id_ptr = SSL_SESSION_get_id(session, &ssl_id_length);
-		ssl_id = { reinterpret_cast<const char*>(ssl_id_ptr), ssl_id_length };
-	}
-	return ssl_id;
-}
-
 void ssl_http_session::do_eof()
 {
 	// Set the timeout.
@@ -91,7 +79,7 @@ void ssl_http_session::on_read(boost::beast::error_code ec, std::size_t bytes_tr
 	}
 
 	// Send the response
-	handle_request(get_ssl_sid(), parser_->release(), queue_);
+	handle_request(parser_->release(), queue_);
 
 	// If we aren't at the queue limit, try to pipeline another request
 	if (!queue_.is_full())

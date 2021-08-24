@@ -13,7 +13,6 @@
 
 #include <Logging>
 
-
 // Handles an SSL HTTP connection
 class ssl_http_session : public std::enable_shared_from_this<ssl_http_session> 
 {
@@ -25,8 +24,6 @@ public:
 
 	// Start the session
 	void run();
-
-	const std::string& get_ssl_sid();
 
 private:
 	// This queue is used for HTTP pipelining.
@@ -128,6 +125,4 @@ private:
 	boost::beast::flat_buffer buffer_;
 
 	boost::beast::ssl_stream<boost::beast::tcp_stream> stream_;
-	
-	std::string ssl_id;
 };

@@ -5,7 +5,8 @@
 #include <boost/function.hpp>
 #include <boost/unordered_map.hpp>
 
-#include <nlohmann/json_fwd.hpp>
+class http_request;
+class http_response;
 
 #include "base/http_session.hpp"
 
@@ -13,21 +14,14 @@ class session_info;
 
 class routing_table
 {
-	using routing_access_predicate = boost::variant<
-		boost::blank,
-		bool(*)(void),
-		bool(*)(const session_info&)
-	>;
-	using routing_handler = boost::variant< 
-		void(*)(const std::string&, const nlohmann::json&, nlohmann::json&), // ssl session id + input params/body + response body
-		void(*)(const nlohmann::json&, nlohmann::json&), // input params/body + response body
-		void(*)(session_info&, const nlohmann::json&, nlohmann::json&) // user session + input params/body + response body
-	>;
+	using routing_access_predicate = bool(*)(const http_request&);
+	using routing_handler = void(*)(const http_request&, http_response&);
 
 	struct routing_entry
 	{
 		routing_handler handler;
 		routing_access_predicate access_predicate;
+		bool need_session;
 	};
 	using table_t = boost::unordered_map<std::string, routing_entry>;
 
@@ -35,7 +29,7 @@ public:
 	routing_table() = default;
 
 	/** Registers a [HTTP Method, Path] pair with he given handler and an optional access predicate. Tables are created where needed. */
-	void register_path(boost::beast::http::verb verb, std::string&& path, const routing_handler& handler, const routing_access_predicate& pred = routing_access_predicate{});
+	void register_path(boost::beast::http::verb verb, std::string&& path, const routing_handler& handler, const routing_access_predicate& pred = routing_access_predicate{}, const bool need_session = true);
 
 	/** Looks up athe HTTP Method, and if a corresponding table can be found, looks up the path in there. 
 	* Returns a pair, where the boolean is true if the following iterator is valid. 
