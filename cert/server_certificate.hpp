@@ -16,11 +16,11 @@
 */
 inline void load_server_certificate(boost::asio::ssl::context& ctx)
 {
-	const auto cert_dir = theConfig->get<Configs::cert_dir>(".");
+	const auto cert_dir = theConfig->get<Configs::cert_dir>("./cert");
 
 	ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose)
 	{
-		return "test";
+		return "asdfghjk";
 	});
 
 	ctx.set_options(
@@ -28,7 +28,7 @@ inline void load_server_certificate(boost::asio::ssl::context& ctx)
 		boost::asio::ssl::context::no_sslv2 |
 		boost::asio::ssl::context::single_dh_use);
 
-	ctx.use_certificate_chain_file(cert_dir + "/certificate.pem");
-	ctx.use_private_key_file(cert_dir + "/key.pem", boost::asio::ssl::context::file_format::pem);
+	ctx.use_certificate_chain_file(cert_dir + "/certificate.crt");
+	ctx.use_private_key_file(cert_dir + "/key.key", boost::asio::ssl::context::file_format::pem);
 	ctx.use_tmp_dh_file(cert_dir + "/dhparam.pem");
 }

@@ -14,15 +14,7 @@ void routing_table::register_all()
 {
 	using method = boost::beast::http::verb;
 
-	register_path(boost::beast::http::verb::post, "/login", [](const auto& req, auto& resp) {
-		theLog->error("WORKS!");
-
-		const auto user = req.get<std::string>("user");
-		const auto pass = req.get_optional<std::string>("pass");
-
-		resp["sid"] = std::string{"this is a sid you get"};
-		
-	}, {}, false);
+	register_path(method::post, "/login", authentication::on_login, {}, false);
 
 }
 

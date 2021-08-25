@@ -13,8 +13,9 @@ namespace Libs
 	{
 		// Holds the file names (relative to executable) to open and read settings from.
 		// Settings in latter files will always overwrite settings from earlier files.
-		constexpr std::array<const char* const, 1> cConfigFilesToReadInOrder = {
-			"./conf.ini"
+		constexpr std::array<const char* const, 2> cConfigFilesToReadInOrder = {
+			"./conf.ini",
+			"conf.ini"
 		};
 		
 		const std::regex cConfigValidLineRegex  ("^[a-zA-Z_]+\\=.*");

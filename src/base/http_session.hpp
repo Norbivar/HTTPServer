@@ -10,6 +10,7 @@
 #include <boost/beast/ssl/ssl_stream.hpp>
 #include <boost/beast/http/parser.hpp>
 #include <boost/beast/http/string_body.hpp>
+#include <boost/beast/http/write.hpp>
 
 #include <Logging>
 
@@ -83,7 +84,7 @@ private:
 
 				void operator()()
 				{
-					boost::beast::http::async_write(
+					::boost::beast::http::async_write(
 						self_.stream(), msg_,
 						boost::beast::bind_front_handler(&ssl_http_session::on_write,
 							self_.shared_from_this(),

@@ -13,18 +13,13 @@ constexpr auto session_id_generation_max_attempts = 10;
 
 id::session generate_unique_http_session_id()
 {
-	constexpr std::array<char, 63> chars =
-	{
-		"abcdefghijklmnopqrstuvwxyz"
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		"1234567890"
-	};
+	constexpr char chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
 	id::session sid;
 	sid.reserve(sid_length);
 
 	boost::random::random_device rng;
-	boost::random::uniform_int_distribution<> index_dist(0, chars.size() - 1);
+	boost::random::uniform_int_distribution<> index_dist(0, sizeof(chars) - 1);
 	for (int i = 0; i < sid_length; ++i)
 		sid.push_back(chars[index_dist(rng)]);
 

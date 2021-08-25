@@ -11,7 +11,7 @@
 #include "../cert/server_certificate.hpp"
 
 webserver::webserver() : webserver(
-	theConfig->get<Configs::doc_root>(),
+	theConfig->get<Configs::doc_root>("./web/"),
 	boost::asio::ip::make_address(theConfig->get<Configs::bind_ip>("0.0.0.0")),
 	theConfig->get<Configs::port>(443),
 	theConfig->get<Configs::threads>(3))

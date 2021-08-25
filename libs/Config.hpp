@@ -31,9 +31,7 @@ namespace Libs
 		config(const Iterable& file_name_list)
 		{
 			for (const auto& name : file_name_list)
-			{
 				read_file(name);
-			}
 		}
 
 		~config();
@@ -55,9 +53,7 @@ namespace Libs
 					return boost::lexical_cast<T>(node->second);
 			}
 			else
-			{
 				return boost::none;
-			}
 		}
 
 		// Returns the first match of "configname" or the default value if not found any.

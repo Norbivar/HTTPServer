@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/beast/core/string_type.hpp>
+#include <boost/beast/version.hpp>
 
 #include <Logging>
 

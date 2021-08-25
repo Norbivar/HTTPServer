@@ -1,8 +1,9 @@
 #pragma once
 
-#include <nlohmann/json_fwd.hpp>
+class http_request;
+class http_response;
 
 namespace authentication
 {
-	//void on_login(const std::string& ssl_id, const nlohmann::json& arguments, nlohmann::json& resp);
+	void on_login(const http_request& req, http_response& resp);
 }

@@ -9,7 +9,6 @@ class http_request
 {
 public:
 	http_request(beast_request&& b);
-
 	std::string sid;
 
 	template<typename T>

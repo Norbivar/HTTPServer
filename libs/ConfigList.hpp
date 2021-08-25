@@ -3,17 +3,14 @@
 namespace Configs
 {
 	#define CREATE_CONFIG(name, temp, cstr) struct name : public Config { constexpr static const char* get_label() { return cstr; }  typedef temp type;   }
-	namespace
+	class Config
 	{
-		class Config
+		Config() = default;
+		constexpr static const char* get_label()
 		{
-			Config() = default;
-			constexpr static const char* get_label()
-			{
-				return "UNKNOWN";
-			}
-		};
-	}
+			return "UNKNOWN";
+		}
+	};
 
 	CREATE_CONFIG(log_to_file, bool,          "log_to_file");
 	CREATE_CONFIG(log_level,   std::uint8_t,  "log_level");

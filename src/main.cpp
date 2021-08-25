@@ -10,8 +10,15 @@
 int main(int /*argc*/, char* /*argv*/[])
 {
 	theLog->info("Startup in progress");
-
-	auto& server = webserver::instance();
-	server.bootstrap();
-	return server.run();
+	try
+	{
+		auto& server = webserver::instance();
+		server.bootstrap();
+		return server.run();
+	}
+	catch (const std::exception& e)
+	{
+		theLog->info("Exception encountered: {}", e.what());
+		return -1;
+	}
 }
