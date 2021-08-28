@@ -4,6 +4,8 @@
 #include <boost/beast/http.hpp>
 
 using beast_response = boost::beast::http::response<boost::beast::http::string_body>;
+using beast_response_empty = boost::beast::http::response<boost::beast::http::empty_body>;
+using beast_response_file = boost::beast::http::response<boost::beast::http::file_body>;
 
 class http_response
 {

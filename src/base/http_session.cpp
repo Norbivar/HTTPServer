@@ -3,10 +3,78 @@
 #include <boost/beast/core/stream_traits.hpp>
 #include <boost/beast/http/message.hpp>
 #include <boost/beast/http/read.hpp>
+#include <boost/beast/http/write.hpp>
 #include <boost/beast/websocket/rfc6455.hpp>
 #include "websocket_session.hpp"
 
 #include "handle_request.hpp"
+#include "../http_request.hpp"
+
+template<typename Req>
+struct work_impl : work {
+	ssl_http_session& self_;
+	Req msg_;
+
+	work_impl(ssl_http_session& self,
+		Req&& msg) :
+		self_(self),
+		msg_(std::move(msg))
+	{ }
+
+	void operator()()
+	{
+		boost::beast::http::async_write(
+			self_.stream(), msg_,
+			boost::beast::bind_front_handler(&ssl_http_session::on_write,
+				self_.shared_from_this(),
+				msg_.need_eof()));
+	}
+};
+
+response_queue::response_queue(ssl_http_session& self) :
+	self_(self)
+{
+	static_assert(limit > 0, "queue limit must be positive");
+	items_.reserve(limit);
+}
+
+// Returns true if we have reached the queue limit
+bool response_queue::is_full() const
+{ 
+	return items_.size() >= limit; 
+}
+
+// Called when a message finishes sending
+// Returns `true` if the caller should initiate a read
+bool response_queue::on_write()
+{
+	BOOST_ASSERT(!items_.empty());
+	auto const was_full = is_full();
+	items_.erase(items_.begin());
+	if (!items_.empty())
+		(*items_.front())();
+	return was_full;
+}
+
+// Called by the HTTP handler to send a response.
+void response_queue::process(beast_response&& msg)
+{
+	add(std::make_unique<work_impl<beast_response>>(self_, std::move(msg)));
+}
+void response_queue::process_file(beast_response_file&& msg)
+{
+	add(std::make_unique<work_impl<beast_response_file>>(self_, std::move(msg)));
+}
+
+void response_queue::add(std::unique_ptr<work>&& item)
+{
+	// Allocate and store the work
+	items_.emplace_back(std::move(item));
+
+	// If there was no previous work, start this one
+	if (items_.size() == 1)
+		(*items_.front())();
+}
 
 ssl_http_session::ssl_http_session(boost::beast::tcp_stream&& stream, boost::asio::ssl::context& ctx, boost::beast::flat_buffer&& buffer) :
 	queue_(*this),
