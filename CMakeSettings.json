@@ -10,7 +10,6 @@
 			"cmakeCommandArgs": "",
 			"buildCommandArgs": "-v",
 			"ctestCommandArgs": "",
-			"variables": [],
 			"intelliSenseMode": "windows-msvc-x64"
 		},
 		{
@@ -23,7 +22,6 @@
 			"cmakeCommandArgs": "",
 			"buildCommandArgs": "-v",
 			"ctestCommandArgs": "",
-			"variables": [],
 			"intelliSenseMode": "windows-msvc-x64"
 		},
 		{
@@ -36,7 +34,6 @@
 			"cmakeCommandArgs": "",
 			"buildCommandArgs": "-v",
 			"ctestCommandArgs": "",
-			"variables": [],
 			"intelliSenseMode": "windows-msvc-x64"
 		}
 	]

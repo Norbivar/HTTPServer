@@ -4,13 +4,15 @@
 #include <thread>
 #include <vector>
 
+#include <boost/beast/core/string_type.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl/context.hpp>
 
-#include "routing_table.hpp"
-#include "session_tracker.hpp"
-
 #define theServer webserver::instance()
+
+class routing_table;
+class session_tracker;
+class sql_manager;
 
 class webserver
 {
@@ -23,13 +25,15 @@ public:
 
 	webserver();
 	webserver(std::string&& doc_root, const boost::asio::ip::address& address, const std::uint16_t port, const std::uint8_t numthreads);
+	~webserver();
 
 	void bootstrap();
 	int run();
 
 	const boost::beast::string_view get_doc_root() const { return m_doc_root; }
-	const routing_table& get_routing_table() const { return m_routing_table; }
-	session_tracker& get_session_tracker() { return m_session_tracker; }
+	const routing_table& get_routing_table() const { return *m_routing_table; }
+	session_tracker& get_session_tracker() { return *m_session_tracker; }
+	sql_manager& get_sql_manager() { return *m_sql_manager; }
 
 private:
 	boost::asio::ip::address m_address;
@@ -40,6 +44,8 @@ private:
 	std::vector<std::thread> m_threads;
 	boost::asio::io_context m_ioc;
 	boost::asio::ssl::context m_ctx;
-	routing_table m_routing_table;
-	session_tracker m_session_tracker;
+
+	std::unique_ptr<routing_table> m_routing_table;
+	std::unique_ptr<session_tracker> m_session_tracker;
+	std::unique_ptr<sql_manager> m_sql_manager;
 };

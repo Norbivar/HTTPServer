@@ -1,10 +1,16 @@
-#include "auth.hpp"
+﻿#include "auth.hpp"
 
 #include <Logging>
 
 #include "../http_request.hpp"
 #include "../http_response.hpp"
 #include "../webserver.hpp"
+#include "../session_tracker.hpp"
+#include "../sql/sql_manager.hpp"
+
+#include <jdbc/cppconn/connection.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 
 void authentication::on_login(const http_request& req, http_response& resp)
 {
@@ -21,13 +27,28 @@ void authentication::on_login(const http_request& req, http_response& resp)
 		user,
 		pass);
 
+	auto db = theServer.get_sql_manager().acquire_handle();
+
+	std::unique_ptr<sql::PreparedStatement> pstmt{ db->prepareStatement("SELECT id FROM accounts WHERE username=? AND password=? LIMIT 1;") };
+	pstmt->setString(1, user);
+	pstmt->setString(2, pass);
+	std::unique_ptr<sql::ResultSet> res {pstmt->executeQuery()};
+	if (!res->rowsCount())
+	{
+		resp["message"] = "Invalid username/password!";
+		return;
+	}
+
+	res->next();
+	const auto account_id = res->getUInt("id");
+
 	auto& session_tracker = theServer.get_session_tracker();
 
-	const auto account_id = 1;
 	const auto [exists, it] = session_tracker.find_by_account_id(account_id);
 	if (exists)
 	{
 		theLog->warn("Duplicate session request for account ID {}.", account_id);
+		resp["message"] = "Already active session.";
 		return;
 	}
 

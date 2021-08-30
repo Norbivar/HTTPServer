@@ -8,6 +8,10 @@
 #include "base/websocket_session.hpp"
 #include "base/http_session.hpp"
 
+#include "routing_table.hpp"
+#include "session_tracker.hpp"
+#include "sql/sql_manager.hpp"
+
 #include "../cert/server_certificate.hpp"
 
 webserver::webserver() : webserver(
@@ -23,11 +27,16 @@ webserver::webserver(std::string&& doc_root, const boost::asio::ip::address& add
 	m_doc_root{std::move(doc_root)},
 	m_desired_thread_number{numthreads},
 	m_ioc{numthreads},
-	m_ctx{boost::asio::ssl::context::tlsv13}
+	m_ctx{boost::asio::ssl::context::tlsv13},
+	m_routing_table{std::make_unique<routing_table>()},
+	m_session_tracker{std::make_unique<session_tracker>()},
+	m_sql_manager{std::make_unique<sql_manager>()}
 {
 	assert(numthreads != 0);
 	m_threads.reserve(numthreads - 1);
 }
+
+webserver::~webserver() { }
 
 void webserver::bootstrap()
 {
@@ -35,9 +44,9 @@ void webserver::bootstrap()
 	// This holds the self-signed certificate used by the server
 	load_server_certificate(m_ctx);
 	theLog->info("->	Certificates loaded.");
-	m_routing_table.register_all();
+	m_routing_table->register_all();
 	theLog->info("->	Path mapping set up.");
-	m_routing_table.print_stats();
+	m_routing_table->print_stats();
 }
 
 int webserver::run()

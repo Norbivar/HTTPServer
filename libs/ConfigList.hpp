@@ -20,10 +20,11 @@ namespace Configs
 	CREATE_CONFIG(port,        std::uint16_t, "port");
 	CREATE_CONFIG(threads,     std::uint8_t,  "threads");
 
-	CREATE_CONFIG(mysql_address, std::string,   "mysql_address");
-	CREATE_CONFIG(mysql_db,      std::string,   "mysql_db");
-	CREATE_CONFIG(mysql_user,    std::string,   "mysql_user");
-	CREATE_CONFIG(mysql_pass,    std::string,   "mysql_pass");
+	CREATE_CONFIG(mysql_address,        std::string,   "mysql_address");
+	CREATE_CONFIG(mysql_db,             std::string,   "mysql_db");
+	CREATE_CONFIG(mysql_user,           std::string,   "mysql_user");
+	CREATE_CONFIG(mysql_pass,           std::string,   "mysql_pass");
+	CREATE_CONFIG(mysql_conn_pool_size, std::uint8_t,  "mysql_connection_pool_size");
 
 	#undef CREATE_CONFIG
 }

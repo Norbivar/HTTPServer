@@ -19,7 +19,7 @@ id::session generate_unique_http_session_id()
 	sid.reserve(sid_length);
 
 	boost::random::random_device rng;
-	boost::random::uniform_int_distribution<> index_dist(0, sizeof(chars) - 1);
+	boost::random::uniform_int_distribution<> index_dist(0, sizeof(chars) - 2); // last one is a \0
 	for (int i = 0; i < sid_length; ++i)
 		sid.push_back(chars[index_dist(rng)]);
 
