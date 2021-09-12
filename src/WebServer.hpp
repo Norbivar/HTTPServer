@@ -36,6 +36,8 @@ public:
 	sql_manager& get_sql_manager() { return *m_sql_manager; }
 
 private:
+	void load_server_certificate();
+
 	boost::asio::ip::address m_address;
 	std::uint16_t m_port;
 	const std::string m_doc_root;

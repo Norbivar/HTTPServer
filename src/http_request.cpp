@@ -5,6 +5,8 @@
 
 #include <Logging>
 
+#include "session_info.hpp"
+
 http_request::http_request(beast_request&& b) :
 	_base{std::move(b)}
 {

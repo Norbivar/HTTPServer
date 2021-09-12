@@ -10,9 +10,7 @@
 
 #include "routing_table.hpp"
 #include "session_tracker.hpp"
-#include "sql/sql_manager.hpp"
-
-#include "../cert/server_certificate.hpp"
+#include "database/sql/sql_manager.hpp"
 
 webserver::webserver() : webserver(
 	theConfig->get<Configs::doc_root>("./web/"),
@@ -42,7 +40,7 @@ void webserver::bootstrap()
 {
 	theLog->info("Bootstrapping WebServer...");
 	// This holds the self-signed certificate used by the server
-	load_server_certificate(m_ctx);
+	load_server_certificate();
 	theLog->info("->	Certificates loaded.");
 	m_routing_table->register_all();
 	theLog->info("->	Path mapping set up.");
@@ -77,4 +75,22 @@ int webserver::run()
 	theLog->info("WebServer stopped.");
 
 	return EXIT_SUCCESS;
+}
+
+void webserver::load_server_certificate()
+{
+	const auto cert_dir = theConfig->get<Configs::cert_dir>("./cert");
+
+	m_ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
+		return "asdfghjk";
+	});
+
+	m_ctx.set_options(
+		boost::asio::ssl::context::default_workarounds |
+		boost::asio::ssl::context::no_sslv2 |
+		boost::asio::ssl::context::single_dh_use);
+
+	m_ctx.use_certificate_chain_file(cert_dir + "/certificate.crt");
+	m_ctx.use_private_key_file(cert_dir + "/key.key", boost::asio::ssl::context::file_format::pem);
+	m_ctx.use_tmp_dh_file(cert_dir + "/dhparam.pem");
 }

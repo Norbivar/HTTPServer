@@ -38,16 +38,25 @@ find_package(OpenSSL REQUIRED)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake/")
 find_package(MySQL REQUIRED)
 
-file(GLOB_RECURSE All_SRC
-    "src/*.cpp"
-)
-
-file(GLOB_RECURSE Libs_SRC
-    "libs/*.cpp"
-)
-
 ###########################################################################
-add_executable(HTTPServer ${All_SRC} ${Libs_SRC})
+add_executable(HTTPServer 
+"src/main.cpp"
+"libs/Config.cpp"
+"libs/Logger.cpp"
+"src/webserver.cpp"
+"src/auth/auth.cpp"
+"src/base/handle_request.cpp"
+"src/base/http_session.cpp"
+"src/base/listener.cpp"
+"src/database/mappers/accounts_mapper.cpp"
+"src/http_request.cpp"
+"src/http_response.cpp"
+"src/main.cpp"
+"src/routing_table.cpp"
+"src/session_tracker.cpp"
+"src/database/sql/sql_handle.cpp"
+"src/database/sql/sql_manager.cpp"
+"src/database/mappers/accounts_mapper.cpp" )
 
 include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${CONCPP_INCLUDE_DIR} "libs") 
 target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CONCPP_LIB})

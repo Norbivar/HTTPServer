@@ -203,8 +203,10 @@ void handle_request(beast_request&& req, response_queue& resp_queue)
 		try
 		{
 			http_request request{ std::move(req) };
-			auto session_pair = theServer.get_session_tracker().find_by_session_id(request.sid);
-			if (it->second.need_session && !session_pair.first)
+			auto [session_found, session_it] = theServer.get_session_tracker().find_by_session_id(request.sid);
+			if (session_found)
+				request.session = session_it->session;
+			else if (it->second.need_session)
 				return resp_queue.process(set_unauthorized(req));
 
 			if (it->second.access_predicate)

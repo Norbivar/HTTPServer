@@ -12,6 +12,8 @@ class http_response
 public:
 	http_response(const std::uint32_t version, const bool keepalive);
 
+	boost::beast::http::status response_code() const { return _base.result(); }
+	void response_code(const boost::beast::http::status res) { _base.result(res); }
 	void push_back(const nlohmann::json& js) { _base_response_data.push_back(js); }
 	void push_back(nlohmann::json&& js) { _base_response_data.push_back(std::move(js)); }
 	void emplace_back(const nlohmann::json& js) { _base_response_data.emplace_back(js); }

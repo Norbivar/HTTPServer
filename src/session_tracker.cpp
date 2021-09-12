@@ -49,7 +49,7 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 	}
 
 	session_keys session_key_obj{ new_session_id, accounnt_id };
-	session_key_obj.info = std::make_unique<session_info>(); // TODO: add session from DB
+	session_key_obj.session = std::make_unique<session_info>(); // TODO: add session from DB
 
 	auto [it, inserted] = m_session_container.emplace(std::move(session_key_obj));
 	return {inserted, it};

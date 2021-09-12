@@ -5,5 +5,9 @@ class http_response;
 
 namespace authentication
 {
-	void on_login(const http_request& req, http_response& resp);
+	void request_login(const http_request& req, http_response& resp);
+	void request_register(const http_request& req, http_response& resp);
+
+
+	void test_session(const http_request& req, http_response& resp);
 }

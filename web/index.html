@@ -4,6 +4,11 @@
    <HEAD>
       <META charset="UTF-8">
       <TITLE>My first HTML document</TITLE>
+      <STYLE>
+         #email {
+            visibility: hidden;
+         }
+      </STYLE>
    </HEAD>
    <BODY>
       <script>
@@ -59,11 +64,34 @@
             var data = JSON.stringify({"user": document.getElementById('user').value, "pass": document.getElementById('pass').value});
             xhr.send(data);
          }
+         function register() 
+         {
+            if (document.getElementById('email').style.visibility == 'hidden')
+            {
+               document.getElementById('email').style.visibility = 'visible';
+               return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url + "/register", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  console.log("Szuccesz");
+               }
+            };
+            var data = JSON.stringify({
+               "user": document.getElementById('user').value, 
+               "pass": document.getElementById('pass').value,
+               "email": document.getElementById('email').value});
+            xhr.send(data);
+         }
          function testsess()
          {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", url + "/test_get_session", true);
+            xhr.open("POST", url + "/test_session", true);
             xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Authorization", sid);
             xhr.onreadystatechange = function () {
                if (xhr.readyState === 4 && xhr.status === 200) {
                   var json = JSON.parse(xhr.responseText);
@@ -76,8 +104,15 @@
 
       <P>Szevasztok öcskösök! Itt lesz valami szar weboldal amivel milliomos leszek és majd mindenki bekaphatja a brét.</P>
       <button onclick="myFunction()">Open Websocket</button>
-      <P>User: <input id="user"></input> Pass: <input id="pass"></input></P>
-      <P><button onclick="login()">Login</button></P>
+      <P>
+         User: <input id="user"></input> 
+         Pass: <input id="pass"></input>
+         Email: <input id="email"></input>
+      </P>
+      <P>
+         <button onclick="login()">Login</button>
+         <button onclick="register()">Register</button>
+      </P>
       <P><button onclick="testsess()">Test Get Session</button></P>
 
       <img src="untitled.png" alt="Girl in a jacket" width="300" height="400">
