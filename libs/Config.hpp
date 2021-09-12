@@ -59,26 +59,22 @@ namespace Libs
 		// Returns the first match of "configname" or the default value if not found any.
 		// Wrong types will cause a boost::bad_cast exception (boost::any-based).
 		template<typename config>
-		typename config::type get(const typename config::type& defaultval)
-		{
-			const auto conf = get_optional<config>();
-			if (conf)
-				return *conf;
-			else
-			{
-				set<config>(defaultval); // this will make sure that not found configs at first run will get printed out to .ini. TODO: think this through
-				return defaultval;
-			}
-		}
-
-		template<typename config>
 		typename config::type get()
 		{
 			const auto conf = get_optional<config>();
 			if (conf)
 				return *conf;
 			else
-				throw ConfigOrFileNotFoundException(std::string("CONFIG: Could not find:" + std::string(config::get_label())));
+			{
+				if constexpr (std::is_base_of_v<Configs::optional_config_tag, config>)
+				{
+					auto def = config::get_default();
+					set<config>(def); // this will make sure that not found configs at first run will get printed out to .ini. TODO: think this through
+					return def;
+				}
+				else
+					throw ConfigOrFileNotFoundException(std::string("CONFIG: Could not find:" + std::string(config::get_label())));
+			}
 		}
 
 		template<typename config>

@@ -13,8 +13,8 @@ namespace Libs
 		static Logger* GetLogger();
 		Logger()
 		{
-			const bool isFileLoggingEnabled = theConfig->get<Configs::log_to_file>(true);
-			const auto MinimalLogLevel      = static_cast<spdlog::level::level_enum>(theConfig->get<Configs::log_level>(0));
+			const bool isFileLoggingEnabled = theConfig->get<Configs::log_to_file>();
+			const auto MinimalLogLevel      = static_cast<spdlog::level::level_enum>(theConfig->get<Configs::log_level>());
 
 			ConsoleLogger = spdlog::stdout_color_mt("console");
 			if(isFileLoggingEnabled)

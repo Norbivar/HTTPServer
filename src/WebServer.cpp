@@ -13,10 +13,10 @@
 #include "database/sql/sql_manager.hpp"
 
 webserver::webserver() : webserver(
-	theConfig->get<Configs::doc_root>("./web/"),
-	boost::asio::ip::make_address(theConfig->get<Configs::bind_ip>("0.0.0.0")),
-	theConfig->get<Configs::port>(443),
-	theConfig->get<Configs::threads>(3))
+	theConfig->get<Configs::doc_root>(),
+	boost::asio::ip::make_address(theConfig->get<Configs::bind_ip>()),
+	theConfig->get<Configs::port>(),
+	theConfig->get<Configs::threads>())
 { }
 
 webserver::webserver(std::string&& doc_root, const boost::asio::ip::address& address, const uint16_t port, std::uint8_t numthreads) :
@@ -79,7 +79,7 @@ int webserver::run()
 
 void webserver::load_server_certificate()
 {
-	const auto cert_dir = theConfig->get<Configs::cert_dir>("./cert");
+	const auto cert_dir = theConfig->get<Configs::cert_dir>();
 
 	m_ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
 		return "asdfghjk";
