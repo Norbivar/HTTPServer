@@ -3,6 +3,7 @@
 #include <exception>
 #include <boost/random/random_device.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
+#include <boost/range/algorithm_ext/erase.hpp>
 
 #include <Logging>
 
@@ -26,9 +27,9 @@ id::session generate_unique_http_session_id()
 	return sid;
 }
 
-std::pair<bool, session_map::iterator> session_tracker::create_new_session(const id::account accounnt_id)
+std::pair<bool, session_map::iterator> session_tracker::create_new_session(const id::account account_id, bool delete_other_for_account)
 {
-	std::unique_lock lock{m_mutex};
+	std::unique_lock lock{ m_mutex };
 
 	std::uint8_t tries = 0;
 	auto is_unique_session = false;
@@ -37,54 +38,50 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 	{
 		if (tries == session_id_generation_max_attempts)
 		{
-			theLog->error("Hit maximum number of session id generation for account id {}", accounnt_id);
+			theLog->error("Hit maximum number of session id generation for account id {}", account_id);
 			break;
 		}
 
 		new_session_id = generate_unique_http_session_id();
 		const auto& [exists, __] = find_by_session_id_impl(new_session_id);
 		is_unique_session = !exists;
-		
+
 		++tries;
 	}
+	
+	if (delete_other_for_account)
+		m_session_container.get<1>().erase(account_id);
 
-	session_keys session_key_obj{ new_session_id, accounnt_id };
-	session_key_obj.session = std::make_unique<session_info>(); // TODO: add session from DB
+	auto new_session_ptr = std::make_shared<session_data>(new_session_id, account_id);
 
-	auto [it, inserted] = m_session_container.emplace(std::move(session_key_obj));
-	return {inserted, it};
+	auto [it, inserted] = m_session_container.emplace( new_session_id, account_id, std::move(new_session_ptr));
+	return { inserted, it };
 }
 
-bool session_tracker::obliterate_session(const id::session& sid)
+std::size_t session_tracker::obliterate_sessions_by_account_id(const id::account& sid)
 {
-	std::unique_lock lock{m_mutex};
-	auto [found, it] = find_by_session_id_impl(sid);
-	if (found)
-	{
-		m_session_container.erase(it);
-		return true;
-	}
-	return false;
+	std::unique_lock lock{ m_mutex };
+	return m_session_container.get<1>().erase(sid);
 }
 
 std::pair<bool, session_map::nth_index<0>::type::iterator> session_tracker::find_by_session_id(const id::session& sid) const
 {
-	std::shared_lock lock{m_mutex};
+	std::shared_lock lock{ m_mutex };
 	return find_by_session_id_impl(sid);
 }
 
 std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find_by_account_id(const id::account account_id) const
 {
-	std::shared_lock lock{m_mutex};
+	std::shared_lock lock{ m_mutex };
 	return find_by_account_id_impl(account_id);
 }
 
 std::pair<bool, session_map::nth_index<0>::type::iterator> session_tracker::find_by_session_id_impl(const id::session& sid) const
 {
-	std::pair<bool, session_map::nth_index<0>::type::iterator> result {false, nullptr};
+	std::pair<bool, session_map::nth_index<0>::type::iterator> result{ false, nullptr };
 	const auto& cont = m_session_container.get<0>();
 	const auto it = cont.find(sid);
-	
+
 	if (it != cont.end())
 	{
 		result.first = true;

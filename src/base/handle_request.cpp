@@ -121,11 +121,14 @@ beast_response set_server_error(const beast_request& req, boost::beast::string_v
 	return res;
 }
 
-beast_response set_unauthorized(const beast_request& req)
+beast_response set_unauthorized(const beast_request& req, bool kill_session = false)
 {
 	beast_response res{ boost::beast::http::status::unauthorized, req.version() };
 	res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
 	res.set(boost::beast::http::field::content_type, "text/html");
+	if (kill_session)
+		res.set(boost::beast::http::field::set_cookie, "SID=deleted; expires=Thu, 01 Jan 1970 00:00:00 GMT");
+
 	res.keep_alive(req.keep_alive());
 	res.prepare_payload();
 	return res;
@@ -141,7 +144,7 @@ beast_response respond_head_request(const std::string& path, const std::uint64_t
 	return res;
 }
 
-void handle_request(beast_request&& req, response_queue& resp_queue)
+void handle_request(std::string&& from_addr, beast_request&& req, response_queue& resp_queue)
 {
 	const auto target = req.target();
 	// Request path must be absolute and not contain "..".
@@ -202,12 +205,30 @@ void handle_request(beast_request&& req, response_queue& resp_queue)
 
 		try
 		{
-			http_request request{ std::move(req) };
+			http_request request{ std::move(req), std::move(from_addr) };
+			theLog->error("VN: test sid {}", request.sid);
+
 			auto [session_found, session_it] = theServer.get_session_tracker().find_by_session_id(request.sid);
 			if (session_found)
+			{
 				request.session = session_it->session;
-			else if (it->second.need_session)
-				return resp_queue.process(set_unauthorized(req));
+				if (request.session->deactivated)
+					return resp_queue.process(set_unauthorized(req, true));
+
+				if (!request.session->ip_address.empty() && request.session->ip_address != request.address)
+				{
+					theLog->info("Request ip address different than saved session ip. Blocking.");
+					return resp_queue.process(set_unauthorized(req));
+				}
+			}
+			else 
+			{
+				if (!request.sid.empty())
+					return resp_queue.process(set_unauthorized(req, true));
+
+				if (it->second.need_session)
+					return resp_queue.process(set_unauthorized(req, true));
+			}
 
 			if (it->second.access_predicate)
 			{
@@ -224,23 +245,44 @@ void handle_request(beast_request&& req, response_queue& resp_queue)
 		catch (const nlohmann::json::parse_error& e)
 		{
 			theLog->error("Json parse error: {}", e.what());
-			boost::beast::http::response<boost::beast::http::string_body> res{ boost::beast::http::status::bad_request, req.version() };
-			res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
-			return resp_queue.process(std::move(res));
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::bad_request);
+			return resp_queue.process(std::move(response.prepare_release()));
 		}
 		catch (const std::invalid_argument& e)
 		{
-			theLog->error("Input parse error: {}", e.what());
-			boost::beast::http::response<boost::beast::http::string_body> res{ boost::beast::http::status::bad_request, req.version() };
-			res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
-			return resp_queue.process(std::move(res));
+			theLog->error("Invalid argument error: {}", e.what());
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::bad_request);
+			response["error_message"] = e.what();
+			return resp_queue.process(std::move(response.prepare_release()));
+		}
+		catch (const std::runtime_error& e)
+		{
+			theLog->error("Runtime error: {}", e.what());
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::internal_server_error);
+			response["error_message"] = e.what();
+			return resp_queue.process(std::move(response.prepare_release()));
+		}
+		catch (const std::logic_error& e)
+		{
+			theLog->error("Logic error: {}", e.what());
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::internal_server_error);
+			return resp_queue.process(std::move(response.prepare_release()));
 		}
 		catch (const std::exception& e)
 		{
-			theLog->error("Root catched exception: {}", e.what());
-			boost::beast::http::response<boost::beast::http::string_body> res{ boost::beast::http::status::internal_server_error, req.version() };
-			res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
-			return resp_queue.process(std::move(res));
+			theLog->critical("Root catched exception: {}", e.what());
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::internal_server_error);
+			return resp_queue.process(std::move(response.prepare_release()));
 		}
 	}
 }

@@ -1,10 +1,9 @@
 #include "accounts_mapper.hpp"
 
 #include <memory>
-#include <boost/algorithm/string/join.hpp>
-#include <boost/format.hpp>
 #include <Logging>
 
+#include "../libs/format.hpp"
 #include "../sql/sql_includes.hpp"
 
 namespace
@@ -24,11 +23,11 @@ std::string accounts_mapper::filter_t::to_string(sql_handle& db) const
 {
 	std::vector<std::string> where;
 	if (username)
-		where.emplace_back(boost::str(boost::format("username='%1%'") % db.escape(username->c_str())));
+		where.emplace_back(format_string("username='%1%'", db.escape(username->c_str())));
 	if (password)
-		where.emplace_back(boost::str(boost::format("password='%1%'") % db.escape(password->c_str())));
+		where.emplace_back(format_string("password='%1%'", db.escape(password->c_str())));
 	if (email)
-		where.emplace_back(boost::str(boost::format("email='%1%'") % db.escape(email->c_str())));
+		where.emplace_back(format_string("email='%1%'", db.escape(email->c_str())));
 	
 	if (where.empty())
 		return "";
@@ -40,7 +39,7 @@ std::vector<account_element> accounts_mapper::get(sql_handle& db, const filter_t
 {
 	std::unique_ptr<sql::PreparedStatement> pstmt{ 
 		db->prepareStatement(
-			boost::str(boost::format("SELECT id, username, email, UNIX_TIMESTAMP(creationtime) FROM accounts %1%;") % filter.to_string(db))
+			format_string("SELECT id, username, email, UNIX_TIMESTAMP(creationtime) FROM accounts %1%;", filter.to_string(db))
 		)
 	};
 

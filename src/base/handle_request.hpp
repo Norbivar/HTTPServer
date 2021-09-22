@@ -14,10 +14,4 @@ boost::beast::string_view mime_type(boost::beast::string_view path);
 // The returned path is normalized for the platform.
 std::string path_cat(boost::beast::string_view base, boost::beast::string_view path);
 
-beast_response set_bad_request(const beast_request& req, boost::beast::string_view why);
-beast_response set_not_found(const beast_request& req);
-beast_response set_server_error(const beast_request& req, boost::beast::string_view what);
-beast_response set_unauthorized(const beast_request& req);
-beast_response respond_head_request(const std::string& path, const std::uint64_t size, const beast_request& req);
-
-void handle_request(beast_request&& req, response_queue& resp_queue);
+void handle_request(std::string&& from_addr, beast_request&& req, response_queue& resp_queue);

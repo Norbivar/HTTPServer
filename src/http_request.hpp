@@ -5,15 +5,16 @@
 
 using beast_request = boost::beast::http::message<true, boost::beast::http::string_body, boost::beast::http::fields>;
 
-class session_info;
+struct session_data;
 
 class http_request
 {
 public:
-	http_request(beast_request&& b);
+	http_request(beast_request&& b, const std::string& addr);
 
 	std::string sid;
-	std::shared_ptr<session_info> session; // set from outside
+	std::string address;
+	std::shared_ptr<session_data> session; // set from outside
 
 	template<typename T>
 	boost::optional<T> get_optional(const std::string& name) const
@@ -21,6 +22,16 @@ public:
 		if (_base_request_data.count(name))
 			return _base_request_data[name].get<T>();
 		else return boost::none;
+	}
+
+	template<typename T>
+	T get_optional(const std::string& name, const T& default_value) const
+	{
+		auto val = get_optional<T>(name);
+		if (val)
+			return std::move(*val);
+		else
+			return default_value;
 	}
 
 	template<typename T>

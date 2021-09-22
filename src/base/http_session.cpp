@@ -147,7 +147,7 @@ void ssl_http_session::on_read(boost::beast::error_code ec, std::size_t bytes_tr
 	}
 
 	// Send the response
-	handle_request(parser_->release(), queue_);
+	handle_request(stream_.next_layer().socket().remote_endpoint().address().to_string(), parser_->release(), queue_);
 
 	// If we aren't at the queue limit, try to pipeline another request
 	if (!queue_.is_full())

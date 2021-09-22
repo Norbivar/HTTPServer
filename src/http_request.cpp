@@ -7,12 +7,31 @@
 
 #include "session_info.hpp"
 
-http_request::http_request(beast_request&& b) :
-	_base{std::move(b)}
+const std::string extract_cookie(const std::string& cookie, const std::string& label)
 {
-	const auto sid_it = _base.find(boost::beast::http::field::authorization);
-	if (sid_it != _base.end())
-		sid = sid_it->value().to_string();
+	auto cookie_start = cookie.find(label + "=");
+	if (cookie_start != cookie.npos)
+	{
+		cookie_start += label.size() + 1;
+		const auto cookie_end = cookie.find(";", cookie_start);
+		const auto found = cookie.substr(cookie_start, cookie_end - cookie_start);
+		if (found != "deleted") // againts client force persist cookie
+			return found;
+	}
+	return {};
+}
+
+http_request::http_request(beast_request&& b, const std::string& addr) :
+	_base{std::move(b)},
+	address{addr}
+{
+	const auto cookies = _base.find(boost::beast::http::field::cookie);
+	if (cookies != _base.end())
+	{
+		const auto cookie_str = cookies->value().to_string();
+
+		sid = extract_cookie(cookie_str, "SID");
+	}
 
 	auto req_target_stripped = _base.target().to_string();
 	if (_base.method() == boost::beast::http::verb::get)

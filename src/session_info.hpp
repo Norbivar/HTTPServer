@@ -3,14 +3,23 @@
 #include <shared_mutex>
 #include <string>
 #include <chrono>
+#include "id_types.hpp"
 
 struct session_data
 {
-	std::string name;
-	std::chrono::system_clock::time_point session_creation_time;
-
+	session_data(const id::session& sid, const id::account acc_id) :
+		session_id{sid},
+		account_id{acc_id}
+	{}
+	const id::session session_id;
+	const id::account account_id;
+	std::chrono::system_clock::time_point session_creation_time{};
+	bool deactivated{false};
+	std::string ip_address{};
 };
 
+
+/*
 class session_info : public std::enable_shared_from_this<session_info>
 {
 	struct session_read_lock
@@ -33,4 +42,4 @@ public:
 private:
 	session_data m_data;
 	mutable std::shared_mutex m_mutex;
-};
+};*/
