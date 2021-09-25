@@ -21,7 +21,7 @@ int main(int /*argc*/, char* /*argv*/[])
 	}
 	catch (const std::exception& e)
 	{
-		theLog->critical("Exception encountered: {}", e.what());
+		theLog->critical("Unhandled exception encountered: {}", e.what());
 		return -1;
 	}
 }

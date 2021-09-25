@@ -14,18 +14,10 @@ namespace Libs
 		Logger()
 		{
 			ConsoleLogger = spdlog::stdout_color_mt("console");
-			if(isFileLoggingEnabled)
-				RotatedTxtLogger = spdlog::rotating_logger_mt("txtlogger", LoggerSettings::cLogFile, 1024 * 1024 * 20, 3);
 
 			spdlog::set_async_mode(8192);
-			spdlog::set_level(MinimalLogLevel);
+			spdlog::set_level(spdlog::level::level_enum::info);
 			spdlog::flush_on(spdlog::level::err);
-// 				trace = 0,
-// 				debug = 1,
-// 				info = 2,
-// 				warn = 3,
-// 				err = 4,
-// 				critical = 5,	
 
 			toggleLogOnlyText(false);
 			spdlog::drop_all();
@@ -38,12 +30,15 @@ namespace Libs
 
 		void set_log_level(spdlog::level::level_enum level)
 		{
-			 MinimalLogLevel = level;
+			spdlog::set_level(level);
 		}
 
 		void set_file_logging(bool enable)
 		{
-			isFileLoggingEnabled = enable;
+			if (enable && !RotatedTxtLogger)
+				RotatedTxtLogger = spdlog::rotating_logger_mt("txtlogger", LoggerSettings::cLogFile, 1024 * 1024 * 20, 3);
+			else if (!enable && RotatedTxtLogger)
+				RotatedTxtLogger.reset();
 		}
 
 		inline void toggleLogOnlyText(bool setTo)
@@ -157,9 +152,6 @@ namespace Libs
 		}
 
 	private:
-		bool isFileLoggingEnabled = false;
-		spdlog::level::level_enum MinimalLogLevel = spdlog::level::level_enum::info;
-
 		std::shared_ptr<spdlog::logger> RotatedTxtLogger;
 		std::shared_ptr<spdlog::logger> ConsoleLogger;
 	};
