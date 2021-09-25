@@ -7,11 +7,11 @@
 #include <Config>
 
 sql_manager::sql_manager() :
-	m_mysql_address{theConfig->get<Configs::mysql_address>()},
-	m_mysql_database{theConfig->get<Configs::mysql_db>()},
-	m_mysql_user{theConfig->get<Configs::mysql_user>()},
-	m_mysql_pass{theConfig->get<Configs::mysql_pass>()},
-	m_connection_pool_size{theConfig->get<Configs::mysql_conn_pool_size>()},
+	m_mysql_address{theConfig->mysql_address},
+	m_mysql_database{theConfig->mysql_db},
+	m_mysql_user{theConfig->mysql_user},
+	m_mysql_pass{theConfig->mysql_pass},
+	m_connection_pool_size{theConfig->mysql_conn_pool_size},
 	m_connection_pool{m_connection_pool_size}
 {
 	theLog->info("Initiating MySQL Manager. Testing connection: '{}', table '{}', pool size: {}.", m_mysql_address, m_mysql_database, m_connection_pool_size);

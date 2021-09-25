@@ -13,16 +13,16 @@
 #include "database/sql/sql_manager.hpp"
 
 webserver::webserver() : webserver(
-	theConfig->get<Configs::doc_root>(),
-	boost::asio::ip::make_address(theConfig->get<Configs::bind_ip>()),
-	theConfig->get<Configs::port>(),
-	theConfig->get<Configs::threads>())
+	theConfig->doc_root,
+	boost::asio::ip::make_address(theConfig->bind_ip),
+	theConfig->port,
+	theConfig->threads)
 { }
 
-webserver::webserver(std::string&& doc_root, const boost::asio::ip::address& address, const uint16_t port, std::uint8_t numthreads) :
+webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, std::uint8_t numthreads) :
 	m_address{address},
 	m_port{port},
-	m_doc_root{std::move(doc_root)},
+	m_doc_root{doc_root},
 	m_desired_thread_number{numthreads},
 	m_ioc{numthreads},
 	m_ctx{boost::asio::ssl::context::tlsv13},
@@ -79,7 +79,7 @@ int webserver::run()
 
 void webserver::load_server_certificate()
 {
-	const auto cert_dir = theConfig->get<Configs::cert_dir>();
+	const auto& cert_dir = theConfig->cert_dir;
 
 	m_ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
 		return "asdfghjk";

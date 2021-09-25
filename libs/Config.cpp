@@ -3,10 +3,10 @@
 
 namespace Libs
 {
-	config* config::get_config()
+	config& config::get_config()
 	{
 		static config c{ConfigSettings::cConfigFilesToReadInOrder};
-		return &c;
+		return c;
 	}
 
 	config::~config()
@@ -14,23 +14,15 @@ namespace Libs
 		save_all();
 	}
 
-	void config::save_all_to_file(const char* filename)
+	void config::save_all()
 	{
-		std::ofstream output(filename, std::ios::out);
+		std::ofstream output(*ConfigSettings::cConfigFilesToReadInOrder.begin(), std::ios::out);
 		if (output.good())
 		{
-			for (const auto& roots : m_SettingsRootMap)
+			for (const auto& roots : m_SettingsMap)
 			{
 				output << roots.first.c_str() << "=" << roots.second.c_str() << "\n";
 			}
-		}
-	}
-	void config::save_all()
-	{
-		if (!ConfigSettings::cConfigFilesToReadInOrder.empty())
-		{
-			const char* filename = *ConfigSettings::cConfigFilesToReadInOrder.begin();
-			save_all_to_file(filename);
 		}
 	}
 
@@ -48,12 +40,7 @@ namespace Libs
 					const std::string key = line.substr(0, eqpos);
 					const std::string valueText = line.substr(eqpos + 1);
 
-					if (m_SettingsRootMap.find(key) != m_SettingsRootMap.end())
-					{
-						continue;
-					}
-
-					m_SettingsRootMap.emplace(key, valueText);
+					m_SettingsMap.emplace(key, valueText);
 				}
 			}
 			return true;
