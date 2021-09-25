@@ -5,8 +5,23 @@ namespace Libs
 {
 	config& config::get_config()
 	{
-		static config c{ConfigSettings::cConfigFilesToReadInOrder};
+		static config c{};
 		return c;
+	}
+
+	config::config()
+	{
+		reload();
+	}
+
+	void config::reload()
+	{
+		m_SettingsMap.clear();
+		for (const auto& name : Libs::ConfigSettings::cConfigFilesToReadInOrder)
+			read_file(name);
+
+		m_ConfigListSwap = std::make_unique<Configs::list>(m_SettingsMap);
+		m_ConfigListSwap.swap(m_ConfigList);
 	}
 
 	config::~config()
