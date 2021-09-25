@@ -13,9 +13,6 @@ namespace Libs
 		static Logger* GetLogger();
 		Logger()
 		{
-			const bool isFileLoggingEnabled = theConfig->log_to_file;
-			const auto MinimalLogLevel      = static_cast<spdlog::level::level_enum>(theConfig->log_level);
-
 			ConsoleLogger = spdlog::stdout_color_mt("console");
 			if(isFileLoggingEnabled)
 				RotatedTxtLogger = spdlog::rotating_logger_mt("txtlogger", LoggerSettings::cLogFile, 1024 * 1024 * 20, 3);
@@ -37,6 +34,16 @@ namespace Libs
 		{ 
 			if (RotatedTxtLogger)
 				RotatedTxtLogger->flush();
+		}
+
+		void set_log_level(spdlog::level::level_enum level)
+		{
+			 MinimalLogLevel = level;
+		}
+
+		void set_file_logging(bool enable)
+		{
+			isFileLoggingEnabled = enable;
 		}
 
 		inline void toggleLogOnlyText(bool setTo)
@@ -150,6 +157,9 @@ namespace Libs
 		}
 
 	private:
+		bool isFileLoggingEnabled = false;
+		spdlog::level::level_enum MinimalLogLevel = spdlog::level::level_enum::info;
+
 		std::shared_ptr<spdlog::logger> RotatedTxtLogger;
 		std::shared_ptr<spdlog::logger> ConsoleLogger;
 	};

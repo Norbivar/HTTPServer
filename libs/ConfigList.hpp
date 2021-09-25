@@ -5,6 +5,17 @@ namespace Configs
 #define DEFINE_CONFIG_OPTIONAL(name, type, cstr, defaultval) const type name = read<type>(cstr, defaultval);
 #define DEFINE_CONFIG(name, type, cstr)  const type name = read<type>(cstr);
 
+	struct ConfigOrFileNotFoundException : public std::exception
+	{
+		ConfigOrFileNotFoundException(const std::string& msg) : msg(msg) { }
+		const char* what() const throw ()
+		{
+			return msg.c_str();
+		}
+
+		const std::string msg;
+	};
+
 	struct list
 	{
 	private:
@@ -26,6 +37,7 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(mysql_user, std::string, "mysql_user", "root");
 		DEFINE_CONFIG_OPTIONAL(mysql_pass, std::string, "mysql_pass", "qwertzui");
 		DEFINE_CONFIG_OPTIONAL(mysql_conn_pool_size, std::uint8_t, "mysql_connection_pool_size", 3);
+		DEFINE_CONFIG(thrbuzieads, std::uint8_t, "anyad");
 
 	private:
 		template<typename T>
@@ -51,8 +63,8 @@ namespace Configs
 					settings_map[configname] = boost::lexical_cast<std::string>(defaultval);
 
 				return defaultval;
-			}
 		}
+			}
 
 		template<typename T>
 		T read(const char* configname)
@@ -68,7 +80,7 @@ namespace Configs
 					return boost::lexical_cast<T>(node->second);
 			}
 
-			throw ConfigOrFileNotFoundException(std::string("CONFIG: Could not find:" + std::string(config::get_label())));
+			throw ConfigOrFileNotFoundException(std::string{"CONFIG: Could not find:" + std::string(configname)});
 		}
 
 	};

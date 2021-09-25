@@ -11,17 +11,6 @@
 
 namespace Libs
 {
-	struct ConfigOrFileNotFoundException : public std::exception
-	{
-		ConfigOrFileNotFoundException(const std::string& msg) : msg(msg) { }
-		const char* what() const throw ()
-		{
-			return msg.c_str();
-		}
-		
-		const std::string msg;
-	};
-
 	class config
 	{
 	public:
