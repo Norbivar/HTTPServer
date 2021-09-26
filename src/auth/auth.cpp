@@ -34,7 +34,7 @@ void authentication::request_login(const http_request& req, http_response& resp)
 
 	const auto user = req.get<std::string>("user");
 	const auto pass = sha256(req.get<std::string>("pass"));
-	const auto obliterate_sessions = req.get_optional<bool>("obliterate_sessions");
+	const auto obliterate_sessions = req.get<boost::optional<bool>>("obliterate_sessions");
 
 	if (user.empty() || pass.empty())
 		throw std::invalid_argument{"Missing username/password!"};

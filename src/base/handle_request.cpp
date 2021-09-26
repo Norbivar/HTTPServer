@@ -206,7 +206,6 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 		try
 		{
 			http_request request{ std::move(req), std::move(from_addr) };
-			theLog->error("VN: test sid {}", request.sid);
 
 			auto [session_found, session_it] = theServer.get_session_tracker().find_by_session_id(request.sid);
 			if (session_found)

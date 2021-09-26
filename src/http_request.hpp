@@ -2,6 +2,7 @@
 
 #include "../libs/nlohmann/json.hpp"
 #include <boost/beast/http.hpp>
+#include <optional>
 
 using beast_request = boost::beast::http::message<true, boost::beast::http::string_body, boost::beast::http::fields>;
 
@@ -17,27 +18,27 @@ public:
 	std::shared_ptr<session_data> session; // set from outside
 
 	template<typename T>
-	boost::optional<T> get_optional(const std::string& name) const
+	T get(const std::string& name) const
+	{
+		if constexpr (std::is_same_v<T, std::optional<T::value_type>> || std::is_same_v<T, boost::optional<T::value_type>>)
+		{
+			if (_base_request_data.count(name))
+				return _base_request_data[name].get<T::value_type>();
+			else return boost::none;
+		}
+		else
+		{
+			return _base_request_data[name].get<T>();
+		}
+	}
+
+	template<typename T>
+	T get(const std::string& name, const T& defaultval) const
 	{
 		if (_base_request_data.count(name))
 			return _base_request_data[name].get<T>();
-		else return boost::none;
-	}
-
-	template<typename T>
-	T get_optional(const std::string& name, const T& default_value) const
-	{
-		auto val = get_optional<T>(name);
-		if (val)
-			return std::move(*val);
 		else
-			return default_value;
-	}
-
-	template<typename T>
-	T get(const std::string& name) const
-	{
-		return _base_request_data[name].get<T>();
+			return defaultval;
 	}
 
 	template<typename T>
