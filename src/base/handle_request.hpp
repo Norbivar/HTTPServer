@@ -2,8 +2,8 @@
 
 #include <boost/beast/core/string_type.hpp>
 
-#include "../http_request.hpp"
-#include "../http_response.hpp"
+#include "http_request.hpp"
+#include "http_response.hpp"
 
 class response_queue;
 

@@ -14,7 +14,7 @@
 #include <boost/lockfree/queue.hpp>
 
 #include <Logging>
-#include "../http_response.hpp"
+#include "http_response.hpp"
 
 class ssl_http_session;
 

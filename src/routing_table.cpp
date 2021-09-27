@@ -5,8 +5,8 @@
 
 #include <Logging>
 
-#include "http_request.hpp"
-#include "http_response.hpp"
+#include "base/http_request.hpp"
+#include "base/http_response.hpp"
 #include "session_tracker.hpp"
 #include "auth/auth.hpp"
 

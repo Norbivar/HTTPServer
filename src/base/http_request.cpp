@@ -5,7 +5,7 @@
 
 #include <Logging>
 
-#include "session_info.hpp"
+#include "../session_info.hpp"
 
 const std::string extract_cookie(const std::string& cookie, const std::string& label)
 {
