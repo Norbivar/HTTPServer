@@ -26,9 +26,9 @@ webserver::webserver(const std::string& doc_root, const boost::asio::ip::address
 	m_desired_thread_number{numthreads},
 	m_ioc{numthreads},
 	m_ctx{boost::asio::ssl::context::tlsv13},
+	m_sql_manager{std::make_unique<sql_manager>()},
 	m_routing_table{std::make_unique<routing_table>()},
-	m_session_tracker{std::make_unique<session_tracker>()},
-	m_sql_manager{std::make_unique<sql_manager>()}
+	m_session_tracker{std::make_unique<session_tracker>(m_sql_manager)}
 {
 	assert(numthreads != 0);
 	m_threads.reserve(numthreads - 1);

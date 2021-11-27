@@ -6,7 +6,7 @@
 
 using beast_request = boost::beast::http::message<true, boost::beast::http::string_body, boost::beast::http::fields>;
 
-struct session_data;
+struct session_element;
 
 class http_request
 {
@@ -15,7 +15,7 @@ public:
 
 	std::string sid;
 	std::string address;
-	std::shared_ptr<session_data> session; // set from outside
+	std::shared_ptr<session_element> session; // set from outside
 
 	template<typename T>
 	T get(const std::string& name) const

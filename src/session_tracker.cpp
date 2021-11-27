@@ -4,10 +4,18 @@
 #include <boost/random/random_device.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/range/algorithm_ext/erase.hpp>
+#include <boost/range/adaptor/filtered.hpp>
+#include <boost/range/adaptor/transformed.hpp>
 
 #include <Logging>
 
+#include <object_range.hpp>
+
 #include "session_info.hpp"
+#include "database/mappers/sessions_mapper.hpp"
+#include "webserver.hpp"
+#include "database/sql/sql_manager.hpp"
+#include "database/sql/sql_handle.hpp"
 
 constexpr auto sid_length = 64;
 constexpr auto session_id_generation_max_attempts = 10;
@@ -27,6 +35,41 @@ id::session generate_unique_http_session_id()
 	return sid;
 }
 
+session_tracker::session_tracker(std::unique_ptr<sql_manager>& sqlm)
+{
+	if (!sqlm)
+	{
+		theLog->error("Session tracker got invalid sql manager! Could not load sessions");
+		return;
+	}
+
+	auto handle = sqlm->acquire_handle();
+	std::unique_lock lock{ m_mutex };
+
+	const auto all_saved_sessions = sessions_mapper::get_all(handle);
+	for (const auto& saved_sess : all_saved_sessions)
+		emplace_session(saved_sess.session_id, saved_sess.account_id);
+
+	theLog->info("Loaded {} sessions. ", m_session_container.size());
+}
+
+session_tracker::~session_tracker()
+{
+	std::shared_lock lock{ m_mutex };
+
+	const object_range<session_element> sessions_to_save {
+		m_session_container
+		| boost::adaptors::filtered([](const auto& s) { return !s.session->deactivated; })
+		| boost::adaptors::transformed([](const auto& s) { return *s.session; }) 
+	};
+
+	theLog->info("Saving {} sessions.", sessions_to_save.size());
+
+	auto handle = theServer.get_sql_manager().acquire_handle();
+	sessions_mapper::insert(handle, sessions_to_save);
+	theLog->info("Session tracker shut down.");
+}
+
 std::pair<bool, session_map::iterator> session_tracker::create_new_session(const id::account account_id, bool delete_other_for_account)
 {
 	std::unique_lock lock{ m_mutex };
@@ -43,7 +86,7 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 		}
 
 		new_session_id = generate_unique_http_session_id();
-		const auto& [exists, __] = find_by_session_id_impl(new_session_id);
+		const auto& [exists, _] = find_by_session_id_impl(new_session_id);
 		is_unique_session = !exists;
 
 		++tries;
@@ -52,10 +95,7 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 	if (delete_other_for_account)
 		m_session_container.get<1>().erase(account_id);
 
-	auto new_session_ptr = std::make_shared<session_data>(new_session_id, account_id);
-
-	auto [it, inserted] = m_session_container.emplace( new_session_id, account_id, std::move(new_session_ptr));
-	return { inserted, it };
+	return emplace_session(new_session_id, account_id);
 }
 
 std::size_t session_tracker::obliterate_sessions_by_account_id(const id::account& sid)
@@ -101,4 +141,12 @@ std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find
 		result.second = it;
 	}
 	return result;
+}
+
+std::pair<bool, session_map::iterator> session_tracker::emplace_session(const id::session& sid, const id::account account_id)
+{
+	auto new_session_ptr = std::make_shared<session_element>(sid, account_id);
+
+	auto [it, inserted] = m_session_container.emplace(sid, account_id, std::move(new_session_ptr));
+	return { inserted, it };
 }

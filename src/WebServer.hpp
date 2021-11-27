@@ -47,7 +47,7 @@ private:
 	boost::asio::io_context m_ioc;
 	boost::asio::ssl::context m_ctx;
 
+	std::unique_ptr<sql_manager> m_sql_manager;
 	std::unique_ptr<routing_table> m_routing_table;
 	std::unique_ptr<session_tracker> m_session_tracker;
-	std::unique_ptr<sql_manager> m_sql_manager;
 };

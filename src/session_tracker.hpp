@@ -14,7 +14,7 @@
 
 struct session_keys
 {
-	session_keys(const id::session& sid, const id::account& sslid, std::shared_ptr<session_data> sess) : 
+	session_keys(const id::session& sid, const id::account& sslid, std::shared_ptr<session_element> sess) :
 		session_id{sid},
 		account_id{sslid},
 		session{sess}
@@ -23,7 +23,7 @@ struct session_keys
 	const id::session session_id;
 	const id::account account_id;
 
-	std::shared_ptr<session_data> session; 
+	std::shared_ptr<session_element> session; 
 };
 
 using session_map = boost::multi_index::multi_index_container<
@@ -41,6 +41,9 @@ using session_map = boost::multi_index::multi_index_container<
 class session_tracker
 {
 public:
+	session_tracker(std::unique_ptr<class sql_manager>& sqlm);
+	~session_tracker();
+
 	using session_by_sid_iterator = session_map::nth_index<0>::type::iterator;
 	using session_by_account_iterator = session_map::nth_index<1>::type::iterator;
 
@@ -55,6 +58,8 @@ private:
 
 	std::pair<bool, session_by_sid_iterator> find_by_session_id_impl(const id::session& sid) const;
 	std::pair<bool, session_by_account_iterator> find_by_account_id_impl(const id::account account_id) const;
+
+	std::pair<bool, session_map::iterator> emplace_session(const id::session& sid, const id::account account_id);
 
 	mutable std::shared_mutex m_mutex;
 };
