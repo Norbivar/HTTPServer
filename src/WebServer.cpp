@@ -30,6 +30,7 @@ webserver::webserver(const std::string& doc_root, const boost::asio::ip::address
 	m_routing_table{std::make_unique<routing_table>()},
 	m_session_tracker{std::make_unique<session_tracker>(m_sql_manager)}
 {
+	theLog->info("Preparing WebServer ...");
 	assert(numthreads != 0);
 	m_threads.reserve(numthreads - 1);
 }
@@ -51,8 +52,7 @@ int webserver::run()
 {
 	boost::beast::error_code ec;
 
-	theLog->info("Preparing WebServer...");
-
+	theLog->info("Setting up listener ...");
 	std::make_shared<listener>(m_ioc, m_ctx, boost::asio::ip::tcp::endpoint{ m_address, m_port })->run();
 
 	// Capture SIGINT and SIGTERM to perform a clean shutdown

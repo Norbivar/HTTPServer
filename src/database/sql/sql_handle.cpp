@@ -12,6 +12,10 @@ sql_handle::sql_handle(sql_manager& man, std::shared_ptr<sql::Connection> from) 
 
 sql_handle::~sql_handle()
 {
+
+	if (!m_connection->getAutoCommit())
+		m_connection->commit();
+
 	manager.add_handle(m_connection);
 }
 

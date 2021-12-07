@@ -6,16 +6,23 @@
 
 using beast_request = boost::beast::http::message<true, boost::beast::http::string_body, boost::beast::http::fields>;
 
+namespace threadsafe
+{
+	template<typename T>
+	class element;
+}
+
 struct session_element;
 
 class http_request
 {
 public:
-	http_request(beast_request&& b, const std::string& addr);
+	http_request(std::uint64_t id, beast_request&& b, const std::string& addr);
 
+	std::uint64_t id;
 	std::string sid;
 	std::string address;
-	std::shared_ptr<session_element> session; // set from outside
+	std::shared_ptr<threadsafe::element<session_element>> session; // set from outside
 
 	template<typename T>
 	T get(const std::string& name) const

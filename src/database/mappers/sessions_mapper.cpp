@@ -62,20 +62,15 @@ std::vector<session_element> sessions_mapper::get_all(sql_handle& db, const filt
 	return result;
 }
 
-void sessions_mapper::insert(sql_handle& db, const object_range<session_element>& range)
+void sessions_mapper::insert(sql_handle& db, const session_element& element)
 {
-	for (const auto& item : range)
-	{
-		std::unique_ptr<sql::PreparedStatement> pstmt{
-			db->prepareStatement(
-				format_string("INSERT INTO sessions VALUES('%1%', %2%, FROM_UNIXTIME(%3%));",
-					db.escape(item.session_id).c_str(),
-					item.account_id,
-					std::chrono::duration_cast<std::chrono::seconds>(item.session_creation_time.time_since_epoch()).count())
-			)
-		};
-
-		pstmt->executeUpdate();
-	}
-	db->commit();
+	std::unique_ptr<sql::PreparedStatement> pstmt{
+		db->prepareStatement(
+			format_string("INSERT INTO sessions VALUES('%1%', %2%, FROM_UNIXTIME(%3%));",
+				db.escape(element.session_id).c_str(),
+				element.account_id,
+				std::chrono::duration_cast<std::chrono::seconds>(element.session_creation_time.time_since_epoch()).count())
+		)
+	};
+	pstmt->executeUpdate();
 }

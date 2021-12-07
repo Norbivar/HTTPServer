@@ -10,20 +10,21 @@
 #include <boost/multi_index/member.hpp>
 
 #include "id_types.hpp"
-#include "session_info.hpp"
+#include "threadsafe.hpp"
+#include "database/session_element.hpp"
 
 struct session_keys
 {
-	session_keys(const id::session& sid, const id::account& sslid, std::shared_ptr<session_element> sess) :
+	session_keys(const id::session& sid, const id::account& sslid, std::shared_ptr<threadsafe::element<session_element>>&& sess) :
 		session_id{sid},
 		account_id{sslid},
-		session{sess}
+		session{std::move(sess)}
 	{}
 	// Indexes:
 	const id::session session_id;
 	const id::account account_id;
 
-	std::shared_ptr<session_element> session; 
+	std::shared_ptr<threadsafe::element<session_element>> session; 
 };
 
 using session_map = boost::multi_index::multi_index_container<

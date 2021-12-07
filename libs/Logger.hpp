@@ -3,13 +3,34 @@
 #include "spdlog/fmt/ostr.h"
 #include "LibSettings.hpp"
 
+#include "format.hpp"
+
 #include "Config"
 
 namespace Libs
 {
 	class Logger
 	{
+		struct TagCache
+		{
+			const std::string& get();
+			void push(const std::string& p);
+			void pop();
+		private:
+			bool invalidated = false;
+			std::string cached{" "};
+
+			std::vector<std::string> tags;
+		};
+
 	public:
+		struct Tag
+		{
+			Tag(const std::string& t);
+			~Tag();
+		};
+		friend struct Tag;
+
 		static Logger* GetLogger();
 		Logger()
 		{
@@ -22,8 +43,8 @@ namespace Libs
 			toggleLogOnlyText(false);
 			spdlog::drop_all();
 		}
-		~Logger() 
-		{ 
+		~Logger()
+		{
 			if (RotatedTxtLogger)
 				RotatedTxtLogger->flush();
 		}
@@ -43,116 +64,130 @@ namespace Libs
 
 		inline void toggleLogOnlyText(bool setTo)
 		{
-			if(!setTo)
-				spdlog::set_pattern("[%H:%M:%S] %l : %v");
+			if (!setTo)
+				spdlog::set_pattern("[%H:%M:%S]{%l}%v");
 			else
 				spdlog::set_pattern("%v");
 		}
 
 		template<typename Arg1, typename... Args>
-		inline void trace(const char* fmt, const Arg1& arg1, const Args& ... args)
+		inline void trace(const std::string& fmt, const Arg1& arg1, const Args& ... args)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + fmt;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->trace(fmt, arg1, args...);
+				RotatedTxtLogger->trace(tagged_message.c_str(), arg1, args...);
 			if (ConsoleLogger)
-				ConsoleLogger->trace(fmt, arg1, args...);
+				ConsoleLogger->trace(tagged_message.c_str(), arg1, args...);
 		}
 		template<typename T>
 		inline void trace(const T& msg)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + msg;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->trace(msg);
+				RotatedTxtLogger->trace(tagged_message);
 			if (ConsoleLogger)
-				ConsoleLogger->trace(msg);
+				ConsoleLogger->trace(tagged_message);
 		}
 
 		template<typename Arg1, typename... Args>
-		inline void debug(const char* fmt, const Arg1& arg1, const Args& ... args)
+		inline void debug(const std::string& fmt, const Arg1& arg1, const Args& ... args)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + fmt;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->debug(fmt, arg1, args...);
+				RotatedTxtLogger->debug(tagged_message.c_str(), arg1, args...);
 			if (ConsoleLogger)
-				ConsoleLogger->debug(fmt, arg1, args...);
+				ConsoleLogger->debug(tagged_message.c_str(), arg1, args...);
 		}
 		template<typename T>
 		inline void debug(const T& msg)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + msg;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->debug(msg);
+				RotatedTxtLogger->debug(tagged_message);
 			if (ConsoleLogger)
-				ConsoleLogger->debug(msg);
+				ConsoleLogger->debug(tagged_message);
 		}
 
 		template<typename Arg1, typename... Args>
-		inline void info(const char *fmt, const Arg1 &arg1, const Args &... args)
+		inline void info(const std::string& fmt, const Arg1& arg1, const Args &... args)
 		{
-			if(RotatedTxtLogger)
-				RotatedTxtLogger->info(fmt, arg1, args...);
-			if(ConsoleLogger)
-				ConsoleLogger->info(fmt, arg1, args...);
+			std::string tagged_message = get_thread_local_tags().get() + fmt;
+			if (RotatedTxtLogger)
+				RotatedTxtLogger->info(tagged_message.c_str(), arg1, args...);
+			if (ConsoleLogger)
+				ConsoleLogger->info(tagged_message.c_str(), arg1, args...);
 		}
 		template<typename T>
 		inline void info(const T& msg)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + msg;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->info(msg);
+				RotatedTxtLogger->info(tagged_message);
 			if (ConsoleLogger)
-				ConsoleLogger->info(msg);
+				ConsoleLogger->info(tagged_message);
 		}
 
 		template<typename Arg1, typename... Args>
-		inline void warn(const char *fmt, const Arg1 &arg1, const Args &... args)
+		inline void warn(const std::string& fmt, const Arg1& arg1, const Args &... args)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + fmt;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->warn(fmt, arg1, args...);
+				RotatedTxtLogger->warn(tagged_message.c_str(), arg1, args...);
 			if (ConsoleLogger)
-				ConsoleLogger->warn(fmt, arg1, args...);
+				ConsoleLogger->warn(tagged_message.c_str(), arg1, args...);
 		}
 		template<typename T>
 		inline void warn(const T& msg)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + msg;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->warn(msg);
+				RotatedTxtLogger->warn(tagged_message);
 			if (ConsoleLogger)
-				ConsoleLogger->warn(msg);
+				ConsoleLogger->warn(tagged_message);
 		}
 
 		template<typename Arg1, typename... Args>
-		inline void error(const char *fmt, const Arg1 &arg1, const Args &... args)
+		inline void error(const std::string& fmt, const Arg1& arg1, const Args &... args)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + fmt;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->error(fmt, arg1, args...);
+				RotatedTxtLogger->error(tagged_message.c_str(), arg1, args...);
 			if (ConsoleLogger)
-				ConsoleLogger->error(fmt, arg1, args...);
+				ConsoleLogger->error(tagged_message.c_str(), arg1, args...);
 		}
 		template<typename T>
 		inline void error(const T& msg)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + msg;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->error(msg);
+				RotatedTxtLogger->error(tagged_message);
 			if (ConsoleLogger)
-				ConsoleLogger->error(msg);
+				ConsoleLogger->error(tagged_message);
 		}
 
 		template<typename Arg1, typename... Args>
-		inline void critical(const char* fmt, const Arg1& arg1, const Args& ... args)
+		inline void critical(const std::string& fmt, const Arg1& arg1, const Args& ... args)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + fmt;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->critical(fmt, arg1, args...);
+				RotatedTxtLogger->critical(tagged_message.c_str(), arg1, args...);
 			if (ConsoleLogger)
-				ConsoleLogger->critical(fmt, arg1, args...);
+				ConsoleLogger->critical(tagged_message.c_str(), arg1, args...);
 		}
 		template<typename T>
 		inline void critical(const T& msg)
 		{
+			std::string tagged_message = get_thread_local_tags().get() + msg;
 			if (RotatedTxtLogger)
-				RotatedTxtLogger->critical(msg);
+				RotatedTxtLogger->critical(tagged_message);
 			if (ConsoleLogger)
-				ConsoleLogger->critical(msg);
+				ConsoleLogger->critical(tagged_message);
 		}
 
 	private:
 		std::shared_ptr<spdlog::logger> RotatedTxtLogger;
 		std::shared_ptr<spdlog::logger> ConsoleLogger;
+
+		TagCache& get_thread_local_tags() const { static thread_local TagCache tags; return tags; }
 	};
 }

@@ -35,9 +35,13 @@ public:
 	session_tracker& get_session_tracker() { return *m_session_tracker; }
 	sql_manager& get_sql_manager() { return *m_sql_manager; }
 
+	std::uint64_t fetch_add_request_count() { return m_request_count.fetch_add(1); }
+
 private:
 	void load_server_certificate();
 
+	std::atomic_uint64_t m_request_count{ 0 };
+	
 	boost::asio::ip::address m_address;
 	std::uint16_t m_port;
 	const std::string m_doc_root;

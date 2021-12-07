@@ -77,8 +77,10 @@ void authentication::request_login(const http_request& req, http_response& resp)
 
 	if (success)
 	{
-		new_it->session->session_creation_time = std::chrono::system_clock::now();
-		new_it->session->ip_address = req.address;
+		new_it->session->modify([&](auto& session) {
+			session.session_creation_time = std::chrono::system_clock::now();
+			session.ip_address = req.address;
+		});
 		resp.set_cookie(format_string("SID=%1%;", new_it->session_id));
 	}
 }

@@ -203,18 +203,27 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 		if (!success)
 			return resp_queue.process(set_not_found(req));
 
+		const auto request_id = theServer.fetch_add_request_count();
+		Libs::Logger::Tag _{ format_string("req id %1%", request_id)};
+		theLog->info("Request URL: {}", target.to_string());
+
 		try
 		{
-			http_request request{ std::move(req), std::move(from_addr) };
+			http_request request{
+				request_id,
+				std::move(req), 
+				std::move(from_addr) };
 
 			auto [session_found, session_it] = theServer.get_session_tracker().find_by_session_id(request.sid);
 			if (session_found)
 			{
 				request.session = session_it->session;
-				if (request.session->deactivated)
+				const auto read_session = request.session->acquire();
+
+				if (read_session->deactivated)
 					return resp_queue.process(set_unauthorized(req, true));
 
-				if (!request.session->ip_address.empty() && request.session->ip_address != request.address)
+				if (!read_session->ip_address.empty() && read_session->ip_address != request.address)
 				{
 					theLog->info("Request ip address different than saved session ip. Blocking.");
 					return resp_queue.process(set_unauthorized(req));

@@ -11,9 +11,8 @@
 
 #include <object_range.hpp>
 
-#include "session_info.hpp"
-#include "database/mappers/sessions_mapper.hpp"
 #include "webserver.hpp"
+#include "database/mappers/sessions_mapper.hpp"
 #include "database/sql/sql_manager.hpp"
 #include "database/sql/sql_handle.hpp"
 
@@ -53,20 +52,26 @@ session_tracker::session_tracker(std::unique_ptr<sql_manager>& sqlm)
 	theLog->info("Loaded {} sessions. ", m_session_container.size());
 }
 
+#include <chrono>
+#include <jdbc/cppconn/connection.h>
+
 session_tracker::~session_tracker()
 {
 	std::shared_lock lock{ m_mutex };
 
-	const object_range<session_element> sessions_to_save {
-		m_session_container
-		| boost::adaptors::filtered([](const auto& s) { return !s.session->deactivated; })
-		| boost::adaptors::transformed([](const auto& s) { return *s.session; }) 
-	};
+	const auto datas = m_session_container
+		| boost::adaptors::transformed([](const auto& s) { return s.session->acquire(); }) // TODO: force-lock / ignore if cannot take?
+		| boost::adaptors::filtered([](const auto& s) { return !s->deactivated; })
+		| boost::adaptors::transformed([](const auto& s) {return s.data(); });
 
-	theLog->info("Saving {} sessions.", sessions_to_save.size());
+	theLog->info("Saving {} sessions.", std::distance(datas.begin(), datas.end()));
 
-	auto handle = theServer.get_sql_manager().acquire_handle();
-	sessions_mapper::insert(handle, sessions_to_save);
+	{
+		auto handle = theServer.get_sql_manager().acquire_handle();
+		for (const auto& data : datas)
+			sessions_mapper::insert(handle, data);
+	}
+	
 	theLog->info("Session tracker shut down.");
 }
 
@@ -91,7 +96,7 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 
 		++tries;
 	}
-	
+
 	if (delete_other_for_account)
 		m_session_container.get<1>().erase(account_id);
 
@@ -145,7 +150,7 @@ std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find
 
 std::pair<bool, session_map::iterator> session_tracker::emplace_session(const id::session& sid, const id::account account_id)
 {
-	auto new_session_ptr = std::make_shared<session_element>(sid, account_id);
+	auto new_session_ptr = std::make_shared<threadsafe::element<session_element>>(sid, account_id);
 
 	auto [it, inserted] = m_session_container.emplace(sid, account_id, std::move(new_session_ptr));
 	return { inserted, it };

@@ -22,5 +22,5 @@ struct sessions_mapper
 
 	static boost::optional<session_element> get(sql_handle& db, const filter_t& filter = {});
 	static std::vector<session_element> get_all(sql_handle& db, const filter_t& filter = {});
-	static void insert(sql_handle& db, const object_range<session_element>& range);
+	static void insert(sql_handle& db, const session_element& element);
 };

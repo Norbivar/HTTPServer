@@ -16,15 +16,13 @@ sql_manager::sql_manager() :
 {
 	theLog->info("Initiating MySQL Manager. Testing connection: '{}', table '{}', pool size: {}.", m_mysql_address, m_mysql_database, m_connection_pool_size);
 	m_driver = get_driver_instance();
-	std::shared_ptr<sql::Connection> con{ m_driver->connect(m_mysql_address, m_mysql_user, m_mysql_pass) };
-	con->setSchema(m_mysql_database);
 
-	m_connection_pool.emplace(con);
-	for (std::uint8_t i = 1; i < m_connection_pool_size; ++i)
+	for (std::uint8_t i = 0; i < m_connection_pool_size; ++i)
 	{
 		std::shared_ptr<sql::Connection> con{ m_driver->connect(m_mysql_address, m_mysql_user, m_mysql_pass) };
 		con->setSchema(m_mysql_database);
-		m_connection_pool.emplace(std::move(con));
+		con->setAutoCommit(false);
+		add_handle(con);
 	}
 	theLog->info("Database connection success!");
 }

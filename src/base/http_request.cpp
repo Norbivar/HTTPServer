@@ -5,7 +5,7 @@
 
 #include <Logging>
 
-#include "../session_info.hpp"
+#include "../database/session_element.hpp"
 
 const std::string extract_cookie(const std::string& cookie, const std::string& label)
 {
@@ -21,9 +21,10 @@ const std::string extract_cookie(const std::string& cookie, const std::string& l
 	return {};
 }
 
-http_request::http_request(beast_request&& b, const std::string& addr) :
-	_base{std::move(b)},
-	address{addr}
+http_request::http_request(std::uint64_t id, beast_request&& b, const std::string& addr) :
+	id{ id },
+	_base{ std::move(b) },
+	address{ addr }
 {
 	const auto cookies = _base.find(boost::beast::http::field::cookie);
 	if (cookies != _base.end())
@@ -47,12 +48,12 @@ http_request::http_request(beast_request&& b, const std::string& addr) :
 			{
 				const auto equal_operator = param.find_first_of('=');
 				if (equal_operator == std::string::npos)
-					throw std::invalid_argument{"ill formed get"};
+					throw std::invalid_argument{ "ill formed get: no equal" };
 
 				const auto lhs = param.substr(0, equal_operator);
 				const auto rhs = param.substr(equal_operator + 1);
 				if (lhs.empty() || rhs.empty())
-					throw std::invalid_argument{"ill formed get"};
+					throw std::invalid_argument{ "ill formed get: invalid parameter (no name/no value)" };
 
 				_base_request_data.push_back({ lhs, rhs });
 			}
