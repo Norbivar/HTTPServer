@@ -1,5 +1,6 @@
 #include "sessions_mapper.hpp"
 
+#include <Logging>
 #include "../libs/format.hpp"
 #include "../sql/sql_includes.hpp"
 
@@ -7,7 +8,7 @@ namespace
 {
 	session_element session_from_sql(const sql::ResultSet& res)
 	{
-		session_element elem { res.getString(1), res.getUInt(2) };
+		session_element elem{ res.getString(1), res.getUInt(2) };
 		elem.session_creation_time = std::chrono::system_clock::time_point{ std::chrono::seconds{res.getUInt64(3)} };
 		return elem;
 	}
@@ -62,14 +63,15 @@ std::vector<session_element> sessions_mapper::get_all(sql_handle& db, const filt
 	return result;
 }
 
-void sessions_mapper::insert(sql_handle& db, const session_element& element)
+void sessions_mapper::insert(sql_handle& db, const std::vector<std::string>& sessions)
 {
+	if (sessions.empty())
+		return;
+
 	std::unique_ptr<sql::PreparedStatement> pstmt{
 		db->prepareStatement(
-			format_string("INSERT INTO sessions VALUES('%1%', %2%, FROM_UNIXTIME(%3%));",
-				db.escape(element.session_id).c_str(),
-				element.account_id,
-				std::chrono::duration_cast<std::chrono::seconds>(element.session_creation_time.time_since_epoch()).count())
+			format_string("REPLACE INTO sessions VALUES %1%;",
+				boost::join(sessions, ","))
 		)
 	};
 	pstmt->executeUpdate();

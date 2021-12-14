@@ -1,8 +1,11 @@
 #pragma once
 
 #include <chrono>
+#include <string>
 
 #include "../id_types.hpp"
+
+class sql_handle;
 
 struct session_element
 {
@@ -16,4 +19,6 @@ struct session_element
 	std::chrono::system_clock::time_point session_creation_time{};
 	bool deactivated{ false };
 	std::string ip_address{};
+
+	static std::string to_sql_string(sql_handle& db, const session_element& elem);
 };

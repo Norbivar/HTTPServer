@@ -7,6 +7,7 @@
 
 #include "../../id_types.hpp"
 #include "../session_element.hpp"
+#include "../sql/sql_helpers.hpp"
 
 class sql_handle;
 
@@ -22,5 +23,5 @@ struct sessions_mapper
 
 	static boost::optional<session_element> get(sql_handle& db, const filter_t& filter = {});
 	static std::vector<session_element> get_all(sql_handle& db, const filter_t& filter = {});
-	static void insert(sql_handle& db, const session_element& element);
+	static void insert(sql_handle& db, const std::vector<std::string>& sessions);
 };

@@ -52,9 +52,6 @@ session_tracker::session_tracker(std::unique_ptr<sql_manager>& sqlm)
 	theLog->info("Loaded {} sessions. ", m_session_container.size());
 }
 
-#include <chrono>
-#include <jdbc/cppconn/connection.h>
-
 session_tracker::~session_tracker()
 {
 	std::shared_lock lock{ m_mutex };
@@ -68,8 +65,7 @@ session_tracker::~session_tracker()
 
 	{
 		auto handle = theServer.get_sql_manager().acquire_handle();
-		for (const auto& data : datas)
-			sessions_mapper::insert(handle, data);
+		sessions_mapper::insert(handle, to_sql(handle, datas));
 	}
 	
 	theLog->info("Session tracker shut down.");
@@ -86,6 +82,7 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 	{
 		if (tries == session_id_generation_max_attempts)
 		{
+			new_session_id.clear();
 			theLog->error("Hit maximum number of session id generation for account id {}", account_id);
 			break;
 		}
@@ -96,6 +93,9 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 
 		++tries;
 	}
+
+	if (new_session_id.empty())
+		return { false, nullptr };
 
 	if (delete_other_for_account)
 		m_session_container.get<1>().erase(account_id);

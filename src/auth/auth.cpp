@@ -126,4 +126,5 @@ void authentication::request_register(const http_request& req, http_response& re
 void authentication::test_session(const http_request& req, http_response& resp)
 {
 	theLog->info("heyho!");
+	theLog->info("Test session : {}", req.session->acquire()->session_id);
 }

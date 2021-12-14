@@ -57,7 +57,8 @@ add_executable(HTTPServer
 "src/database/sql/sql_handle.cpp"
 "src/database/sql/sql_manager.cpp"
 "src/database/mappers/accounts_mapper.cpp"
-"src/database/mappers/sessions_mapper.cpp"   "libs/object_range.hpp")
+"src/database/mappers/sessions_mapper.cpp" 
+"src/database/session_element.cpp")
 
 include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${CONCPP_INCLUDE_DIR} "libs" "src") 
 target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CONCPP_LIB})
