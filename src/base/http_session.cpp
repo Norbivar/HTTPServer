@@ -86,7 +86,7 @@ ssl_http_session::ssl_http_session(boost::beast::tcp_stream&& stream, boost::asi
 void ssl_http_session::run()
 {
 	// Set the timeout.
-	boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(5));
+	boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(10));
 
 	// Perform the SSL handshake
 	// Note, this is the buffered version of the handshake.
@@ -99,7 +99,7 @@ void ssl_http_session::run()
 void ssl_http_session::do_eof()
 {
 	// Set the timeout.
-	boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(5));
+	boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(10));
 
 	// Perform the SSL shutdown
 	stream_.async_shutdown(boost::beast::bind_front_handler(&ssl_http_session::on_shutdown, shared_from_this()));
@@ -112,7 +112,7 @@ void ssl_http_session::do_read()
 
 	// Apply a reasonable limit to the allowed size
 	// of the body in bytes to prevent abuse.
-	parser_->body_limit(10000);
+	parser_->body_limit(32 * 1024);
 
 	// Set the timeout.
 	boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::seconds(60));
@@ -143,7 +143,8 @@ void ssl_http_session::on_read(boost::beast::error_code ec, std::size_t bytes_tr
 
 		// Create a websocket session, transferring ownership
 		// of both the socket and the HTTP request.
-		return make_websocket_session(release_stream(), parser_->release());
+		make_websocket_session(release_stream(), parser_->release());
+		return;
 	}
 
 	// Send the response

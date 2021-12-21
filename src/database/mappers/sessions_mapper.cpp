@@ -28,26 +28,16 @@ std::string sessions_mapper::filter_t::to_string(sql_handle& db) const
 		return "WHERE " + boost::algorithm::join(where, " AND ");
 }
 
-boost::optional<session_element> sessions_mapper::get(sql_handle& db, const filter_t& filter)
+std::vector<session_element> sessions_mapper::get_raw(sql_handle& db, const filter_t& filter, const boost::optional<std::uint32_t>& limit)
 {
+	const auto limit_str = limit ? format_string("LIMIT %1%", *limit) : "";
+
 	std::unique_ptr<sql::PreparedStatement> pstmt{
 		db->prepareStatement(
-			format_string("SELECT sessionid, accountid, UNIX_TIMESTAMP(creationtime) FROM sessions %1% LIMIT 1;", filter.to_string(db))
-		)
-	};
-
-	std::unique_ptr<sql::ResultSet> res{ pstmt->executeQuery() };
-	if (!res->rowsCount() || !res->next())
-		return boost::none;
-
-	return session_from_sql(*res);
-}
-
-std::vector<session_element> sessions_mapper::get_all(sql_handle& db, const filter_t& filter)
-{
-	std::unique_ptr<sql::PreparedStatement> pstmt{
-		db->prepareStatement(
-			format_string("SELECT sessionid, accountid, UNIX_TIMESTAMP(creationtime) FROM sessions %1%;", filter.to_string(db))
+			format_string("SELECT sessionid, accountid, UNIX_TIMESTAMP(creationtime) FROM sessions %1% %2%;", 
+				filter.to_string(db), 
+				limit_str
+			)
 		)
 	};
 
@@ -61,6 +51,20 @@ std::vector<session_element> sessions_mapper::get_all(sql_handle& db, const filt
 		result.emplace_back(session_from_sql(*res));
 
 	return result;
+}
+
+boost::optional<session_element> sessions_mapper::get(sql_handle& db, const filter_t& filter)
+{
+	auto get_res = get_raw(db, filter, 1);
+	if (!get_res.empty())
+		return std::move(get_res.front());
+	else
+		return boost::none;
+}
+
+std::vector<session_element> sessions_mapper::get_all(sql_handle& db, const filter_t& filter)
+{
+	return get_raw(db, filter);
 }
 
 void sessions_mapper::insert(sql_handle& db, const std::vector<std::string>& sessions)

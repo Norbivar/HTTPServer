@@ -23,7 +23,8 @@ namespace
 	}
 	bool validate_email(const std::string& email)
 	{
-		return !email.empty();
+		const std::regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+		return std::regex_match(email, pattern);
 	}
 }
 
@@ -72,17 +73,11 @@ void authentication::request_login(const http_request& req, http_response& resp)
 		}
 	}
 
-	const auto [success, new_it] = session_tracker.create_new_session(account.id);
+	const auto [success, new_it] = session_tracker.create_new_session(req.address, account.id);
 	theLog->info("Session creation {}. Account ID: {} | SID: {}", success ? "succeeded" : "failed", new_it->account_id, new_it->session_id);
 
 	if (success)
-	{
-		new_it->session->modify([&](auto& session) {
-			session.session_creation_time = std::chrono::system_clock::now();
-			session.ip_address = req.address;
-		});
 		resp.set_cookie(format_string("SID=%1%;", new_it->session_id));
-	}
 }
 
 void authentication::request_register(const http_request& req, http_response& resp)
@@ -98,7 +93,7 @@ void authentication::request_register(const http_request& req, http_response& re
 	const auto email = req.get<std::string>("email");
 
 	if (!validate_username(user) || !validate_password(pass) || !validate_email(email))
-		throw std::invalid_argument{"Invalid username/password!"};
+		throw std::invalid_argument{"Invalid form of username/password/email!"};
 
 	auto db = theServer.get_sql_manager().acquire_handle();
 

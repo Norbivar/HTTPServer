@@ -25,13 +25,13 @@
             let socket = new WebSocket("wss://" + base_url);
 
             socket.onopen = function(e) {
-            alert("[open] Connection established");
-            alert("Sending to server");
-            socket.send("My name is John");
+               alert("[open] Connection established");
+               alert("Sending to server");
+             // socket.send("My name is John");
             };
 
             socket.onmessage = function(event) {
-            alert(`[message] Data received from server: ${event.data}`);
+               alert(`[message] Data received from server: ${event.data}`);
             };
 
             socket.onclose = function(event) {
@@ -66,12 +66,6 @@
          }
          function register() 
          {
-            if (document.getElementById('email').style.visibility == 'hidden')
-            {
-               document.getElementById('email').style.visibility = 'visible';
-               return;
-            }
-
             var xhr = new XMLHttpRequest();
             xhr.open("POST", url + "/register", true);
             xhr.setRequestHeader("Content-Type", "application/json");
@@ -81,9 +75,9 @@
                }
             };
             var data = JSON.stringify({
-               "user": document.getElementById('user').value, 
-               "pass": document.getElementById('pass').value,
-               "email": document.getElementById('email').value});
+               "user": document.getElementById('register_user').value, 
+               "pass": document.getElementById('register_pass').value,
+               "email": document.getElementById('register_email').value});
             xhr.send(data);
          }
          function testsess()
@@ -103,16 +97,25 @@
       </script>
 
       <P>Szevasztok öcskösök! Itt lesz valami szar weboldal amivel milliomos leszek és majd mindenki bekaphatja a brét.</P>
+
+
+      <div id="Login" class="tabcontent">
+         <h3>Login</h3>
+         User: <input id="login_user"></input> 
+         Pass: <input id="login_pass"></input>
+         <P><button onclick="login()">Login</button></P>
+      </div>
+       
+      <div id="Register" class="tabcontent">
+         <h3>Register</h3>
+         User: <input id="register_user"></input> 
+         Pass: <input id="register_pass"></input>
+         Email: <input id="register_email"></input> 
+         <P><button onclick="register()">Register</button></P>
+      </div>
+
       <button onclick="myFunction()">Open Websocket</button>
-      <P>
-         User: <input id="user"></input> 
-         Pass: <input id="pass"></input>
-         Email: <input id="email"></input>
-      </P>
-      <P>
-         <button onclick="login()">Login</button>
-         <button onclick="register()">Register</button>
-      </P>
+
       <P><button onclick="testsess()">Test Get Session</button></P>
 
       <img src="untitled.png" alt="Girl in a jacket" width="300" height="400">

@@ -89,8 +89,8 @@ class websocket_session
 	}
 
 public:
-	websocket_session() { }
-	~websocket_session() { }
+	websocket_session() { theLog->info("VN: created websock"); }
+	~websocket_session() { theLog->info("VN: removed websock"); }
 
 	// Start the asynchronous operation
 	template <class Body, class Allocator>

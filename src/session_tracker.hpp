@@ -48,7 +48,7 @@ public:
 	using session_by_sid_iterator = session_map::nth_index<0>::type::iterator;
 	using session_by_account_iterator = session_map::nth_index<1>::type::iterator;
 
-	std::pair<bool, session_map::iterator> create_new_session(const id::account account_id, bool delete_other_for_account = false);
+	std::pair<bool, session_map::iterator> create_new_session(const std::string& ip_address, const id::account account_id, bool delete_other_for_account = false);
 	std::size_t obliterate_sessions_by_account_id(const id::account& sid);
 
 	std::pair<bool, session_by_sid_iterator> find_by_session_id(const id::session& sid) const;
@@ -60,7 +60,7 @@ private:
 	std::pair<bool, session_by_sid_iterator> find_by_session_id_impl(const id::session& sid) const;
 	std::pair<bool, session_by_account_iterator> find_by_account_id_impl(const id::account account_id) const;
 
-	std::pair<bool, session_map::iterator> emplace_session(const id::session& sid, const id::account account_id);
+	std::pair<bool, session_map::iterator> emplace_session(session_element&& session);
 
 	mutable std::shared_mutex m_mutex;
 };

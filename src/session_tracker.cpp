@@ -9,8 +9,6 @@
 
 #include <Logging>
 
-#include <object_range.hpp>
-
 #include "webserver.hpp"
 #include "database/mappers/sessions_mapper.hpp"
 #include "database/sql/sql_manager.hpp"
@@ -43,11 +41,11 @@ session_tracker::session_tracker(std::unique_ptr<sql_manager>& sqlm)
 	}
 
 	auto handle = sqlm->acquire_handle();
-	std::unique_lock lock{ m_mutex };
+	std::unique_lock lock{ m_mutex }; // This is probably not needed because it's the constructor, but hey...
 
-	const auto all_saved_sessions = sessions_mapper::get_all(handle);
-	for (const auto& saved_sess : all_saved_sessions)
-		emplace_session(saved_sess.session_id, saved_sess.account_id);
+	 auto all_saved_sessions = sessions_mapper::get_all(handle);
+	for (auto& saved_sess : all_saved_sessions)
+		emplace_session(std::move(saved_sess));
 
 	theLog->info("Loaded {} sessions. ", m_session_container.size());
 }
@@ -71,7 +69,7 @@ session_tracker::~session_tracker()
 	theLog->info("Session tracker shut down.");
 }
 
-std::pair<bool, session_map::iterator> session_tracker::create_new_session(const id::account account_id, bool delete_other_for_account)
+std::pair<bool, session_map::iterator> session_tracker::create_new_session(const std::string& ip_address, const id::account account_id, bool delete_other_for_account)
 {
 	std::unique_lock lock{ m_mutex };
 
@@ -100,7 +98,11 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 	if (delete_other_for_account)
 		m_session_container.get<1>().erase(account_id);
 
-	return emplace_session(new_session_id, account_id);
+	session_element new_sess{ new_session_id, account_id };
+	new_sess.session_creation_time = std::chrono::system_clock::now();
+	new_sess.ip_address = ip_address;
+
+	return emplace_session(std::move(new_sess));
 }
 
 std::size_t session_tracker::obliterate_sessions_by_account_id(const id::account& sid)
@@ -148,10 +150,13 @@ std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find
 	return result;
 }
 
-std::pair<bool, session_map::iterator> session_tracker::emplace_session(const id::session& sid, const id::account account_id)
+std::pair<bool, session_map::iterator> session_tracker::emplace_session(session_element&& session)
 {
-	auto new_session_ptr = std::make_shared<threadsafe::element<session_element>>(sid, account_id);
+	auto sid = session.session_id;
+	auto account_id = session.account_id;
 
-	auto [it, inserted] = m_session_container.emplace(sid, account_id, std::move(new_session_ptr));
+	auto new_session_ptr = std::make_shared<threadsafe::element<session_element>>(std::move(session));
+
+	auto [it, inserted] = m_session_container.emplace(std::move(sid), std::move(account_id), std::move(new_session_ptr));
 	return { inserted, it };
 }
