@@ -10,6 +10,7 @@ namespace
 	{
 		session_element elem{ res.getString(1), res.getUInt(2) };
 		elem.session_creation_time = std::chrono::system_clock::time_point{ std::chrono::seconds{res.getUInt64(3)} };
+		elem.last_request_time = std::chrono::system_clock::time_point{ std::chrono::seconds{res.getUInt64(4)} };
 		return elem;
 	}
 }
@@ -34,7 +35,7 @@ std::vector<session_element> sessions_mapper::get_raw(sql_handle& db, const filt
 
 	std::unique_ptr<sql::PreparedStatement> pstmt{
 		db->prepareStatement(
-			format_string("SELECT sessionid, accountid, UNIX_TIMESTAMP(creationtime) FROM sessions %1% %2%;", 
+			format_string("SELECT sessionid, accountid, UNIX_TIMESTAMP(creationtime), UNIX_TIMESTAMP(lastrequesttime) FROM sessions %1% %2%;", 
 				filter.to_string(db), 
 				limit_str
 			)

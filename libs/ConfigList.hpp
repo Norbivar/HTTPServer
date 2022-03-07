@@ -1,17 +1,16 @@
 #pragma once
 
+#include "Config.hpp"
+
 namespace Configs
 {
 #define DEFINE_CONFIG_OPTIONAL(name, type, cstr, defaultval) const type name = read<type>(cstr, defaultval);
-#define DEFINE_CONFIG(name, type, cstr)  const type name = read<type>(cstr);
+#define DEFINE_CONFIG(name, type, cstr) const type name = read<type>(cstr);
 
-	struct list
+	class list : public Libs::config::list_base
 	{
-	private:
-		std::map<std::string, std::string>& settings_map;
-
 	public:
-		list(std::map<std::string, std::string>& map) : settings_map{ map } {}
+		list(std::map<std::string, std::string>&& map) : Libs::config::list_base{ std::move(map) } {}
 
 		DEFINE_CONFIG_OPTIONAL(log_to_file, bool, "log_to_file", true);
 		DEFINE_CONFIG_OPTIONAL(log_level, std::uint8_t, "log_level", 0);
@@ -27,50 +26,7 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(mysql_pass, std::string, "mysql_pass", "qwertzui");
 		DEFINE_CONFIG_OPTIONAL(mysql_conn_pool_size, std::uint8_t, "mysql_connection_pool_size", 3);
 
-	private:
-		template<typename T>
-		T read(const char* configname, T defaultval)
-		{
-			const auto& node = settings_map.find(configname);
-			if (node != settings_map.end())
-			{
-				if constexpr (std::is_same<T, std::uint8_t>::value)
-					return static_cast<T>(boost::lexical_cast<std::uint16_t>(node->second));
-				else if constexpr (std::is_same<T, std::int8_t>::value)
-					return static_cast<T>(boost::lexical_cast<std::int16_t>(node->second));
-				else
-					return boost::lexical_cast<T>(node->second);
-			}
-			else
-			{
-				if constexpr (std::is_same<T, std::uint8_t>::value)
-					settings_map[configname] = boost::lexical_cast<std::string, std::uint16_t>(defaultval);
-				else if constexpr (std::is_same<T, std::int8_t>::value)
-					settings_map[configname] = boost::lexical_cast<std::string, std::int16_t>(defaultval);
-				else
-					settings_map[configname] = boost::lexical_cast<std::string>(defaultval);
-
-				return defaultval;
-			}
-		}
-
-		template<typename T>
-		T read(const char* configname)
-		{
-			const auto& node = settings_map.find(configname);
-			if (node != settings_map.end())
-			{
-				if constexpr (std::is_same<T, std::uint8_t>::value)
-					return static_cast<T>(boost::lexical_cast<std::uint16_t>(node->second));
-				else if constexpr (std::is_same<T, std::int8_t>::value)
-					return static_cast<T>(boost::lexical_cast<std::int16_t>(node->second));
-				else
-					return boost::lexical_cast<T>(node->second);
-			}
-
-			throw std::runtime_error(std::string{ "Could not find config : " + std::string(configname) });
-		}
-
+		DEFINE_CONFIG_OPTIONAL(session_expire_time, std::uint64_t, "session_expire_time", 60 * 60 * 60);
 	};
 
 

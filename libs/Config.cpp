@@ -1,8 +1,13 @@
 #include <fstream>
 #include "Config.hpp"
+#include "ConfigList.hpp"
 
 namespace Libs
 {
+	config::list_base::list_base(std::map<std::string, std::string>&& map) :
+		settings_map{ std::move(map) }
+	{}
+
 	config& config::get_config()
 	{
 		static config c{};
@@ -16,17 +21,17 @@ namespace Libs
 
 	void config::reload()
 	{
-		m_SettingsMap.clear();
+		std::map<std::string, std::string> config_list;
 		for (const auto& name : Libs::ConfigSettings::cConfigFilesToReadInOrder)
-			read_file(name);
+			read_file(name, config_list);
 
-		m_ConfigListSwap = std::make_unique<Configs::list>(m_SettingsMap);
+		m_ConfigListSwap = std::make_unique<Configs::list>(std::move(config_list));
 		m_ConfigListSwap.swap(m_ConfigList);
 	}
 
 	config::~config()
 	{
-		save_all();
+		//save_all(); // A config should not really require saving
 	}
 
 	void config::save_all()
@@ -34,14 +39,12 @@ namespace Libs
 		std::ofstream output(*ConfigSettings::cConfigFilesToReadInOrder.begin(), std::ios::out);
 		if (output.good())
 		{
-			for (const auto& roots : m_SettingsMap)
-			{
+			for (const auto& roots : m_ConfigList->settings_map)
 				output << roots.first.c_str() << "=" << roots.second.c_str() << "\n";
-			}
 		}
 	}
 
-	bool config::read_file(const char* filename)
+	bool config::read_file(const char* filename, std::map<std::string, std::string>& output) const
 	{
 		std::ifstream input(filename);
 		if (input.good())
@@ -55,11 +58,11 @@ namespace Libs
 					const std::string key = line.substr(0, eqpos);
 					const std::string valueText = line.substr(eqpos + 1);
 
-					m_SettingsMap.emplace(key, valueText);
+					output[key] = valueText;
 				}
 			}
 			return true;
 		}
-		else return false;
+		return false;
 	}
 }

@@ -17,6 +17,7 @@ struct session_element
 	const id::account account_id; 
 	const id::session session_id;
 	std::chrono::system_clock::time_point session_creation_time{};
+	std::chrono::system_clock::time_point last_request_time{};
 	bool deactivated{ false };
 	std::string ip_address{};
 

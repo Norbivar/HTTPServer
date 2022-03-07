@@ -5,8 +5,9 @@
 
 std::string session_element::to_sql_string(sql_handle& db, const session_element& elem)
 {
-	return format_string("('%1%', %2%, FROM_UNIXTIME(%3%))",
+	return format_string("('%1%', %2%, FROM_UNIXTIME(%3%), FROM_UNIXTIME(%4%))",
 		db.escape(elem.session_id),
 		elem.account_id,
-		std::chrono::duration_cast<std::chrono::seconds>(elem.session_creation_time.time_since_epoch()).count());
+		std::chrono::duration_cast<std::chrono::seconds>(elem.session_creation_time.time_since_epoch()).count(),
+		std::chrono::duration_cast<std::chrono::seconds>(elem.last_request_time.time_since_epoch()).count());
 }
