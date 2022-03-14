@@ -14,14 +14,14 @@ SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
 	if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # TODO: create the equivalent for other compilers?
-		SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
 	endif()
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	SET(Project_BUILD_DEBUG true)
+	set(Project_BUILD_DEBUG true)
 else() #if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	SET(Project_BUILD_DEBUG false)
+	set(Project_BUILD_DEBUG false)
 endif()
 
 ####### Build configuration INDEPENDENT things:
@@ -36,9 +36,12 @@ find_package(Boost REQUIRED COMPONENTS filesystem date_time random regex)
 find_package(OpenSSL REQUIRED) 
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake/")
-find_package(MySQL REQUIRED)
+find_package(PostgreSQL REQUIRED)
+find_package(libpqxx REQUIRED)
 
 ###########################################################################
+add_definitions(-DFMT_HEADER_ONLY)
+
 add_executable(HTTPServer 
 "src/main.cpp"
 "libs/Config.cpp"
@@ -59,9 +62,9 @@ add_executable(HTTPServer
 "src/database/mappers/accounts_mapper.cpp"
 "src/database/mappers/sessions_mapper.cpp" 
 "src/database/session_element.cpp")
-
-include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${CONCPP_INCLUDE_DIR} "libs" "src") 
-target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${CONCPP_LIB})
+	
+include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${LIBPQXX_INCLUDE_DIR} "libs" "src") 
+target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBPQXX_LIBRARIES} ${PostgreSQL_LIBRARIES})
 
 # Set the binary extension
 set(BINARY_SUFFIX "")

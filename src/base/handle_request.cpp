@@ -204,7 +204,7 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 			return resp_queue.process(set_not_found(req));
 
 		const auto request_id = theServer.fetch_add_request_count();
-		Libs::Logger::Tag _{ format_string("req id %1%", request_id)};
+		Libs::Logger::Tag _{ fmt::format("req id {}", request_id)};
 		theLog->info("Request URL: {}", target.to_string());
 
 		try

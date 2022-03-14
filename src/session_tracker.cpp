@@ -14,7 +14,7 @@
 #include "database/sql/sql_manager.hpp"
 #include "database/sql/sql_handle.hpp"
 
-constexpr auto sid_length = 64;
+constexpr auto sid_length = 64; // If changed, the database needs to change too
 constexpr auto session_id_generation_max_attempts = 10;
 
 id::session generate_unique_http_session_id()

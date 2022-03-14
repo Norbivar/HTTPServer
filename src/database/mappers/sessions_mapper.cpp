@@ -1,60 +1,56 @@
 #include "sessions_mapper.hpp"
 
+#include <boost/algorithm/string/join.hpp>
 #include <Logging>
-#include "../libs/format.hpp"
-#include "../sql/sql_includes.hpp"
+#include <pqxx/transaction>
+#include <pqxx/result>
+#include "../sql/sql_handle.hpp"
 
 namespace
 {
-	session_element session_from_sql(const sql::ResultSet& res)
+	std::vector<session_element> sessions_from_sql(const pqxx::result& res)
 	{
-		session_element elem{ res.getString(1), res.getUInt(2) };
-		elem.session_creation_time = std::chrono::system_clock::time_point{ std::chrono::seconds{res.getUInt64(3)} };
-		elem.last_request_time = std::chrono::system_clock::time_point{ std::chrono::seconds{res.getUInt64(4)} };
-		return elem;
+		std::vector<session_element> elements;
+		elements.reserve(res.size());
+		for (const auto it : res)
+		{
+			session_element elem{ it[0].c_str(), it[1].as<std::uint32_t>() };
+			elem.session_creation_time = std::chrono::system_clock::time_point{ std::chrono::seconds{it[2].as<std::uint64_t>()} };
+			elem.last_request_time = std::chrono::system_clock::time_point{ std::chrono::seconds{it[3].as<std::uint64_t>()} };
+			elements.emplace_back(std::move(elem));
+		}
+		return elements;
 	}
 }
 
-std::string sessions_mapper::filter_t::to_string(sql_handle& db) const
+std::string sessions_mapper::filter_t::to_string(const sql_handle& db) const
 {
 	std::vector<std::string> where;
 	if (sid)
-		where.emplace_back(format_string("sessionid='%1%'", db.escape(sid->c_str())));
+		where.emplace_back(fmt::format("'SessionID' LIKE '{}'", db.escape(*sid)));
 	if (account_id)
-		where.emplace_back(format_string("accountid=%1%", *account_id));
+		where.emplace_back(fmt::format("'AccountID' = {}", *account_id));
 
 	if (where.empty())
 		return "";
 	else
-		return "WHERE " + boost::algorithm::join(where, " AND ");
+		return "WHERE " + boost::join(where, " AND ");
 }
 
-std::vector<session_element> sessions_mapper::get_raw(sql_handle& db, const filter_t& filter, const boost::optional<std::uint32_t>& limit)
+std::vector<session_element> sessions_mapper::get_raw(const sql_handle& db, const filter_t& filter, const boost::optional<std::uint32_t>& limit)
 {
-	const auto limit_str = limit ? format_string("LIMIT %1%", *limit) : "";
+	const auto limit_str = limit ? fmt::format("LIMIT {}", *limit) : "";
 
-	std::unique_ptr<sql::PreparedStatement> pstmt{
-		db->prepareStatement(
-			format_string("SELECT sessionid, accountid, UNIX_TIMESTAMP(creationtime), UNIX_TIMESTAMP(lastrequesttime) FROM sessions %1% %2%;", 
-				filter.to_string(db), 
-				limit_str
-			)
-		)
-	};
+	auto work = db.start();
+	const auto res = work->exec(fmt::format("SELECT 'SessionID', 'AccountID', EXTRACT(epoch FROM \"CreationTime\")::integer, EXTRACT(epoch FROM \"LastRequestTime\")::integer FROM httpserver.sessions {} {};",
+		filter.to_string(db),
+		limit_str)
+	);
 
-	std::unique_ptr<sql::ResultSet> res{ pstmt->executeQuery() };
-	if (!res->rowsCount())
-		return {};
-
-	std::vector<session_element> result;
-	result.reserve(res->rowsCount());
-	while (res->next())
-		result.emplace_back(session_from_sql(*res));
-
-	return result;
+	return sessions_from_sql(res);
 }
 
-boost::optional<session_element> sessions_mapper::get(sql_handle& db, const filter_t& filter)
+boost::optional<session_element> sessions_mapper::get(const sql_handle& db, const filter_t& filter)
 {
 	auto get_res = get_raw(db, filter, 1);
 	if (!get_res.empty())
@@ -63,7 +59,7 @@ boost::optional<session_element> sessions_mapper::get(sql_handle& db, const filt
 		return boost::none;
 }
 
-std::vector<session_element> sessions_mapper::get_all(sql_handle& db, const filter_t& filter)
+std::vector<session_element> sessions_mapper::get_all(const sql_handle& db, const filter_t& filter)
 {
 	return get_raw(db, filter);
 }
@@ -73,11 +69,9 @@ void sessions_mapper::insert(sql_handle& db, const std::vector<std::string>& ses
 	if (sessions.empty())
 		return;
 
-	std::unique_ptr<sql::PreparedStatement> pstmt{
-		db->prepareStatement(
-			format_string("REPLACE INTO sessions VALUES %1%;",
-				boost::join(sessions, ","))
-		)
-	};
-	pstmt->executeUpdate();
+	auto work = db.start();
+	work->exec0(
+		fmt::format("REPLACE INTO httpserver.sessions VALUES {};",
+			boost::join(sessions, ","))
+	);
 }

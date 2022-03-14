@@ -9,7 +9,6 @@
 #include "../database/sql/sql_manager.hpp"
 #include "../database/mappers/accounts_mapper.hpp"
 #include "../libs/sha256.hpp"
-#include "../libs/format.hpp"
 
 namespace
 {
@@ -34,10 +33,10 @@ void authentication::request_login(const http_request& req, http_response& resp)
 		throw std::invalid_argument{"Already logged in."};
 
 	const auto user = req.get<std::string>("user");
-	const auto pass = sha256(req.get<std::string>("pass"));
+	const auto pass_encoded = req.get<std::string>("pass");
 	const auto obliterate_sessions = req.get<boost::optional<bool>>("obliterate_sessions");
 
-	if (user.empty() || pass.empty())
+	if (user.empty() || pass_encoded.empty())
 		throw std::invalid_argument{"Missing username/password!"};
 
 	theLog->info("Login request received '{}'", user);
@@ -46,7 +45,7 @@ void authentication::request_login(const http_request& req, http_response& resp)
 
 	accounts_mapper::filter_t filter;
 	filter.username = user;
-	filter.password = pass;
+	filter.password = pass_encoded;
 
 	const auto accounts = accounts_mapper::get(db, filter);
 	if (accounts.size() != 1)
@@ -77,7 +76,7 @@ void authentication::request_login(const http_request& req, http_response& resp)
 	theLog->info("Session creation {}. Account ID: {} | SID: {}", success ? "succeeded" : "failed", new_it->account_id, new_it->session_id);
 
 	if (success)
-		resp.set_cookie(format_string("SID=%1%;", new_it->session_id));
+		resp.set_cookie(fmt::format("SID={};", new_it->session_id));
 }
 
 void authentication::request_register(const http_request& req, http_response& resp)

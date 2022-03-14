@@ -20,11 +20,12 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(port, std::uint16_t, "port", 443);
 		DEFINE_CONFIG_OPTIONAL(threads, std::uint8_t, "threads", 3);
 
-		DEFINE_CONFIG_OPTIONAL(mysql_address, std::string, "mysql_address", "tcp://127.0.0.1:3306");
-		DEFINE_CONFIG_OPTIONAL(mysql_db, std::string, "mysql_db", "test");
-		DEFINE_CONFIG_OPTIONAL(mysql_user, std::string, "mysql_user", "root");
-		DEFINE_CONFIG_OPTIONAL(mysql_pass, std::string, "mysql_pass", "qwertzui");
-		DEFINE_CONFIG_OPTIONAL(mysql_conn_pool_size, std::uint8_t, "mysql_connection_pool_size", 3);
+		DEFINE_CONFIG_OPTIONAL(sql_address, std::string, "sql_address", "localhost");
+		DEFINE_CONFIG_OPTIONAL(sql_port, std::uint16_t, "sql_port", 5432);
+		DEFINE_CONFIG_OPTIONAL(sql_db, std::string, "sql_db", "httpserver");
+		DEFINE_CONFIG_OPTIONAL(sql_user, std::string, "sql_user", "postgres");
+		DEFINE_CONFIG_OPTIONAL(sql_pass, std::string, "sql_pass", "asdasd");
+		DEFINE_CONFIG_OPTIONAL(sql_conn_pool_size, std::uint8_t, "sql_connection_pool_size", 3);
 
 		DEFINE_CONFIG_OPTIONAL(session_expire_time, std::uint64_t, "session_expire_time", 60 * 60 * 60);
 	};

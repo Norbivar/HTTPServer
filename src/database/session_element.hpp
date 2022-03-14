@@ -21,5 +21,5 @@ struct session_element
 	bool deactivated{ false };
 	std::string ip_address{};
 
-	static std::string to_sql_string(sql_handle& db, const session_element& elem);
+	static std::string to_sql_string(const sql_handle& db, const session_element& elem);
 };

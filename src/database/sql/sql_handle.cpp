@@ -1,25 +1,28 @@
 #include "sql_handle.hpp"
 
-#include <jdbc/cppconn/connection.h>
-#include <jdbc/mysql_connection.h>
 #include "sql_manager.hpp"
 
-sql_handle::sql_handle(sql_manager& man, std::shared_ptr<sql::Connection> from) :
+sql_handle::sql_handle(sql_manager& man, std::shared_ptr<pqxx::connection> from) :
 	m_connection{from},
-	m_connection_as_raw_api{static_cast<sql::mysql::MySQL_Connection*>(from.get())},
 	manager{man}
 { }
 
-sql_handle::~sql_handle()
+std::string sql_handle::escape(const std::string& what) const
 {
-
-	if (!m_connection->getAutoCommit())
-		m_connection->commit();
-
-	manager.add_handle(m_connection);
+	return m_connection->esc(what);
 }
 
-sql::SQLString sql_handle::escape(const std::string& str)
+sql_work<pqxx::work> sql_handle::start()
 {
-	return m_connection_as_raw_api->escapeString(str);
+	return sql_work<pqxx::work>{ *m_connection };
+}
+
+sql_work<pqxx::read_transaction> sql_handle::start() const
+{
+	return sql_work<pqxx::read_transaction>{ *m_connection };
+}
+
+sql_handle::~sql_handle()
+{
+	manager.add_handle(m_connection);
 }

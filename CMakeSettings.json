@@ -1,40 +1,57 @@
 ﻿{
-	"configurations": [
-		{
-			"name": "x64-Debug",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"inheritEnvironments": [ "msvc_x64_x64" ],
-			"buildRoot": "${projectDir}\\build\\MSVC\\${name}",
-			"installRoot": "${projectDir}\\build\\MSVC\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "-v",
-			"ctestCommandArgs": "",
-			"intelliSenseMode": "windows-msvc-x64"
-		},
-		{
-			"name": "x64-Release",
-			"generator": "Ninja",
-			"configurationType": "Release",
-			"inheritEnvironments": [ "msvc_x64_x64" ],
-			"buildRoot": "${projectDir}\\build\\MSVC\\${name}",
-			"installRoot": "${projectDir}\\build\\MSVC\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "-v",
-			"ctestCommandArgs": "",
-			"intelliSenseMode": "windows-msvc-x64"
-		},
-		{
-			"name": "x64-RelWithDebugInfo",
-			"generator": "Ninja",
-			"configurationType": "RelWithDebInfo",
-			"inheritEnvironments": [ "msvc_x64_x64" ],
-			"buildRoot": "${projectDir}\\build\\MSVC\\${name}",
-			"installRoot": "${projectDir}\\build\\MSVC\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "-v",
-			"ctestCommandArgs": "",
-			"intelliSenseMode": "windows-msvc-x64"
-		}
-	]
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\build\\MSVC\\${name}",
+      "installRoot": "${projectDir}\\build\\MSVC\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "intelliSenseMode": "windows-msvc-x64"
+    },
+    {
+      "name": "x64-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\build\\MSVC\\${name}",
+      "installRoot": "${projectDir}\\build\\MSVC\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "intelliSenseMode": "windows-msvc-x64"
+    },
+    {
+      "name": "x64-RelWithDebugInfo",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\build\\MSVC\\${name}",
+      "installRoot": "${projectDir}\\build\\MSVC\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "intelliSenseMode": "windows-msvc-x64",
+      "variables": [
+        {
+          "name": "LIBPQXX_INCLUDE_DIR",
+          "value": "E:/Documents/Tools/PostgreS14/libpqxx/include/",
+          "type": "PATH"
+        },
+        {
+          "name": "LIBPQXX_LIB_DIR",
+          "value": "E:/Documents/Tools/PostgreS14/libpqxx/lib/",
+          "type": "PATH"
+        },
+        {
+          "name": "libpqxx_DIR",
+          "value": "E:/Documents/Tools/PostgreS14/libpqxx/",
+          "type": "PATH"
+        }
+      ]
+    }
+  ]
 }

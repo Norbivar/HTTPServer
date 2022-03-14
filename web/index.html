@@ -61,7 +61,7 @@
                   sid = json.sid;
                }
             };
-            var data = JSON.stringify({"user": document.getElementById('user').value, "pass": document.getElementById('pass').value});
+            var data = JSON.stringify({"user": document.getElementById('login_user').value, "pass": document.getElementById('login_pass').value});
             xhr.send(data);
          }
          function register() 

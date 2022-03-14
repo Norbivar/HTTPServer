@@ -7,8 +7,6 @@
 #include <rigtorp/MPMCQueue.h>
 #include "sql_handle.hpp"
 
-namespace sql{ class Driver; class Connection; }
-
 class sql_manager
 {
 public:
@@ -16,16 +14,15 @@ public:
 	~sql_manager() = default;
 
 	sql_handle acquire_handle(); // threadsafe
-	void add_handle(std::shared_ptr<sql::Connection> conn); // threadsafe
+	void add_handle(std::shared_ptr<pqxx::connection> conn); // threadsafe
 
 private:
-	const std::string m_mysql_address;
-	const std::string m_mysql_database;
-	const std::string m_mysql_user;
-	const std::string m_mysql_pass;
+	const std::string m_sql_address;
+	const std::uint16_t m_sql_port;
+	const std::string m_sql_database;
+	const std::string m_sql_user;
+	const std::string m_sql_pass;
+	const std::uint8_t m_sql_connection_pool_size = 3;
 
-	const std::uint8_t m_connection_pool_size = 3;
-
-	rigtorp::MPMCQueue<std::shared_ptr<sql::Connection>> m_connection_pool;
-	sql::Driver* m_driver;
+	rigtorp::MPMCQueue<std::shared_ptr<pqxx::connection>> m_connection_pool;
 };

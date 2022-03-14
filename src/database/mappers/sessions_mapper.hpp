@@ -15,15 +15,13 @@ struct sessions_mapper
 		boost::optional<id::session> sid;
 		boost::optional<id::account> account_id;
 
-		std::string to_string(sql_handle& db) const;
+		std::string to_string(const sql_handle& db) const;
 	};
 
-	static boost::optional<session_element> get(sql_handle& db, const filter_t& filter = {});
-	static std::vector<session_element> get_all(sql_handle& db, const filter_t& filter = {});
+	static boost::optional<session_element> get(const sql_handle& db, const filter_t& filter = {});
+	static std::vector<session_element> get_all(const sql_handle& db, const filter_t& filter = {});
 	static void insert(sql_handle& db, const std::vector<std::string>& sessions);
 
-
-
 private:
-	static std::vector<session_element> get_raw(sql_handle& db, const filter_t& filter = {}, const boost::optional<std::uint32_t>& limit = boost::none);
+	static std::vector<session_element> get_raw(const sql_handle& db, const filter_t& filter = {}, const boost::optional<std::uint32_t>& limit = boost::none);
 };

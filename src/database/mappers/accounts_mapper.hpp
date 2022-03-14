@@ -14,9 +14,9 @@ struct accounts_mapper
 		boost::optional<std::string> password;
 		boost::optional<std::string> email;
 
-		std::string to_string(sql_handle& db) const;
+		std::string to_string(const sql_handle& db) const;
 	};
 
-	static std::vector<account_element> get(sql_handle& db, const filter_t& filter);
+	static std::vector<account_element> get(const sql_handle& db, const filter_t& filter);
 	static bool insert(sql_handle& db, const account_element& element);
 };

@@ -3,65 +3,75 @@
 #include <memory>
 #include <Logging>
 
-#include "../libs/format.hpp"
-#include "../sql/sql_includes.hpp"
+#include <boost/algorithm/string/join.hpp>
+#include <pqxx/transaction>
+#include <pqxx/result>
+#include "../libs/spdlog/fmt/fmt.h"
+#include "../sql/sql_handle.hpp"
 
 namespace
 {
-	account_element account_from_sql(const sql::ResultSet& res)
+	std::vector<account_element> accounts_from_sql(const pqxx::result& res)
 	{
-		account_element elem;
-		elem.id = res.getUInt(1);
-		elem.username = res.getString(2);
-		elem.email = res.getString(3);
-		elem.creationtime = std::chrono::system_clock::time_point{std::chrono::seconds{res.getUInt64(4)}};
-		return elem;
+		std::vector<account_element> elements;
+		elements.reserve(res.size());
+		for (const auto it : res)
+		{
+			account_element elem;
+			elem.id = it[0].as<std::uint32_t>();
+			elem.username = it[1].c_str();
+			elem.email = it[2].c_str();
+			elem.creationtime = std::chrono::system_clock::time_point{ std::chrono::seconds{it[3].as<std::uint64_t>()} };
+			elements.emplace_back(std::move(elem));
+		}
+
+		return elements;
 	}
 }
 
-std::string accounts_mapper::filter_t::to_string(sql_handle& db) const
+std::string accounts_mapper::filter_t::to_string(const sql_handle& db) const
 {
 	std::vector<std::string> where;
 	if (username)
-		where.emplace_back(format_string("username='%1%'", db.escape(username->c_str())));
+		where.emplace_back(fmt::format("'Username' LIKE '{}'", db.escape(*username)));
 	if (password)
-		where.emplace_back(format_string("password='%1%'", db.escape(password->c_str())));
+		where.emplace_back(fmt::format("'Password' LIKE '{}'", db.escape(*password)));
 	if (email)
-		where.emplace_back(format_string("email='%1%'", db.escape(email->c_str())));
-	
+		where.emplace_back(fmt::format("'Email' LIKE '{}'", db.escape(*email)));
+
 	if (where.empty())
 		return "";
 	else
-		return "WHERE " + boost::algorithm::join(where, OR ? " OR " : " AND ");
+		return "WHERE " + boost::join(where, OR ? " OR " : " AND ");
 }
 
-std::vector<account_element> accounts_mapper::get(sql_handle& db, const filter_t& filter)
+std::vector<account_element> accounts_mapper::get(const sql_handle& db, const filter_t& filter)
 {
-	std::unique_ptr<sql::PreparedStatement> pstmt{ 
-		db->prepareStatement(
-			format_string("SELECT id, username, email, UNIX_TIMESTAMP(creationtime) FROM accounts %1%;", filter.to_string(db))
-		)
-	};
+	auto work = db.start();
+	const auto res = work->exec(
+		fmt::format("SELECT 'ID', 'Username', 'Email', EXTRACT(epoch FROM \"CreationTime\")::integer FROM httpserver.accounts {};", filter.to_string(db))
+	);
 
-	std::unique_ptr<sql::ResultSet> res{ pstmt->executeQuery() };
-	if (!res->rowsCount())
-		return {};
-
-	std::vector<account_element> result;
-	result.reserve(res->rowsCount());
-	while (res->next())
-		result.emplace_back(account_from_sql(*res));
-	
-	return result;
+	return accounts_from_sql(res);
 }
 
 bool accounts_mapper::insert(sql_handle& db, const account_element& element)
 {
-	std::unique_ptr<sql::PreparedStatement> pstmt{db->prepareStatement("INSERT INTO accounts(username, password, email, creationtime) VALUES(?, ?, ?, FROM_UNIXTIME(?));")};
-	pstmt->setString(1, element.username);
-	pstmt->setString(2, element.password);
-	pstmt->setString(3, element.email);
-	pstmt->setInt64(4, std::chrono::duration_cast<std::chrono::seconds>(element.creationtime.time_since_epoch()).count());
-
-	return pstmt->executeUpdate() == 1;
+	try
+	{
+		auto work = db.start();
+		work->exec0(
+			fmt::format("INSERT INTO httpserver.accounts('Username', 'Password', 'Email', 'CreationTime') VALUES('{}', '{}', '{}', TO_TIMESTAMP({}));",
+				db.escape(element.username),
+				db.escape(element.password),
+				db.escape(element.email),
+				std::chrono::duration_cast<std::chrono::seconds>(element.creationtime.time_since_epoch()).count())
+		);
+	}
+	catch (const std::exception& ex)
+	{
+		theLog->error(ex);
+		return false;
+	}
+	return true;
 }

@@ -3,8 +3,6 @@
 #include "spdlog/fmt/ostr.h"
 #include "LibSettings.hpp"
 
-#include "format.hpp"
-
 #include "Config"
 
 namespace Libs
@@ -146,6 +144,15 @@ namespace Libs
 				ConsoleLogger->warn(tagged_message);
 		}
 
+		inline void warn(const std::exception& err)
+		{
+			std::string tagged_message = fmt::format("{}{}", get_thread_local_tags().get(), err.what());
+			if (RotatedTxtLogger)
+				RotatedTxtLogger->warn(tagged_message);
+			if (ConsoleLogger)
+				ConsoleLogger->warn(tagged_message);
+		}
+
 		template<typename Arg1, typename... Args>
 		inline void error(const std::string& fmt, const Arg1& arg1, const Args &... args)
 		{
@@ -165,6 +172,15 @@ namespace Libs
 				ConsoleLogger->error(tagged_message);
 		}
 
+		inline void error(const std::exception& err)
+		{
+			std::string tagged_message = fmt::format("{}{}", get_thread_local_tags().get(), err.what());
+			if (RotatedTxtLogger)
+				RotatedTxtLogger->error(tagged_message);
+			if (ConsoleLogger)
+				ConsoleLogger->error(tagged_message);
+		}
+
 		template<typename Arg1, typename... Args>
 		inline void critical(const std::string& fmt, const Arg1& arg1, const Args& ... args)
 		{
@@ -178,6 +194,15 @@ namespace Libs
 		inline void critical(const T& msg)
 		{
 			std::string tagged_message = get_thread_local_tags().get() + msg;
+			if (RotatedTxtLogger)
+				RotatedTxtLogger->critical(tagged_message);
+			if (ConsoleLogger)
+				ConsoleLogger->critical(tagged_message);
+		}
+
+		inline void critical(const std::exception& err)
+		{
+			std::string tagged_message = fmt::format("{}{}", get_thread_local_tags().get(), err.what());
 			if (RotatedTxtLogger)
 				RotatedTxtLogger->critical(tagged_message);
 			if (ConsoleLogger)
