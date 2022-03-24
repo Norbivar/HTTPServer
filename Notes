@@ -1,0 +1,12 @@
+
+Installation:
+
+
+- Get a working copy of libpqxx (postgres c++ driver). Build it (should be simple), then move the following files into the include dir:
+config-internal-compiler.h
+config-internal-libpq.h
+config-public-compiler.h
+
+
+
+curl -i -H --http1.1 "Accept: application/json" -H "Content-Type: application/json" -H "connection: upgrade" -H "upgrade: websocket" -H "Sec-WebSocket-Key: 2pGeTR0DsE4dfZs2pH+8MA==" -H "Sec-WebSocket-Version: 13" http://norbinet.asuscomm.com

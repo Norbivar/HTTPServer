@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+   <HEAD>
+      <META charset="UTF-8">
+      <TITLE>My first HTML document</TITLE>
+      <STYLE>
+         #email {
+            visibility: hidden;
+         }
+      </STYLE>
+   </HEAD>
+   <BODY>
+      <script>
+         async function sha256(message) {
+            // encode as UTF-8
+            const msgBuffer = new TextEncoder().encode(message);                    
+
+            // hash the message
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+            // convert ArrayBuffer to Array
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+            // convert bytes to hex string                  
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+         }
+
+         var script = document.createElement('script');
+         script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+         script.type = 'text/javascript';
+         document.getElementsByTagName('head')[0].appendChild(script);
+
+         let base_url = "norbinet.asuscomm.com";
+         let url = "https://" + base_url;
+         let sid = "";
+         function myFunction() 
+         {
+            let socket = new WebSocket("wss://" + base_url);
+
+            socket.onopen = function(e) {
+               alert("[open] Connection established");
+               alert("Sending to server");
+             // socket.send("My name is John");
+            };
+
+            socket.onmessage = function(event) {
+               alert(`[message] Data received from server: ${event.data}`);
+            };
+
+            socket.onclose = function(event) {
+            if (event.wasClean) {
+               alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+            } else {
+               // e.g. server process killed or network down
+               // event.code is usually 1006 in this case
+               alert('[close] Connection died');
+            }
+            };
+
+            socket.onerror = function(error) {
+            alert(`[error] ${error.message}`);
+            };
+         }
+
+         function login() 
+         {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url + "/login", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  var json = JSON.parse(xhr.responseText);
+                  console.log("SID: " + json.sid);
+                  sid = json.sid;
+               }
+            };
+            var encoded_pass = sha256(document.getElementById('login_pass').value).then(pass => {
+               var data = JSON.stringify({
+                  "user": document.getElementById('login_user').value, 
+                  "pass": pass
+               });
+               xhr.send(data);
+            });
+         }
+         function register() 
+         {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url + "/register", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  console.log("Szuccesz");
+               }
+            };
+            var encoded_pass = sha256(document.getElementById('register_pass').value).then(pass =>
+            {
+               var data = JSON.stringify({
+                  "user": document.getElementById('register_user').value, 
+                  "pass": pass,
+                  "email": document.getElementById('register_email').value});
+               xhr.send(data);
+            });
+
+         }
+         function testsess()
+         {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url + "/test_session", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Authorization", sid);
+            xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4 && xhr.status === 200) {
+                  var json = JSON.parse(xhr.responseText);
+                  console.log("Name: " + json.nev);
+               }
+            };
+            xhr.send("{}");
+         }
+      </script>
+
+      <P>Szevasztok öcskösök! Itt lesz valami szar weboldal amivel milliomos leszek és majd mindenki bekaphatja a brét.</P>
+
+
+      <div id="Login" class="tabcontent">
+         <h3>Login</h3>
+         User: <input id="login_user"></input> 
+         Pass: <input id="login_pass"></input>
+         <P><button onclick="login()">Login</button></P>
+      </div>
+       
+      <div id="Register" class="tabcontent">
+         <h3>Register</h3>
+         User: <input id="register_user"></input> 
+         Pass: <input id="register_pass"></input>
+         Email: <input id="register_email"></input> 
+         <P><button onclick="register()">Register</button></P>
+      </div>
+
+      <button onclick="myFunction()">Open Websocket</button>
+
+      <P><button onclick="testsess()">Test Get Session</button></P>
+
+      <img src="untitled.png" alt="Girl in a jacket" width="300" height="400">
+      <img src="untitled2.png" alt="Girl in a jacket" width="800" height="400">
+      <img src="sukar.png" alt="Girl in a jacket" width="200" height="400"> 
+            <!-- <iframe width="600" height="400" src="https://www.youtube.com/embed/0XFudmaObLI?list=RD0XFudmaObLI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      -->
+   </BODY>
+</HTML>
