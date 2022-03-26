@@ -35,8 +35,6 @@ void authentication::request_login(const http_request& req, http_response& resp)
 	const auto pass_encoded = req.get<std::string>("pass");
 	const auto obliterate_sessions = req.get<boost::optional<bool>>("obliterate_sessions");
 
-	theLog->error("VN: User : {} | pass : {} | obliterate exists: {} val {}", user, pass_encoded, obliterate_sessions.has_value(), obliterate_sessions.get_value_or(false));
-
 	if (user.empty() || pass_encoded.empty())
 		throw std::invalid_argument{ "Missing username/password!" };
 
