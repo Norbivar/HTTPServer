@@ -29,14 +29,16 @@ namespace
 void authentication::request_login(const http_request& req, http_response& resp)
 {
 	if (!req.sid.empty())
-		throw std::invalid_argument{"Already logged in."};
+		throw std::invalid_argument{ "Already logged in." };
 
-	const auto user = req["user"].get<std::string>();
-	const auto pass_encoded = req["pass"].get<std::string>();
-	const auto obliterate_sessions = req["obliterate_sessions"].get<std::optional<bool>>();
+	const auto user = req.get<std::string>("user");
+	const auto pass_encoded = req.get<std::string>("pass");
+	const auto obliterate_sessions = req.get<boost::optional<bool>>("obliterate_sessions");
+
+	theLog->error("VN: User : {} | pass : {} | obliterate exists: {} val {}", user, pass_encoded, obliterate_sessions.has_value(), obliterate_sessions.get_value_or(false));
 
 	if (user.empty() || pass_encoded.empty())
-		throw std::invalid_argument{"Missing username/password!"};
+		throw std::invalid_argument{ "Missing username/password!" };
 
 	theLog->info("Login request received '{}'", user);
 
@@ -48,7 +50,7 @@ void authentication::request_login(const http_request& req, http_response& resp)
 
 	const auto accounts = accounts_mapper::get(db, filter);
 	if (accounts.size() != 1)
-		throw std::invalid_argument{"Invalid username/password!"};
+		throw std::invalid_argument{ "Invalid username/password!" };
 
 	const auto& account = accounts.front();
 
@@ -83,12 +85,12 @@ void authentication::request_register(const http_request& req, http_response& re
 		return;
 	}
 
-	const auto user  = req["user"].get<std::string>();
-	const auto pass  = req["pass"].get<std::string>(); // should already be in SHA-256
-	const auto email = req["email"].get<std::string>();
+	const auto user = req.get<std::string>("user");
+	const auto pass = req.get<std::string>("pass"); // should already be in SHA-256
+	const auto email = req.get<std::string>("email");
 
 	if (!validate_username(user) || !validate_password(pass) || !validate_email(email))
-		throw std::invalid_argument{"Invalid form of username/password/email!"};
+		throw std::invalid_argument{ "Invalid form of username/password/email!" };
 
 	auto db = theServer.get_sql_manager().acquire_handle();
 
@@ -99,7 +101,7 @@ void authentication::request_register(const http_request& req, http_response& re
 
 	const auto accounts = accounts_mapper::get(db, filter);
 	if (!accounts.empty())
-		throw std::invalid_argument{"Already taken username/email!"};
+		throw std::invalid_argument{ "Already taken username/email!" };
 
 	account_element new_account;
 	new_account.username = user;
@@ -108,21 +110,10 @@ void authentication::request_register(const http_request& req, http_response& re
 	new_account.creationtime = std::chrono::system_clock::now();
 
 	if (!accounts_mapper::insert(db, new_account))
-		throw std::invalid_argument{"Invalid username/password!"};
+		throw std::invalid_argument{ "Invalid username/password!" };
 
 	theLog->info("New account created: {}", user);
 }
-
-struct test_sess_obj
-{
-	std::string name;
-	std::uint32_t facker;
-
-	static test_sess_obj from_json(const http::json& obj)
-	{
-
-	}
-};
 
 void authentication::test_session(const http_request& req, http_response& resp)
 {

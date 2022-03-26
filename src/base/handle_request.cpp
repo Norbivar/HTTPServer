@@ -258,6 +258,14 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 			response.response_code(boost::beast::http::status::bad_request);
 			return resp_queue.process(std::move(response.prepare_release()));
 		}
+		catch (const nlohmann::json::out_of_range& e)
+		{
+			theLog->error("Json params not found: {}", e.what());
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::bad_request);
+			return resp_queue.process(std::move(response.prepare_release()));
+		}
 		catch (const std::invalid_argument& e)
 		{
 			theLog->error("Invalid argument error: {}", e.what());

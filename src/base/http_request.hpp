@@ -14,19 +14,6 @@ namespace threadsafe
 
 struct session_element;
 
-namespace http
-{
-	class json : public nlohmann::json
-	{
-		template <typename F = boost::optional<T>>
-		T get() const noexcept()
-		{
-			
-			return 
-		}
-	};
-}
-
 class http_request
 {
 public:
@@ -40,9 +27,52 @@ public:
 	auto& base() { return _base; }
 
 	const auto& params() const { return _base_request_data; }
-	const auto& operator[](const std::string& name) const { return _base_request_data[name]; }
-	const auto& operator[](const char* name) const { return operator[](std::string{ name }); }
+
+	template<typename T>
+	T get(const std::string& name) const { return nlohmann::get<T>(_base_request_data, name); }
+
+	template<typename T>
+	T get(const char* name) const { return nlohmann::get<T>(_base_request_data, name); }
 private:
 	beast_request _base;
-	http::json _base_request_data;
+	nlohmann::json _base_request_data;
 };
+
+namespace nlohmann // small, non-intrusive extension to the json lib
+{
+	template<typename T>
+	T get(const nlohmann::json& json, const std::string& name)
+	{
+		if constexpr (std::is_assignable<T, boost::none_t>::value)
+		{
+			if (json.count(name))
+				return boost::make_optional(json.at(name).get<T::value_type>());
+			else
+				return boost::none;
+		}
+		else
+		{
+			return json.at(name).get<T>();
+		}
+	}
+
+	// Const char* forwardor
+	template<typename T>
+	T get(const nlohmann::json& json, const char* name)
+	{
+		return nlohmann::get<T>(json, std::string{ name });
+	}
+
+	// Just to be able to read directly from req without calling .params() all the time
+	template<typename T>
+	T get(const http_request& req, const std::string& name)
+	{
+		return nlohmann::get<T>(req.params(), name);
+	}
+
+	template<typename T>
+	T get(const http_request& req, const char* name)
+	{
+		return nlohmann::get<T>(req, std::string{ name });
+	}
+}
