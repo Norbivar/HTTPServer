@@ -1,8 +1,10 @@
 #pragma once
 
-#include "../libs/nlohmann/json.hpp"
-#include <boost/beast/http.hpp>
 #include <optional>
+#include <boost/beast/http.hpp>
+
+#include "../libs/nlohmann/json.hpp"
+#include "../libs/compile_traits.hpp"
 
 using beast_request = boost::beast::http::message<true, boost::beast::http::string_body, boost::beast::http::fields>;
 
@@ -46,13 +48,20 @@ namespace nlohmann // small, non-intrusive extension to the json lib
 		if constexpr (std::is_assignable<T, boost::none_t>::value)
 		{
 			if (json.count(name))
-				return boost::make_optional(json.at(name).get<T::value_type>());
-			else
-				return boost::none;
+			{
+				if constexpr (traits::has_from_json<T::value_type>::value)
+					return T::value_type::from_json(json.at(name));
+				else
+					return boost::make_optional(json.at(name).get<T::value_type>()); // if overload not found error is here, it probably means the nlohmann json lib does not have overload -> create from_json
+			}
+			else return boost::none;
 		}
 		else
 		{
-			return json.at(name).get<T>();
+			if constexpr (traits::has_from_json<T>::value)
+				return T::from_json(json.at(name));
+			else
+				return json.at(name).get<T>(); // if overload not found error is here, it probably means the nlohmann json lib does not have overload -> create from_json
 		}
 	}
 

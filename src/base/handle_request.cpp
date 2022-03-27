@@ -205,14 +205,15 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 
 		const auto request_id = theServer.fetch_add_request_count();
 		Libs::Logger::Tag _{ fmt::format("req id {}", request_id)};
-		theLog->info("Request URL: {}", target.to_string());
+		Libs::Logger::Tag __{ fmt::format("url {}", target.to_string())};
 
 		try
 		{
 			http_request request{
 				request_id,
 				std::move(req), 
-				std::move(from_addr) };
+				std::move(from_addr) 
+			};
 
 			auto [session_found, session_it] = theServer.get_session_tracker().find_by_session_id(request.sid);
 			if (session_found)
@@ -221,29 +222,44 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 				const auto read_session = request.session->acquire();
 
 				if (read_session->deactivated)
+				{
+					theLog->info("Unauthorized: Session deactivated.");
 					return resp_queue.process(set_unauthorized(req, true));
+				}
 
 				if (!read_session->ip_address.empty() && read_session->ip_address != request.address)
 				{
-					theLog->info("Request ip address different than saved session ip. Blocking.");
+					theLog->info("Unauthorized: Request ip address different than saved session ip. Blocking.");
 					return resp_queue.process(set_unauthorized(req));
 				}
 			}
 			else 
 			{
 				if (!request.sid.empty())
+				{
+					theLog->info("Unauthorized: Unknown SID.");
 					return resp_queue.process(set_unauthorized(req, true));
+				}
 
 				if (it->second.need_session)
+				{
+					theLog->info("Unauthorized: Handler requires session.");
 					return resp_queue.process(set_unauthorized(req, true));
+				}
 			}
 
 			if (it->second.access_predicate)
 			{
 				bool result = it->second.access_predicate(request);
 				if (!result)
+				{
+					theLog->info("Unauthorized: Handler access predicate failed.");
 					return resp_queue.process(set_unauthorized(req));
+				}
 			}
+
+			if (session_found)
+				session_it->session->modify([](session_element& sess) { sess.last_request_time = std::chrono::system_clock::now(); });
 
 			http_response response{ request.base().version(), req.keep_alive() };
 			it->second.handler(request, response);

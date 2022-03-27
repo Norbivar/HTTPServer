@@ -71,7 +71,7 @@ void sessions_mapper::insert(sql_handle& db, const std::vector<std::string>& ses
 
 	auto work = db.start();
 	work->exec0(
-		fmt::format("REPLACE INTO httpserver.sessions VALUES {};",
+		fmt::format("INSERT INTO httpserver.sessions VALUES {}; ",
 			boost::join(sessions, ","))
 	);
 }

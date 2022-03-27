@@ -61,7 +61,7 @@ add_executable(HTTPServer
 "src/database/sql/sql_manager.cpp"
 "src/database/mappers/accounts_mapper.cpp"
 "src/database/mappers/sessions_mapper.cpp" 
-"src/database/session_element.cpp")
+"src/database/session_element.cpp" "libs/compile_traits.hpp")
 	
 include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${LIBPQXX_INCLUDE_DIR} "libs" "src") 
 target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBPQXX_LIBRARIES} ${PostgreSQL_LIBRARIES})

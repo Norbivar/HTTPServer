@@ -72,8 +72,7 @@
             xhr.onreadystatechange = function () {
                if (xhr.readyState === 4 && xhr.status === 200) {
                   var json = JSON.parse(xhr.responseText);
-                  console.log("SID: " + json.sid);
-                  sid = json.sid;
+                  //console.log("SID: " + json.sid);
                }
             };
             var encoded_pass = sha256(document.getElementById('login_pass').value).then(pass => {
@@ -110,12 +109,6 @@
             xhr.open("POST", url + "/test_session", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Authorization", sid);
-            xhr.onreadystatechange = function () {
-               if (xhr.readyState === 4 && xhr.status === 200) {
-                  var json = JSON.parse(xhr.responseText);
-                  console.log("Name: " + json.nev);
-               }
-            };
             xhr.send("{}");
          }
       </script>
