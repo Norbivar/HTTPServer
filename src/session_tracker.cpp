@@ -40,9 +40,9 @@ session_tracker::session_tracker(std::unique_ptr<sql_manager>& sqlm)
 		return;
 	}
 
-	auto handle = sqlm->acquire_handle();
 	std::unique_lock lock{ m_mutex }; // This is probably not needed because it's the constructor, but hey...
 
+	auto handle = sqlm->acquire_handle();
 	auto all_saved_sessions = sessions_mapper::get_all(handle);
 	for (auto& saved_sess : all_saved_sessions)
 		emplace_session(std::move(saved_sess));

@@ -61,7 +61,7 @@ add_executable(HTTPServer
 "src/database/sql/sql_manager.cpp"
 "src/database/mappers/accounts_mapper.cpp"
 "src/database/mappers/sessions_mapper.cpp" 
-"src/database/session_element.cpp" "libs/compile_traits.hpp")
+"src/database/session_element.cpp" "libs/compile_traits.hpp" "libs/nlohmann_additions.hpp")
 	
 include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${LIBPQXX_INCLUDE_DIR} "libs" "src") 
 target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBPQXX_LIBRARIES} ${PostgreSQL_LIBRARIES})
@@ -69,7 +69,7 @@ target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBPQ
 # Set the binary extension
 set(BINARY_SUFFIX "")
 
-set_property(TARGET HTTPServer PROPERTY CXX_STANDARD 17)
+set_property(TARGET HTTPServer PROPERTY CXX_STANDARD 20)
 if(UNIX)
     target_link_libraries(HTTPServer pthread)
     set(BINARY_SUFFIX ".out")

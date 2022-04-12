@@ -162,7 +162,7 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 		// Attempt to open the file
 		boost::beast::error_code ec;
 		boost::beast::http::file_body::value_type body;
-		body.open(path.c_str(), boost::beast::file_mode::scan, ec);
+		body.open(path.c_str(), boost::beast::file_mode::scan, ec); // TODO: this seems like a neat little security leak :)
 
 		// Handle the case where the file doesn't exist
 		if (ec == boost::beast::errc::no_such_file_or_directory)

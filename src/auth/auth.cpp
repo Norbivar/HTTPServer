@@ -40,7 +40,7 @@ void authentication::request_login(const http_request& req, http_response& resp)
 
 	theLog->info("Login request received '{}'", user);
 
-	auto db = theServer.get_sql_manager().acquire_handle();
+	const auto db = theServer.get_sql_manager().acquire_handle();
 
 	accounts_mapper::filter_t filter;
 	filter.username = user;
