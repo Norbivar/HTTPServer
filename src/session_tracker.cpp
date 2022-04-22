@@ -57,14 +57,12 @@ session_tracker::~session_tracker()
 	const auto datas = m_session_container
 		| boost::adaptors::transformed([](const auto& s) { return s.session->acquire(); }) // TODO: force-lock / ignore if cannot take?
 		| boost::adaptors::filtered([](const auto& s) { return !s->deactivated; })
-		| boost::adaptors::transformed([](const auto& s) {return s.data(); });
+		| boost::adaptors::transformed([](const auto& s) { return s.data(); });
 
 	theLog->info("Saving {} sessions.", std::distance(datas.begin(), datas.end()));
 
-	{
-		auto handle = theServer.get_sql_manager().acquire_handle();
-		sessions_mapper::insert(handle, { handle, datas });
-	}
+	auto handle = theServer.get_sql_manager().acquire_handle();
+	sessions_mapper::insert(handle, { handle, datas });
 
 	theLog->info("Session tracker shut down.");
 }

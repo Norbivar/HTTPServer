@@ -71,7 +71,9 @@ void sessions_mapper::insert(sql_handle& db, const insert_range_as_sql& sessions
 
 	auto work = db.start();
 	work->exec0(
-		fmt::format("INSERT INTO httpserver.sessions VALUES {}; ",
+		fmt::format("INSERT INTO httpserver.sessions VALUES {} "
+			"ON CONFLICT(session_id) DO UPDATE SET "
+			"account_id = EXCLUDED.account_id, creation_time = EXCLUDED.creation_time, last_request_time = EXCLUDED.last_request_time; ",
 			boost::join(sessions, ","))
 	);
 }
