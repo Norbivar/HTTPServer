@@ -63,7 +63,7 @@ session_tracker::~session_tracker()
 
 	{
 		auto handle = theServer.get_sql_manager().acquire_handle();
-		sessions_mapper::insert(handle, to_sql(handle, datas));
+		sessions_mapper::insert(handle, { handle, datas });
 	}
 
 	theLog->info("Session tracker shut down.");

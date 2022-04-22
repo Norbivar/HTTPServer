@@ -33,3 +33,17 @@ std::vector<std::string> to_sql(const sql_handle& db, const T& range)
 
 	return ret;
 }
+
+class insert_range_as_sql : public std::vector<std::string>
+{
+public:
+	template<typename T>
+	insert_range_as_sql(const T& range) :
+		std::vector<std::string>{ to_sql(range) }
+	{ }
+
+	template<typename T>
+	insert_range_as_sql(const sql_handle& db, const T& range) :
+		std::vector<std::string>{ to_sql(db, range) }
+	{ }
+};

@@ -64,7 +64,7 @@ std::vector<session_element> sessions_mapper::get_all(const sql_handle& db, cons
 	return get_raw(db, filter);
 }
 
-void sessions_mapper::insert(sql_handle& db, const std::vector<std::string>& sessions)
+void sessions_mapper::insert(sql_handle& db, const insert_range_as_sql& sessions)
 {
 	if (sessions.empty())
 		return;
