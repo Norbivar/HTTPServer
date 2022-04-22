@@ -17,7 +17,7 @@
 constexpr auto sid_length = 64; // If changed, the database needs to change too
 constexpr auto session_id_generation_max_attempts = 10;
 
-id::session generate_unique_http_session_id()
+id::session generate_http_session_id()
 {
 	constexpr char chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
@@ -73,23 +73,20 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 {
 	std::unique_lock lock{ m_mutex };
 
-	std::uint8_t tries = 0;
-	auto is_unique_session = false;
-	id::session new_session_id;
-	while (!is_unique_session)
+	id::session new_session_id{};
+	for (auto tries = 1; tries <= session_id_generation_max_attempts; ++tries)
 	{
+		new_session_id = generate_http_session_id();
+		const auto& [exists, _] = find_by_session_id_impl(new_session_id);
+		if (!exists)
+			break;
+
 		if (tries == session_id_generation_max_attempts)
 		{
 			new_session_id.clear();
 			theLog->error("Hit maximum number of session id generation for account id {}", account_id);
 			break;
 		}
-
-		new_session_id = generate_unique_http_session_id();
-		const auto& [exists, _] = find_by_session_id_impl(new_session_id);
-		is_unique_session = !exists;
-
-		++tries;
 	}
 
 	if (new_session_id.empty())
