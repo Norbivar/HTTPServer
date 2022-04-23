@@ -62,7 +62,7 @@ session_tracker::~session_tracker()
 	theLog->info("Saving {} sessions.", std::distance(datas.begin(), datas.end()));
 
 	auto handle = theServer.get_sql_manager().acquire_handle();
-	sessions_mapper::insert(handle, { handle, datas });
+	sessions_mapper::insert(handle, { datas, handle });
 
 	theLog->info("Session tracker shut down.");
 }

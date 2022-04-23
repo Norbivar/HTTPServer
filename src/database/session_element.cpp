@@ -3,7 +3,7 @@
 #include "../libs/spdlog/fmt/fmt.h"
 #include "sql/sql_handle.hpp"
 
-std::string session_element::to_sql_string(const sql_handle& db, const session_element& elem)
+std::string session_element::to_sql_string(const session_element& elem, const sql_handle& db)
 {
 	return fmt::format("('{}', {}, TO_TIMESTAMP({}) AT TIME ZONE 'UTC', TO_TIMESTAMP({}) AT TIME ZONE 'UTC')",
 		db.escape(elem.session_id),

@@ -118,21 +118,7 @@ void authentication::test_session(const http_request& req, http_response& resp)
 	theLog->info("heyho!");
 	theLog->info("Test session : {}", req.session->acquire()->session_id);
 
-	struct teszter_str
-	{
-		int i = 0;
-		std::string name = "asd";
-
-		static teszter_str from_json(const nlohmann::json& json) {
-			teszter_str t;
-			t.i = nlohmann::get<int>(json, "i");
-			t.name = nlohmann::get<std::string>(json, "name");
-			return t;
-		}
-	};
-
-
-	auto teszt = req.get<boost::optional<teszter_str>>("teszter");
-	if (teszt)
-		theLog->info("Teszter: {} | {}", teszt->i, teszt->name);
+	theLog->info("VN: test session sleeping!");
+	std::this_thread::sleep_for(std::chrono::seconds{ 10 });
+	theLog->info("VN: test session woke up!");
 }

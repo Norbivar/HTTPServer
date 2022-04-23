@@ -19,14 +19,14 @@ std::vector<std::string> to_sql(const T& range)
 }
 
 template<typename T>
-std::vector<std::string> to_sql(const sql_handle& db, const T& range)
+std::vector<std::string> to_sql(const T& range, const sql_handle& db)
 {
 	std::vector<std::string> ret;
 	ret.reserve(std::distance(std::begin(range), std::end(range)));
 
 	for (const auto& elem : range)
 	{
-		std::string str_format = std::remove_reference<decltype(elem)>::type::to_sql_string(db, elem);
+		std::string str_format = std::remove_reference<decltype(elem)>::type::to_sql_string(elem, db);
 		if (!str_format.empty())
 			ret.emplace_back(std::move(str_format));
 	}
@@ -43,7 +43,7 @@ public:
 	{ }
 
 	template<typename T>
-	insert_range_as_sql(const sql_handle& db, const T& range) :
-		std::vector<std::string>{ to_sql(db, range) }
+	insert_range_as_sql(const T& range, const sql_handle& db) :
+		std::vector<std::string>{ to_sql(range, db) }
 	{ }
 };

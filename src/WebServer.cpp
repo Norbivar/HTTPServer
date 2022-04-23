@@ -40,7 +40,6 @@ webserver::~webserver() { }
 void webserver::bootstrap()
 {
 	theLog->info("Bootstrapping WebServer...");
-	// This holds the self-signed certificate used by the server
 	load_server_certificate();
 	theLog->info("->	Certificates loaded.");
 	m_routing_table->register_all();
@@ -58,13 +57,14 @@ int webserver::run()
 	// Capture SIGINT and SIGTERM to perform a clean shutdown
 	boost::asio::signal_set signals(m_ioc, SIGINT, SIGTERM);
 	signals.async_wait([&](const boost::beast::error_code&, int) {
+		theLog->warn("Encountered SIGINT/SIGTERM!");
 		m_ioc.stop();
 	});
 
 	for (auto i = 1; i < m_desired_thread_number; ++i)
 		m_threads.emplace_back([this] { m_ioc.run(); });
 
-	theLog->info("WebServer runnning on port {}", m_port);
+	theLog->info("WebServer runnning on port: {}, threads running: {}", m_port, m_threads.size() + 1);
 
 	m_ioc.run();
 
