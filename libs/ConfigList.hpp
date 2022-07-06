@@ -15,7 +15,7 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(log_to_file, bool, "log_to_file", true);
 		DEFINE_CONFIG_OPTIONAL(log_level, std::uint8_t, "log_level", 0);
 		DEFINE_CONFIG_OPTIONAL(doc_root, std::string, "doc_root", "./web/");
-		DEFINE_CONFIG_OPTIONAL(cert_dir, std::string, "cert_dir", "./cert");
+		DEFINE_CONFIG_OPTIONAL(cert_dir, std::string, "cert_dir", "./cert/");
 		DEFINE_CONFIG_OPTIONAL(bind_ip, std::string, "bind_ip", "0.0.0.0");
 		DEFINE_CONFIG_OPTIONAL(port, std::uint16_t, "port", 443);
 		DEFINE_CONFIG_OPTIONAL(threads, std::uint8_t, "threads", 3);

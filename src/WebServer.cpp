@@ -19,7 +19,7 @@ webserver::webserver() : webserver(
 	theConfig->threads)
 { }
 
-webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, std::uint8_t numthreads) :
+webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, const std::uint8_t numthreads) :
 	m_address{address},
 	m_port{port},
 	m_doc_root{doc_root},
@@ -80,6 +80,7 @@ int webserver::run()
 void webserver::load_server_certificate()
 {
 	const auto& cert_dir = theConfig->cert_dir;
+	theLog->info("Loading cert from '{}'", cert_dir);
 
 	m_ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
 		return "asdfghjk";
@@ -90,7 +91,7 @@ void webserver::load_server_certificate()
 		boost::asio::ssl::context::no_sslv2 |
 		boost::asio::ssl::context::single_dh_use);
 
-	m_ctx.use_certificate_chain_file(cert_dir + "/certificate.crt");
-	m_ctx.use_private_key_file(cert_dir + "/key.key", boost::asio::ssl::context::file_format::pem);
-	m_ctx.use_tmp_dh_file(cert_dir + "/dhparam.pem");
+	m_ctx.use_certificate_chain_file(cert_dir + "certificate.crt");
+	m_ctx.use_private_key_file(cert_dir + "key.key", boost::asio::ssl::context::file_format::pem);
+	m_ctx.use_tmp_dh_file(cert_dir + "dhparam.pem");
 }

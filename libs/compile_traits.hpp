@@ -4,7 +4,7 @@ namespace traits
 {
 	// SFINAE test
 	template <typename T>
-	class has_from_json
+	class [[deprecated]] has_from_json
 	{
 		typedef char one;
 		struct two { char x[2]; };

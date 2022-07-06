@@ -78,7 +78,8 @@
             var encoded_pass = sha256(document.getElementById('login_pass').value).then(pass => {
                var data = JSON.stringify({
                   "user": document.getElementById('login_user').value, 
-                  "pass": pass
+                  "pass": pass,
+                  "obliterate_sessions": document.getElementById('login_obliterate').checked
                });
                xhr.send(data);
             });
@@ -120,6 +121,7 @@
          <h3>Login</h3>
          User: <input id="login_user"></input> 
          Pass: <input id="login_pass"></input>
+         Obliterate: <input type="checkbox" id="login_obliterate"></input>
          <P><button onclick="login()">Login</button></P>
       </div>
        

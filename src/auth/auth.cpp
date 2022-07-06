@@ -113,12 +113,33 @@ void authentication::request_register(const http_request& req, http_response& re
 	theLog->info("New account created: {}", user);
 }
 
+struct testermester
+{
+	int i = 1;
+	std::string s = "s";
+};
+
+void to_json(nlohmann::json& j, const testermester& p) {
+	j = nlohmann::json{ {"i", p.i}, {"s", p.s} };
+}
+
+void from_json(const nlohmann::json& j, testermester& p) {
+	j.at("i").get_to(p.i);
+	j.at("s").get_to(p.s);
+}
+
 void authentication::test_session(const http_request& req, http_response& resp)
 {
+
 	theLog->info("heyho!");
 	theLog->info("Test session : {}", req.session->acquire()->session_id);
 
-	theLog->info("VN: test session sleeping!");
-	std::this_thread::sleep_for(std::chrono::seconds{ 10 });
-	theLog->info("VN: test session woke up!");
+	auto email = req.get<testermester>("obj");
+	theLog->info("VN: after read: [ i : {} | s : '{}' ]", email.i, email.s);
+
+	email.i = 55;
+	email.s = "kerek";
+
+	theLog->info("VN: after mod: [ i : {} | s : '{}' ]", email.i, email.s);
+	resp = email;
 }

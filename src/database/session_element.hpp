@@ -7,6 +7,7 @@
 
 class sql_handle;
 
+// The database part of a session. These are the data that are persistent for each session. 
 struct session_element
 {
 	session_element(const id::session& sid, const id::account acc_id) :
