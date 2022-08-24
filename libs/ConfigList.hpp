@@ -26,6 +26,8 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(sql_user, std::string, "sql_user", "postgres");
 		DEFINE_CONFIG_OPTIONAL(sql_pass, std::string, "sql_pass", "asdasd");
 		DEFINE_CONFIG_OPTIONAL(sql_conn_pool_size, std::uint8_t, "sql_connection_pool_size", 3);
+		DEFINE_CONFIG_OPTIONAL(sql_conn_max_pool_size, std::uint8_t, "sql_connection_max_pool_size", 6);
+		DEFINE_CONFIG_OPTIONAL(sql_conn_pool_expand_time_ms, std::uint32_t, "sql_connection_pool_expand_time_ms", 1000);
 
 		DEFINE_CONFIG_OPTIONAL(session_expire_time, std::uint64_t, "session_expire_time", 60 * 60 * 60);
 	};

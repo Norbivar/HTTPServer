@@ -34,16 +34,23 @@
 
          let base_url = "norbinet.asuscomm.com";
          let url = "https://" + base_url;
-         let sid = "";
+         let socket = null;
          function myFunction() 
          {
-            let socket = new WebSocket("wss://" + base_url);
-
-            socket.onopen = function(e) {
-               alert("[open] Connection established");
-               alert("Sending to server");
-             // socket.send("My name is John");
-            };
+            if (socket == null)
+            {
+               socket = new WebSocket("wss://" + base_url);
+   
+               socket.onopen = function(e) {
+                  alert("[open] Connection established");
+                  alert("Sending to server");
+                  socket.send("My name is John");
+               };
+            }
+            else
+            {
+               socket.send("My name is NOT JOHN");
+            }
 
             socket.onmessage = function(event) {
                alert(`[message] Data received from server: ${event.data}`);
@@ -109,7 +116,6 @@
             var xhr = new XMLHttpRequest();
             xhr.open("POST", url + "/test_session", true);
             xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Authorization", sid);
             xhr.send("{}");
          }
       </script>

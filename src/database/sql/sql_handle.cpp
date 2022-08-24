@@ -3,8 +3,8 @@
 #include "sql_manager.hpp"
 
 sql_handle::sql_handle(sql_manager& man, std::shared_ptr<pqxx::connection> from) :
-	m_connection{from},
-	manager{man}
+	m_connection{ from },
+	manager{ man }
 { }
 
 std::string sql_handle::escape(const std::string& what) const
@@ -24,5 +24,6 @@ sql_work<pqxx::read_transaction> sql_handle::start() const
 
 sql_handle::~sql_handle()
 {
-	manager.add_handle(m_connection);
+	if (m_connection.use_count() == 1)
+		manager.add_handle(m_connection);
 }

@@ -1,38 +1,71 @@
 #include "sql_manager.hpp"
 
-#include <pqxx/connection>
-#include <pqxx/version>
+#include <chrono>
 
-#include <Logging>
-#include <Config>
-
-sql_manager::sql_manager() :
-	m_sql_address{ theConfig->sql_address },
-	m_sql_port{ theConfig->sql_port},
-	m_sql_database{ theConfig->sql_db },
-	m_sql_user{ theConfig->sql_user },
-	m_sql_pass{ theConfig->sql_pass },
-	m_sql_connection_pool_size{ theConfig->sql_conn_pool_size },
-	m_connection_pool{ m_sql_connection_pool_size }
+sql_manager::sql_manager(const std::string& name, const sql_provider& provider)
+	:
+	m_name{ name },
+	m_sql_address{ provider.get_address() },
+	m_sql_port{ provider.get_port() },
+	m_sql_database{ provider.get_database() },
+	m_sql_user{ provider.get_user() },
+	m_sql_pass{ provider.get_pass() },
+	m_sql_connection_desired_pool_size{ provider.get_connection_desired_pool_size() },
+	m_sql_connection_max_pool_size{ provider.get_connection_max_pool_size() },
+	m_sql_connection_pool_expand_time{ provider.get_connection_pool_expand_time_ms() },
+	m_sql_connection_total_handles { 0 }
 {
-	theLog->info("Initiating PostgreSQL Manager. Using PostgreS version: {}", PQXX_VERSION);
-	theLog->info("Testing connection: '{}', table '{}', pool size: {}.", m_sql_address, m_sql_database, m_sql_connection_pool_size);
+	m_connection_pool.reserve(m_sql_connection_max_pool_size);
 
-	for (std::uint8_t i = 0; i < m_sql_connection_pool_size; ++i)
-		add_handle(std::make_shared<pqxx::connection>(fmt::format("host={} port={} dbname={} user={} password={}", m_sql_address, m_sql_port, m_sql_database, m_sql_user, m_sql_pass)));
+	theLog->info("Initiating SQL Connection '{}' : address '{}' table '{}', pool size: {}, max pool size: {}", m_name, m_sql_address, m_sql_database, m_sql_connection_desired_pool_size, m_sql_connection_max_pool_size);
+
+	for (std::uint8_t i = 0; i < m_sql_connection_desired_pool_size; ++i)
+		push_new_handle();
 
 	theLog->info("Database connection success!");
 }
 
-sql_handle sql_manager::acquire_handle()
+void sql_manager::push_new_handle()
 {
-	// Optimization idea for later: count the time a handle acquire waites for pop, and push in new sql connections accordingly
-	std::shared_ptr<pqxx::connection> free_handle;
-	m_connection_pool.pop(free_handle);
-	return sql_handle{ *this, free_handle };
+	m_connection_pool.push_back(std::make_shared<pqxx::connection>(fmt::format("host={} port={} dbname={} user={} password={}", m_sql_address, m_sql_port, m_sql_database, m_sql_user, m_sql_pass)));
+	++m_sql_connection_total_handles;
 }
 
-void sql_manager::add_handle(std::shared_ptr<pqxx::connection> conn)
+thread_local std::weak_ptr<pqxx::connection> sql_manager::handle_of_thread{};
+
+sql_handle sql_manager::acquire_handle() // threadsafe
 {
-	m_connection_pool.push(conn);
+	if (handle_of_thread.use_count() > 0) // if this thread already holds a handle -> just return that
+	{
+		return sql_handle{ *this, handle_of_thread.lock() };
+	}
+	else
+	{
+		std::unique_lock lock{ m_connection_pool_mutex };
+
+		if (m_connection_pool.empty())
+		{
+			while (!m_connection_pool_push_event.wait_for(lock, std::chrono::milliseconds{ m_sql_connection_pool_expand_time }, [&] { return !m_connection_pool.empty(); })) // maanged to receive an event
+			{
+				if (m_sql_connection_total_handles < m_sql_connection_max_pool_size)
+					push_new_handle(); // Does not need the notify, because this thread can pick it up right away
+			}
+		}
+
+		std::shared_ptr<pqxx::connection> free_handle = m_connection_pool.back();
+		m_connection_pool.pop_back();
+
+		handle_of_thread = free_handle;
+		return sql_handle{ *this, free_handle };
+	}
+}
+
+void sql_manager::add_handle(std::shared_ptr<pqxx::connection> conn) // threadsafe
+{
+	std::unique_lock lock{ m_connection_pool_mutex };
+
+	handle_of_thread.reset();
+	m_connection_pool.push_back(conn);
+
+	m_connection_pool_push_event.notify_one();
 }

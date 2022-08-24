@@ -18,7 +18,7 @@ class websocket_session
 	// the Curiously Recurring Template Pattern idiom.
 	Derived& derived() { return static_cast<Derived&>(*this); }
 
-	boost::beast::flat_buffer buffer_;
+	boost::beast::flat_buffer buffer_{1 * 1024 * 3};
 
 	// Start the asynchronous operation
 	template <class Body, class Allocator>

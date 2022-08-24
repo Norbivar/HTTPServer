@@ -11,6 +11,7 @@
 #include "routing_table.hpp"
 #include "session_tracker.hpp"
 #include "database/sql/sql_manager.hpp"
+#include "database/sql/sql_provider.hpp"
 
 webserver::webserver() : webserver(
 	theConfig->doc_root,
@@ -19,23 +20,25 @@ webserver::webserver() : webserver(
 	theConfig->threads)
 { }
 
+webserver::~webserver()
+{
+}
+
 webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, const std::uint8_t numthreads) :
-	m_address{address},
-	m_port{port},
-	m_doc_root{doc_root},
-	m_desired_thread_number{numthreads},
-	m_ioc{numthreads},
-	m_ctx{boost::asio::ssl::context::tlsv13},
-	m_sql_manager{std::make_unique<sql_manager>()},
-	m_routing_table{std::make_unique<routing_table>()},
-	m_session_tracker{std::make_unique<session_tracker>(m_sql_manager)}
+	m_address{ address },
+	m_port{ port },
+	m_doc_root{ doc_root },
+	m_desired_thread_number{ numthreads },
+	m_ioc{ numthreads },
+	m_ctx{ boost::asio::ssl::context::tlsv13 },
+	m_sql_manager{ std::make_unique<sql_manager>("Default Database", default_sql_provider{}) },
+	m_routing_table{ std::make_unique<routing_table>() },
+	m_session_tracker{ std::make_unique<session_tracker>(m_sql_manager) }
 {
 	theLog->info("Preparing WebServer ...");
 	assert(numthreads != 0);
 	m_threads.reserve(numthreads - 1);
 }
-
-webserver::~webserver() { }
 
 void webserver::bootstrap()
 {
@@ -84,7 +87,7 @@ void webserver::load_server_certificate()
 
 	m_ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
 		return "asdfghjk";
-	});
+		});
 
 	m_ctx.set_options(
 		boost::asio::ssl::context::default_workarounds |

@@ -130,8 +130,7 @@ void from_json(const nlohmann::json& j, testermester& p) {
 
 void authentication::test_session(const http_request& req, http_response& resp)
 {
-
-	theLog->info("heyho!");
+	/*theLog->info("heyho!");
 	theLog->info("Test session : {}", req.session->acquire()->session_id);
 
 	auto email = req.get<testermester>("obj");
@@ -141,5 +140,13 @@ void authentication::test_session(const http_request& req, http_response& resp)
 	email.s = "kerek";
 
 	theLog->info("VN: after mod: [ i : {} | s : '{}' ]", email.i, email.s);
-	resp = email;
+	resp = email;*/
+
+	theLog->error("VN: GETTING DB");
+	auto db = theServer.get_sql_manager().acquire_handle();
+	theLog->error("VN: GOT DB");
+
+	std::this_thread::sleep_for(std::chrono::seconds{ 5 });
+	theLog->error("VN: DONE");
+
 }

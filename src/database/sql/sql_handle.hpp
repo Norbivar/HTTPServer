@@ -42,7 +42,9 @@ public:
 	~sql_handle();
 
 	std::string escape(const std::string& what) const;
+
 private:
 	std::shared_ptr<pqxx::connection> m_connection;
+	bool m_conenction_owner;
 	sql_manager& manager;
 };

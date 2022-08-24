@@ -58,10 +58,11 @@ add_executable(HTTPServer
 "src/routing_table.cpp"
 "src/session_tracker.cpp"
 "src/database/sql/sql_handle.cpp"
+"src/database/sql/sql_provider.cpp"
 "src/database/sql/sql_manager.cpp"
 "src/database/mappers/accounts_mapper.cpp"
 "src/database/mappers/sessions_mapper.cpp" 
-"src/database/session_element.cpp" "libs/compile_traits.hpp" "libs/nlohmann_additions.hpp")
+"src/database/session_element.cpp")
 	
 include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${LIBPQXX_INCLUDE_DIR} "libs" "src") 
 target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBPQXX_LIBRARIES} ${PostgreSQL_LIBRARIES})
