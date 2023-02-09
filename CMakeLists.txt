@@ -1,6 +1,9 @@
 project(HTTPServer LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.16)
 
+include(${CMAKE_SOURCE_DIR}/conanbuildinfo.cmake)  # Includes the contents of the conanbuildinfo.cmake file.
+conan_basic_setup()  # Prepares the CMakeList.txt for Conan.
+
 ##############################################################################################################################################################
 
 if((CMAKE_SIZEOF_VOID_P EQUAL 8) OR (CMAKE_CXX_COMPILER_ID MATCHES "SunPro"))
@@ -32,12 +35,8 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(Boost_COMPILER gcc)
 endif()
-find_package(Boost REQUIRED COMPONENTS filesystem date_time random regex) 
-find_package(OpenSSL REQUIRED) 
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake/")
 find_package(PostgreSQL REQUIRED)
-find_package(libpqxx REQUIRED)
 
 ###########################################################################
 add_definitions(-DFMT_HEADER_ONLY)
@@ -64,8 +63,8 @@ add_executable(HTTPServer
 "src/database/mappers/sessions_mapper.cpp" 
 "src/database/session_element.cpp")
 	
-include_directories(BEFORE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} ${LIBPQXX_INCLUDE_DIR} "libs" "src") 
-target_link_libraries(HTTPServer ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBPQXX_LIBRARIES} ${PostgreSQL_LIBRARIES})
+include_directories(BEFORE ${CONAN_INCLUDE_DIRS} "libs" "src") 
+target_link_libraries(HTTPServer ${PostgreSQL_LIBRARIES} ${CONAN_LIBS})
 
 # Set the binary extension
 set(BINARY_SUFFIX "")

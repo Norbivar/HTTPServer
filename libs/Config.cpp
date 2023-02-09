@@ -31,12 +31,15 @@ namespace Libs
 
 	config::~config()
 	{
-		//save_all(); // A config should not really require saving
+		save_all(); // A config should not really require saving
 	}
 
 	void config::save_all()
 	{
-		std::ofstream output(*ConfigSettings::cConfigFilesToReadInOrder.begin(), std::ios::out);
+		if (ConfigSettings::cConfigFilesToReadInOrder.empty())
+			return;
+
+		std::ofstream output(ConfigSettings::cConfigFilesToReadInOrder.front(), std::ios::out);
 		if (output.good())
 		{
 			for (const auto& roots : m_ConfigList->settings_map)

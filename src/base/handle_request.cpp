@@ -194,8 +194,8 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 	}
 	else
 	{
-		auto req_target_stripped = target.to_string();
-		auto get_method_question_mark = req_target_stripped.find_first_of('?');
+		auto req_target_stripped = target;
+		auto get_method_question_mark = target.find_first_of('?');
 		if (get_method_question_mark != std::string::npos)
 			req_target_stripped = req_target_stripped.substr(0, get_method_question_mark);
 
@@ -205,7 +205,7 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 
 		const auto request_id = theServer.fetch_add_request_count();
 		Libs::Logger::Tag _{ fmt::format("req id {}", request_id)};
-		Libs::Logger::Tag __{ fmt::format("url {}", target.to_string())};
+		Libs::Logger::Tag __{ fmt::format("url {}", target)};
 
 		try
 		{

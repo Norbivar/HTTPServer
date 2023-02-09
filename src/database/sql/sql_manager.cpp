@@ -45,7 +45,7 @@ sql_handle sql_manager::acquire_handle() // threadsafe
 
 		if (m_connection_pool.empty())
 		{
-			while (!m_connection_pool_push_event.wait_for(lock, std::chrono::milliseconds{ m_sql_connection_pool_expand_time }, [&] { return !m_connection_pool.empty(); })) // maanged to receive an event
+			while (!m_connection_pool_push_event.wait_for(lock, std::chrono::milliseconds{ m_sql_connection_pool_expand_time }, [&] { return !m_connection_pool.empty(); })) // managed to receive an event
 			{
 				if (m_sql_connection_total_handles < m_sql_connection_max_pool_size)
 					push_new_handle(); // Does not need the notify, because this thread can pick it up right away
@@ -60,7 +60,7 @@ sql_handle sql_manager::acquire_handle() // threadsafe
 	}
 }
 
-void sql_manager::add_handle(std::shared_ptr<pqxx::connection> conn) // threadsafe
+void sql_manager::add_handle(const std::shared_ptr<pqxx::connection> conn) // threadsafe
 {
 	std::unique_lock lock{ m_connection_pool_mutex };
 

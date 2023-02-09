@@ -21,19 +21,19 @@ void routing_table::register_all()
 
 }
 
-void routing_table::register_path(boost::beast::http::verb verb, 
-	std::string&& path, 
-	const routing_handler& handler, 
-	const routing_access_predicate& pred,  
+void routing_table::register_path(boost::beast::http::verb verb,
+	std::string&& path,
+	const routing_handler& handler,
+	const routing_access_predicate& pred,
 	const bool need_session)
 {
 	auto& verb_table_it = m_tables[verb];
 	verb_table_it.emplace(std::move(path), routing_entry{ handler, pred, need_session });
 }
 
-std::pair<bool, routing_table::table_t::const_iterator> routing_table::lookup(boost::beast::http::verb verb, const std::string& path) const
+routing_table::routing_lookup_result routing_table::lookup(boost::beast::http::verb verb, const std::string& path) const
 {
-	std::pair<bool, routing_table::table_t::const_iterator> entry{ false, nullptr };
+	routing_lookup_result entry{ false, {} };
 
 	const auto verb_table_it = m_tables.find(verb);
 	if (verb_table_it == m_tables.end())

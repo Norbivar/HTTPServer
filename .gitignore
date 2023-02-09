@@ -38,3 +38,10 @@ CMakeFiles/
 *.exe
 *.out
 *.app
+
+# Conan things
+conan.lock
+conaninfo.txt
+conanbuildinfo.txt
+conanbuildinfo.cmake
+graph_info.json

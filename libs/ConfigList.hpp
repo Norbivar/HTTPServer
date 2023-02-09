@@ -32,7 +32,6 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(session_expire_time, std::uint64_t, "session_expire_time", 60 * 60 * 60);
 	};
 
-
 #undef DEFINE_CONFIG_OPTIONAL
 #undef DEFINE_CONFIG
 }

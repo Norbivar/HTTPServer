@@ -32,6 +32,9 @@ private:
 	T _work;
 };
 
+/* 
+RAII wrapper for the SQL Connection that is given the requestor, handles automatically giving back the connection to be reused. 
+*/
 class sql_handle
 {
 public:

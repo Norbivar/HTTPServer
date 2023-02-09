@@ -21,7 +21,7 @@ public:
 
 	sql_handle acquire_handle(); // threadsafe
 
-	void add_handle(std::shared_ptr<pqxx::connection> conn); // threadsafe
+	void add_handle(const std::shared_ptr<pqxx::connection> conn); // threadsafe
 
 private:
 	void push_new_handle();

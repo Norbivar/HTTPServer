@@ -26,6 +26,8 @@ class routing_table
 	using table_t = boost::unordered_map<std::string, routing_entry>;
 
 public:
+	using routing_lookup_result = std::pair<bool, table_t::const_iterator>;
+
 	routing_table() = default;
 
 	/** Registers a [HTTP Method, Path] pair with he given handler and an optional access predicate. Tables are created where needed. */
@@ -34,7 +36,7 @@ public:
 	/** Looks up athe HTTP Method, and if a corresponding table can be found, looks up the path in there. 
 	* Returns a pair, where the boolean is true if the following iterator is valid. 
 	*/
-	std::pair<bool, table_t::const_iterator> lookup(boost::beast::http::verb verb, const std::string& path) const;
+	routing_lookup_result lookup(boost::beast::http::verb verb, const std::string& path) const;
 
 	/** Logs out the tables. */
 	void print_stats() const;

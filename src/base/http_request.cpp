@@ -7,7 +7,7 @@
 
 #include "../database/session_element.hpp"
 
-const std::string extract_cookie(const std::string& cookie, const std::string& label)
+const std::string extract_cookie(const boost::beast::string_view& cookie, const std::string& label)
 {
 	auto cookie_start = cookie.find(label + "=");
 	if (cookie_start != cookie.npos)
@@ -29,12 +29,10 @@ http_request::http_request(std::uint64_t id, beast_request&& b, const std::strin
 	const auto cookies = _base.find(boost::beast::http::field::cookie);
 	if (cookies != _base.end())
 	{
-		const auto cookie_str = cookies->value().to_string();
-
-		sid = extract_cookie(cookie_str, "SID");
+		sid = extract_cookie(cookies->value(), "SID");
 	}
 
-	auto req_target_stripped = _base.target().to_string();
+	auto req_target_stripped = _base.target();
 	if (_base.method() == boost::beast::http::verb::get)
 	{
 		const auto get_method_question_mark = req_target_stripped.find_first_of('?');
