@@ -1,10 +1,6 @@
-project(HTTPServer LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.16)
 
-include(${CMAKE_SOURCE_DIR}/conanbuildinfo.cmake)  # Includes the contents of the conanbuildinfo.cmake file.
-conan_basic_setup()  # Prepares the CMakeList.txt for Conan.
-
-##############################################################################################################################################################
+project(HTTPServer LANGUAGES CXX)
 
 if((CMAKE_SIZEOF_VOID_P EQUAL 8) OR (CMAKE_CXX_COMPILER_ID MATCHES "SunPro"))
   set(IS64BIT 1)
@@ -13,6 +9,58 @@ else()
   message("Generating 32bit code")
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	set(Project_BUILD_DEBUG true)
+else() #if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	set(Project_BUILD_DEBUG false)
+endif()
+
+#################################################### Config stuff ending ####################################################
+
+set(CONAN_PROFILE "conan_profile")
+if(UNIX)
+    set(CONAN_PROFILE "${CONAN_PROFILE}_linux")
+elseif(WIN32)
+    set(CONAN_PROFILE "${CONAN_PROFILE}_windows")
+endif()
+if(IS64BIT)
+	set(CONAN_PROFILE "${CONAN_PROFILE}_x64")
+else()
+	set(CONAN_PROFILE "${CONAN_PROFILE}_x86")
+endif()
+if(Project_BUILD_DEBUG)
+	set(CONAN_PROFILE "${CONAN_PROFILE}_debug")
+else()
+	set(CONAN_PROFILE "${CONAN_PROFILE}_release")
+endif()
+
+set(CONAN_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/conan_toolchain.cmake")
+if(EXISTS ${CONAN_TOOLCHAIN_FILE})
+	include(${CONAN_TOOLCHAIN_FILE})  # Includes the contents of the conanbuildinfo.cmake file.
+else()
+	# Try building it
+	set(CONAN_INSTALL_COMMAND "conan install -v --profile ./${CONAN_PROFILE} --build=missing .")
+	execute_process(COMMAND ${CONAN_INSTALL_COMMAND}
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	RESULT_VARIABLE CONAN_INSTALL_RESULT)
+
+	if(CONAN_INSTALL_RESULT EQUAL 1)
+		message(FATAL_ERROR "Error while handling Conan, stopping build!")
+	endif()
+
+	if(EXISTS ${CONAN_TOOLCHAIN_FILE}) # if succeeded
+		include(${CONAN_TOOLCHAIN_FILE})  # Includes the contents of the conanbuildinfo.cmake file.
+	else()
+		message(ERROR " No conan_toolchain file found at '${CONAN_TOOLCHAIN_FILE}'. You might need to run:")
+		message(FATAL_ERROR " ${CONAN_INSTALL_COMMAND}")
+	endif()
+endif()
+
+set(CMAKE_GENERATOR_PLATFORM "" CACHE STRING "" FORCE) # Otherwise ninja fails
+set(CMAKE_GENERATOR_TOOLSET "" CACHE STRING "" FORCE) # Otherwise ninja fails
+
+##############################################################################################################################################################
+
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
@@ -20,17 +68,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
 	endif()
 endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(Project_BUILD_DEBUG true)
-else() #if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(Project_BUILD_DEBUG false)
-endif()
-
-####### Build configuration INDEPENDENT things:
-set(Boost_USE_STATIC_LIBS ON) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
+message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(Boost_COMPILER gcc)
@@ -63,8 +101,16 @@ add_executable(HTTPServer
 "src/database/mappers/sessions_mapper.cpp" 
 "src/database/session_element.cpp")
 	
-include_directories(BEFORE ${CONAN_INCLUDE_DIRS} "libs" "src") 
-target_link_libraries(HTTPServer ${PostgreSQL_LIBRARIES} ${CONAN_LIBS})
+include_directories(BEFORE
+	${CMAKE_INCLUDE_PATH}
+	"libs"
+	"src") 
+
+link_directories(BEFORE ${CMAKE_LIBRARY_PATH})
+message("Link directories: ${CMAKE_LIBRARY_PATH}")
+
+target_link_libraries(HTTPServer
+	${PostgreSQL_LIBRARIES})
 
 # Set the binary extension
 set(BINARY_SUFFIX "")
@@ -77,9 +123,11 @@ if(UNIX)
 elseif(WIN32)
     set(BINARY_SUFFIX ".exe")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /D_WIN32_WINNT=0x0601 /wd4996 /wd4702 /utf-8")
-	string(REGEX REPLACE "/W[3|4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+	string(REGEX REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+	string(REGEX REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 endif()
+
+message("Compile flags: ${CMAKE_CXX_FLAGS}")
+
 set_target_properties(HTTPServer PROPERTIES SUFFIX ${BINARY_SUFFIX})
 message("Target extension is: ${BINARY_SUFFIX}")

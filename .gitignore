@@ -45,3 +45,7 @@ conaninfo.txt
 conanbuildinfo.txt
 conanbuildinfo.cmake
 graph_info.json
+conanbuild*
+conanrun*
+deactivate_conan*
+conan_toolchain.cmake

@@ -1,4 +1,4 @@
-﻿{
+{
   "configurations": [
     {
       "name": "x64-Debug",
@@ -34,29 +34,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "intelliSenseMode": "windows-msvc-x64",
-      "variables": [
-        {
-          "name": "LIBPQXX_INCLUDE_DIR",
-          "value": "E:/Documents/Tools/PostgreS14/libpqxx/include/",
-          "type": "PATH"
-        },
-        {
-          "name": "LIBPQXX_LIB_DIR",
-          "value": "E:/Documents/Tools/PostgreS14/libpqxx/lib/",
-          "type": "PATH"
-        },
-        {
-          "name": "libpqxx_DIR",
-          "value": "E:/Documents/Tools/PostgreS14/libpqxx/",
-          "type": "PATH"
-        },
-        {
-          "name": "Boost_LIBRARY_DIR_RELEASE",
-          "value": "E:/Documents/Tools/boost_1_78_0/stage/lib",
-          "type": "PATH"
-        }
-      ]
+      "intelliSenseMode": "windows-msvc-x64"
     }
   ]
 }

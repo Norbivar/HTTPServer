@@ -1,5 +1,7 @@
 #pragma once
 
+#include <shared_mutex>
+
 #include <boost/variant.hpp>
 #include <boost/beast/http/verb.hpp>
 #include <boost/function.hpp>
@@ -46,5 +48,6 @@ public:
 
 private:
 	boost::unordered_map<boost::beast::http::verb, table_t> m_tables;
+	mutable std::shared_mutex m_mutex;
 };
 

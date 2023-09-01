@@ -1,4 +1,4 @@
-#include "WebServer.hpp"
+﻿#include "WebServer.hpp"
 
 #include <boost/asio/ip/address.hpp>
 #include <boost/asio/signal_set.hpp>
@@ -25,6 +25,7 @@ webserver::~webserver()
 }
 
 webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, const std::uint8_t numthreads) :
+	m_server_status{ status::starting },
 	m_address{ address },
 	m_port{ port },
 	m_doc_root{ doc_root },
@@ -42,11 +43,11 @@ webserver::webserver(const std::string& doc_root, const boost::asio::ip::address
 
 void webserver::bootstrap()
 {
-	theLog->info("Bootstrapping WebServer...");
+	theLog->info("Bootstrapping WebServer ...");
 	load_server_certificate();
-	theLog->info("->	Certificates loaded.");
+	theLog->info("-> Certificates loaded ✓");
 	m_routing_table->register_all();
-	theLog->info("->	Path mapping set up.");
+	theLog->info("-> Path mapping set up ✓");
 	m_routing_table->print_stats();
 }
 
@@ -67,13 +68,16 @@ int webserver::run()
 	for (auto i = 1; i < m_desired_thread_number; ++i)
 		m_threads.emplace_back([this] { m_ioc.run(); });
 
-	theLog->info("WebServer runnning on port: {}, threads running: {}", m_port, m_threads.size() + 1);
+	theLog->info("-> WebServer runnning on port: {}, threads running: {} ✓", m_port, m_threads.size() + 1);
 
 	m_ioc.run();
+	m_server_status = status::running;
 
 	// Block until all the threads exit
 	for (auto& t : m_threads)
 		t.join();
+
+	m_server_status = status::stopping;
 
 	theLog->info("WebServer stopped.");
 

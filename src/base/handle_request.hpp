@@ -14,4 +14,8 @@ boost::beast::string_view mime_type(boost::beast::string_view path);
 // The returned path is normalized for the platform.
 std::string path_cat(boost::beast::string_view base, boost::beast::string_view path);
 
+// Handle the HTTP(S) request
 void handle_request(std::string&& from_addr, beast_request&& req, response_queue& resp_queue);
+
+// Handle the WebSocket traffic
+void handle_websocket_request();
