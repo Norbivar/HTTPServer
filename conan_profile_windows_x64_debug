@@ -6,3 +6,12 @@ compiler.cppstd=20
 compiler.runtime=static
 compiler.version=193
 os=Windows
+
+boost/*:build_type=Release
+boost/*:compiler.runtime_type=Release
+libpq/*:build_type=Release
+libpq/*:compiler.runtime_type=Release
+libpqxx/*:build_type=Release
+libpqxx/*:compiler.runtime_type=Release
+openssl/*:build_type=Release
+openssl/*:compiler.runtime_type=Release

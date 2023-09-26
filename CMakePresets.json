@@ -1,38 +1,53 @@
 {
-    "version": 3,
-    "vendor": {
-        "conan": {}
+  "version": 3,
+  "vendor": {
+    "conan": {}
+  },
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "visual-studio-debug",
+      "displayName": "VS Config Debug",
+      "description": "Debug configure using VS",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "binaryDir": "${sourceDir}/build/msvc/debug"
     },
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 15,
-        "patch": 0
+    {
+      "name": "visual-studio-release",
+      "displayName": "VS Config Release",
+      "description": "Release configure using VS",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+      },
+      "binaryDir": "${sourceDir}/build/msvc/debug"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "msvc-debug",
+      "configurePreset": "visual-studio-debug",
+      "configuration": "Debug"
     },
-    "configurePresets": [
-        {
-            "name": "conan-default",
-            "displayName": "'conan-default' config",
-            "description": "'conan-default' configure using 'Visual Studio 17 2022' generator",
-            "generator": "Visual Studio 17 2022",
-            "cacheVariables": {
-                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
-            },
-            "toolchainFile": "E:\\Documents\\Projects\\HTTPServer\\conan_toolchain.cmake",
-            "binaryDir": "E:\\Documents\\Projects\\HTTPServer"
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "conan-release",
-            "configurePreset": "conan-default",
-            "configuration": "Release"
-        }
-    ],
-    "testPresets": [
-        {
-            "name": "conan-release",
-            "configurePreset": "conan-default",
-            "configuration": "Release"
-        }
-    ]
+    {
+      "name": "msvc-release",
+      "configurePreset": "visual-studio-release",
+      "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "conan-debug",
+      "configurePreset": "visual-studio-debug",
+      "configuration": "Debug"
+    }
+  ]
 }

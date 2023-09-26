@@ -2,64 +2,35 @@ cmake_minimum_required(VERSION 3.16)
 
 project(HTTPServer LANGUAGES CXX)
 
+function(RERUN_CONAN_INSTALL VAR_CONAN_PROFILE VAR_BUILD_TYPE VAR_CONAN_OUTPUT_DIR)
+	# Try building it
+	set(CONAN_INSTALL_COMMAND "conan")
+	set(CONAN_INSTALL_PARAMS 
+		"install" 
+		"-s" "build_type=${VAR_BUILD_TYPE}"
+		"-pr:h" "./${VAR_CONAN_PROFILE}"
+		"--output-folder=${VAR_CONAN_OUTPUT_DIR}"
+		"--build=missing"
+		".")
+
+	execute_process(COMMAND ${CONAN_INSTALL_COMMAND} ${CONAN_INSTALL_PARAMS}
+					WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					RESULT_VARIABLE CONAN_INSTALL_RESULT
+					COMMAND_ECHO STDOUT 
+					OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+	message("rv='${CONAN_INSTALL_RESULT}'")
+	if(${CONAN_INSTALL_RESULT} EQUAL 1)
+		message(FATAL_ERROR "Error while handling Conan, stopping build!")
+	endif()
+endfunction()
+
+
 if((CMAKE_SIZEOF_VOID_P EQUAL 8) OR (CMAKE_CXX_COMPILER_ID MATCHES "SunPro"))
   set(IS64BIT 1)
-  message("Generating 64bit code")
-else()
-  message("Generating 32bit code")
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(Project_BUILD_DEBUG true)
-else() #if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	set(Project_BUILD_DEBUG false)
 endif()
 
 #################################################### Config stuff ending ####################################################
-
-set(CONAN_PROFILE "conan_profile")
-if(UNIX)
-    set(CONAN_PROFILE "${CONAN_PROFILE}_linux")
-elseif(WIN32)
-    set(CONAN_PROFILE "${CONAN_PROFILE}_windows")
-endif()
-if(IS64BIT)
-	set(CONAN_PROFILE "${CONAN_PROFILE}_x64")
-else()
-	set(CONAN_PROFILE "${CONAN_PROFILE}_x86")
-endif()
-if(Project_BUILD_DEBUG)
-	set(CONAN_PROFILE "${CONAN_PROFILE}_debug")
-else()
-	set(CONAN_PROFILE "${CONAN_PROFILE}_release")
-endif()
-
-set(CONAN_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/conan_toolchain.cmake")
-if(EXISTS ${CONAN_TOOLCHAIN_FILE})
-	include(${CONAN_TOOLCHAIN_FILE})  # Includes the contents of the conanbuildinfo.cmake file.
-else()
-	# Try building it
-	set(CONAN_INSTALL_COMMAND "conan install -v --profile ./${CONAN_PROFILE} --build=missing .")
-	execute_process(COMMAND ${CONAN_INSTALL_COMMAND}
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	RESULT_VARIABLE CONAN_INSTALL_RESULT)
-
-	if(CONAN_INSTALL_RESULT EQUAL 1)
-		message(FATAL_ERROR "Error while handling Conan, stopping build!")
-	endif()
-
-	if(EXISTS ${CONAN_TOOLCHAIN_FILE}) # if succeeded
-		include(${CONAN_TOOLCHAIN_FILE})  # Includes the contents of the conanbuildinfo.cmake file.
-	else()
-		message(ERROR " No conan_toolchain file found at '${CONAN_TOOLCHAIN_FILE}'. You might need to run:")
-		message(FATAL_ERROR " ${CONAN_INSTALL_COMMAND}")
-	endif()
-endif()
-
-set(CMAKE_GENERATOR_PLATFORM "" CACHE STRING "" FORCE) # Otherwise ninja fails
-set(CMAKE_GENERATOR_TOOLSET "" CACHE STRING "" FORCE) # Otherwise ninja fails
-
-##############################################################################################################################################################
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -68,15 +39,63 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
 	endif()
 endif()
+
 message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(Boost_COMPILER gcc)
 endif()
 
-find_package(PostgreSQL REQUIRED)
+set(BUILD_PROFILE "")
+set(CONAN_BUILD_TYPE_STR "")
+
+if(UNIX)
+    set(BUILD_PROFILE "linux")
+elseif(WIN32)
+    set(BUILD_PROFILE "windows")
+endif()
+if(IS64BIT)
+	set(BUILD_PROFILE "${BUILD_PROFILE}_x64")
+else()
+	set(BUILD_PROFILE "${BUILD_PROFILE}_x86")
+endif()
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	set(BUILD_PROFILE "${BUILD_PROFILE}_debug")
+	set(CONAN_BUILD_TYPE_STR "Debug")
+else()
+	set(BUILD_PROFILE "${BUILD_PROFILE}_release")
+	set(CONAN_BUILD_TYPE_STR "Release")
+endif()
+set(CONAN_PROFILE "conan_profile_${BUILD_PROFILE}")
+
+SET(CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER "build/${CONAN_PROFILE}")
+set(CONAN_TOOLCHAIN_EXPECTED_PATH "${CMAKE_SOURCE_DIR}/${CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER}/")
+set(CONAN_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_EXPECTED_PATH}/conan_toolchain.cmake")
+
+if(EXISTS ${CONAN_TOOLCHAIN_FILE})
+	include(${CONAN_TOOLCHAIN_FILE})
+	set(CMAKE_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_FILE}")
+else()
+	RERUN_CONAN_INSTALL(${CONAN_PROFILE} ${CONAN_BUILD_TYPE_STR} ${CONAN_TOOLCHAIN_EXPECTED_PATH})
+
+	if(EXISTS ${CONAN_TOOLCHAIN_FILE}) # if succeeded
+		include(${CONAN_TOOLCHAIN_FILE})
+		set(CMAKE_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_FILE}")
+	else()
+		message(ERROR " Failed to automatically produce conan_toolchain to '${CONAN_TOOLCHAIN_FILE}'. You might need to run manually:")
+		message(FATAL_ERROR " ${CONAN_INSTALL_COMMAND} ")
+	endif()
+endif()
+
+set(CMAKE_GENERATOR_PLATFORM "" CACHE STRING "" FORCE) # Otherwise ninja fails
+set(CMAKE_GENERATOR_TOOLSET "" CACHE STRING "" FORCE) # Otherwise ninja fails
 
 ###########################################################################
+find_package(openssl REQUIRED)
+find_package(boost REQUIRED)
+find_package(libpqxx REQUIRED)
+
 add_definitions(-DFMT_HEADER_ONLY)
 
 add_executable(HTTPServer 
@@ -106,11 +125,12 @@ include_directories(BEFORE
 	"libs"
 	"src") 
 
-link_directories(BEFORE ${CMAKE_LIBRARY_PATH})
-message("Link directories: ${CMAKE_LIBRARY_PATH}")
-
 target_link_libraries(HTTPServer
-	${PostgreSQL_LIBRARIES})
+	PRIVATE
+	boost::boost
+	openssl::openssl
+	libpqxx::pqxx
+)
 
 # Set the binary extension
 set(BINARY_SUFFIX "")
@@ -125,6 +145,7 @@ elseif(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /D_WIN32_WINNT=0x0601 /wd4996 /wd4702 /utf-8")
 	string(REGEX REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 	string(REGEX REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+	string(REGEX REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 endif()
 
 message("Compile flags: ${CMAKE_CXX_FLAGS}")
