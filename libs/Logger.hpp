@@ -9,6 +9,8 @@ namespace Libs
 {
 	class Logger
 	{
+		bool text_only_format = true;
+
 		struct TagCache
 		{
 			const std::string& get();
@@ -63,9 +65,14 @@ namespace Libs
 		inline void toggleLogOnlyText(bool setTo)
 		{
 			if (!setTo)
+			{
 				spdlog::set_pattern("[%H:%M:%S]{%l}%v");
+			}
 			else
+			{
 				spdlog::set_pattern("%v");
+			}
+			text_only_format = setTo;
 		}
 
 		template<typename Arg1, typename... Args>
@@ -209,7 +216,16 @@ namespace Libs
 				ConsoleLogger->critical(tagged_message);
 		}
 
+
 	private:
+		inline void write_separator_lines()
+		{
+			if (RotatedTxtLogger)
+				RotatedTxtLogger->critical("\n\n\n");
+			if (ConsoleLogger)
+				ConsoleLogger->critical("\n\n\n");
+		}
+
 		std::shared_ptr<spdlog::logger> RotatedTxtLogger;
 		std::shared_ptr<spdlog::logger> ConsoleLogger;
 

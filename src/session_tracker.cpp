@@ -32,18 +32,14 @@ id::session generate_http_session_id()
 	return sid;
 }
 
-session_tracker::session_tracker(std::unique_ptr<sql_manager>& sqlm)
+void session_tracker::load_from_db(const sql_handle& db)
 {
-	if (!sqlm)
-	{
-		theLog->error("Session tracker got invalid sql manager! Could not load sessions");
-		return;
-	}
-
 	std::unique_lock lock{ m_mutex }; // This is probably not needed because it's the constructor, but hey...
 
-	auto handle = sqlm->acquire_handle();
-	auto all_saved_sessions = sessions_mapper::get_all(handle);
+	m_session_container.clear();
+	auto all_saved_sessions = sessions_mapper::get_all(db);
+
+	m_session_container.reserve(all_saved_sessions.size());
 	for (auto& saved_sess : all_saved_sessions)
 		emplace_session(std::move(saved_sess));
 

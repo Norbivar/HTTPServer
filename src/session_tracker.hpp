@@ -42,11 +42,13 @@ using session_map = boost::multi_index::multi_index_container<
 class session_tracker
 {
 public:
-	session_tracker(std::unique_ptr<class sql_manager>& sqlm);
+	session_tracker() = default;
 	~session_tracker();
 
 	using session_by_sid_iterator = session_map::nth_index<0>::type::iterator;
 	using session_by_account_iterator = session_map::nth_index<1>::type::iterator;
+
+	void load_from_db(const sql_handle& db);
 
 	std::pair<bool, session_map::iterator> create_new_session(const std::string& ip_address, const id::account account_id, bool delete_other_for_account = false);
 	std::size_t obliterate_sessions_by_account_id(const id::account& sid);

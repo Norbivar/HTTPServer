@@ -118,7 +118,8 @@ add_executable(HTTPServer
 "src/database/sql/sql_manager.cpp"
 "src/database/mappers/accounts_mapper.cpp"
 "src/database/mappers/sessions_mapper.cpp" 
-"src/database/session_element.cpp")
+"src/database/session_element.cpp" 
+"src/components/server/network_component.cpp")
 	
 include_directories(BEFORE
 	${CMAKE_INCLUDE_PATH}

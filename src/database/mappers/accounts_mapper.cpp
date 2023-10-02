@@ -17,11 +17,13 @@ namespace
 		elements.reserve(res.size());
 		for (const auto it : res)
 		{
-			account_element elem;
-			elem.id = it[0].as<std::uint32_t>();
-			elem.username = it[1].c_str();
-			elem.email = it[2].c_str();
-			elem.creationtime = std::chrono::system_clock::time_point{ std::chrono::seconds{it[3].as<std::uint64_t>()} };
+			account_element elem {
+				.id = it[0].as<std::uint32_t>(),
+				.username = it[1].c_str(),
+				.email = it[2].c_str(),
+				.creationtime = std::chrono::system_clock::time_point{ std::chrono::seconds{it[3].as<std::uint64_t>()} }
+			};
+
 			elements.emplace_back(std::move(elem));
 		}
 

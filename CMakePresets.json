@@ -10,6 +10,16 @@
   },
   "configurePresets": [
     {
+      "name": "visual-studio-release",
+      "displayName": "VS Config Release",
+      "description": "Release configure using VS",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+      },
+      "binaryDir": "${sourceDir}/build/msvc/release"
+    },
+    {
       "name": "visual-studio-debug",
       "displayName": "VS Config Debug",
       "description": "Debug configure using VS",
@@ -19,28 +29,18 @@
         "CMAKE_BUILD_TYPE": "Debug"
       },
       "binaryDir": "${sourceDir}/build/msvc/debug"
-    },
-    {
-      "name": "visual-studio-release",
-      "displayName": "VS Config Release",
-      "description": "Release configure using VS",
-      "generator": "Visual Studio 17 2022",
-      "cacheVariables": {
-        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
-      },
-      "binaryDir": "${sourceDir}/build/msvc/debug"
     }
   ],
   "buildPresets": [
     {
-      "name": "msvc-debug",
-      "configurePreset": "visual-studio-debug",
-      "configuration": "Debug"
-    },
-    {
       "name": "msvc-release",
       "configurePreset": "visual-studio-release",
       "configuration": "Release"
+    },
+    {
+      "name": "msvc-debug",
+      "configurePreset": "visual-studio-debug",
+      "configuration": "Debug"
     }
   ],
   "testPresets": [

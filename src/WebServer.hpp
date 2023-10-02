@@ -5,18 +5,24 @@
 #include <vector>
 
 #include <boost/beast/core/string_type.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ssl/context.hpp>
+#include <boost/asio/ip/address.hpp>
 
 #define theServer webserver::instance()
 
 class routing_table;
 class session_tracker;
 class sql_manager;
+class network_component;
 
 class webserver
 {
 public:
+	static webserver& instance()
+	{
+		static webserver instance;
+		return instance;
+	}
+
 	enum status
 	{
 		unknown,
@@ -25,12 +31,6 @@ public:
 		stopping
 	};
 
-	static webserver& instance()
-	{
-		static webserver instance;
-		return instance;
-	}
-
 	webserver();
 	webserver(const std::string& doc_root, const boost::asio::ip::address& address, const std::uint16_t port, const std::uint8_t numthreads);
 	~webserver();
@@ -38,30 +38,27 @@ public:
 	void bootstrap();
 	int run();
 
-	const boost::beast::string_view get_doc_root() const { return m_doc_root; }
-	const routing_table& get_routing_table() const { return *m_routing_table; }
-	session_tracker& get_session_tracker() { return *m_session_tracker; }
-	sql_manager& get_sql_manager() { return *m_sql_manager; }
-	status get_status() const { return m_server_status; }
+	const boost::beast::string_view get_doc_root() const { return doc_root; }
+	const auto& get_routing_table() const { return *my_routing_table; }
 
-	std::uint64_t fetch_add_request_count() { return m_request_count.fetch_add(1); }
+	auto& get_session_tracker() { return *my_session_tracker; }
+	const auto& get_session_tracker() const { return *my_session_tracker; }
+
+	auto& get_sql_manager() { return *my_sql_manager; }
+	const auto& get_sql_manager() const { return *my_sql_manager; }
+
+	status get_status() const { return server_status; }
+
+	std::uint64_t fetch_add_request_count() { return request_count.fetch_add(1); }
 
 private:
-	void load_server_certificate();
+	status server_status{ status::unknown };
+	std::atomic_uint64_t request_count{ 0 };
 
-	status m_server_status{ status::unknown };
-	std::atomic_uint64_t m_request_count{ 0 };
+	const std::string doc_root;
 
-	boost::asio::ip::address m_address;
-	std::uint16_t m_port;
-	const std::string m_doc_root;
-	std::uint8_t m_desired_thread_number;
-
-	std::vector<std::thread> m_threads;
-	boost::asio::io_context m_ioc;
-	boost::asio::ssl::context m_ctx;
-
-	std::unique_ptr<sql_manager> m_sql_manager;
-	std::unique_ptr<routing_table> m_routing_table;
-	std::unique_ptr<session_tracker> m_session_tracker;
+	std::unique_ptr<network_component> my_network_component;
+	std::unique_ptr<sql_manager> my_sql_manager;
+	std::unique_ptr<routing_table> my_routing_table;
+	std::unique_ptr<session_tracker> my_session_tracker;
 };
