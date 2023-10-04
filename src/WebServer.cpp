@@ -18,7 +18,7 @@ webserver::webserver() : webserver(
 webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, const std::uint8_t numthreads) :
 	doc_root{ doc_root },
 	server_status{ status::starting },
-	my_network_component{ std::make_unique<server_network_component>(address, port, numthreads) },
+	my_network_component{ std::make_unique<https_network_component>(address, port, numthreads) },
 	my_sql_manager{ std::make_unique<sql_manager>("Default Database", default_sql_provider{}) },
 	my_routing_table{ std::make_unique<routing_table>() },
 	my_session_tracker{ std::make_unique<session_tracker>() }

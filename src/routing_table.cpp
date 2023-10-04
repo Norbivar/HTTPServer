@@ -10,7 +10,7 @@
 #include "base/http_response.hpp"
 #include "session_tracker.hpp"
 #include "auth/auth.hpp"
-#include "webserver.hpp"
+#include "WebServer.hpp"
 
 void routing_table::register_all()
 {

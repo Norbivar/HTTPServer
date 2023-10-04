@@ -9,7 +9,7 @@
 
 #include <Logging>
 
-#include "webserver.hpp"
+#include "WebServer.hpp"
 #include "database/mappers/sessions_mapper.hpp"
 #include "database/sql/sql_manager.hpp"
 #include "database/sql/sql_handle.hpp"

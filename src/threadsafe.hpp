@@ -10,8 +10,8 @@ namespace threadsafe
 		struct element_read_lock
 		{
 			element_read_lock(const element& elem) : target{ elem }, lock{ elem.m_mutex } { }
-			const T& data() inline const { return target.m_data; }
-			const T* operator->() inline const { return &data(); }
+			const T& data() const { return target.m_data; }
+			const T* operator->() const { return &data(); }
 
 		private:
 			const element& target;

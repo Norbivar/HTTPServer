@@ -19,35 +19,21 @@ function(RERUN_CONAN_INSTALL VAR_CONAN_PROFILE VAR_BUILD_TYPE VAR_CONAN_OUTPUT_D
 					COMMAND_ECHO STDOUT 
 					OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-	message("rv='${CONAN_INSTALL_RESULT}'")
+	#message("rv='${CONAN_INSTALL_RESULT}'")
 	if(${CONAN_INSTALL_RESULT} EQUAL 1)
 		message(FATAL_ERROR "Error while handling Conan, stopping build!")
 	endif()
 endfunction()
 
-
-if((CMAKE_SIZEOF_VOID_P EQUAL 8) OR (CMAKE_CXX_COMPILER_ID MATCHES "SunPro"))
-  set(IS64BIT 1)
-endif()
-
-#################################################### Config stuff ending ####################################################
+#######################################################################################################
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-	if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # TODO: create the equivalent for other compilers?
-		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
-	endif()
-endif()
-
-message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
-
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	set(Boost_COMPILER gcc)
-endif()
-
 set(BUILD_PROFILE "")
 set(CONAN_BUILD_TYPE_STR "")
+if((CMAKE_SIZEOF_VOID_P EQUAL 8) OR (CMAKE_CXX_COMPILER_ID MATCHES "SunPro"))
+  set(IS64BIT 1)
+endif()
 
 if(UNIX)
     set(BUILD_PROFILE "linux")
@@ -73,6 +59,10 @@ SET(CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER "build/${CONAN_PROFILE}")
 set(CONAN_TOOLCHAIN_EXPECTED_PATH "${CMAKE_SOURCE_DIR}/${CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER}/")
 set(CONAN_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_EXPECTED_PATH}/conan_toolchain.cmake")
 
+if(${CMAKE_TOOLCHAIN_FILE}) # include the toolchain if given
+	include(${CMAKE_TOOLCHAIN_FILE})
+endif()
+
 if(EXISTS ${CONAN_TOOLCHAIN_FILE})
 	include(${CONAN_TOOLCHAIN_FILE})
 	set(CMAKE_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_FILE}")
@@ -88,8 +78,20 @@ else()
 	endif()
 endif()
 
-set(CMAKE_GENERATOR_PLATFORM "" CACHE STRING "" FORCE) # Otherwise ninja fails
-set(CMAKE_GENERATOR_TOOLSET "" CACHE STRING "" FORCE) # Otherwise ninja fails
+unset(CMAKE_GENERATOR_PLATFORM CACHE)
+unset(CMAKE_GENERATOR_TOOLSET CACHE)
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+	if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # TODO: create the equivalent for other compilers?
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
+	endif()
+endif()
+
+message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set(Boost_COMPILER gcc)
+endif()
 
 ###########################################################################
 find_package(openssl REQUIRED)
@@ -119,7 +121,8 @@ add_executable(HTTPServer
 "src/database/mappers/accounts_mapper.cpp"
 "src/database/mappers/sessions_mapper.cpp" 
 "src/database/session_element.cpp" 
-"src/components/server/network_component.cpp")
+"src/components/server/network_component.cpp"
+"src/components/server/task_runner_component.cpp")
 	
 include_directories(BEFORE
 	${CMAKE_INCLUDE_PATH}

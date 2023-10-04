@@ -119,26 +119,6 @@ public:
 
 //------------------------------------------------------------------------------
 
-// Handles a plain WebSocket connection
-class plain_websocket_session :
-	public websocket_session<plain_websocket_session>,
-	public std::enable_shared_from_this<plain_websocket_session>
-{
-	boost::beast::websocket::stream<boost::beast::tcp_stream> ws_;
-
-public:
-	// Create the session
-	explicit plain_websocket_session(boost::beast::tcp_stream&& stream) :
-		ws_(std::move(stream))
-	{
-	}
-
-	// Called by the base class
-	boost::beast::websocket::stream<boost::beast::tcp_stream>& ws() { return ws_; }
-};
-
-//------------------------------------------------------------------------------
-
 // Handles an SSL WebSocket connection
 class ssl_websocket_session :
 	public websocket_session<ssl_websocket_session>,
@@ -158,12 +138,6 @@ public:
 };
 
 //------------------------------------------------------------------------------
-
-template <class Body, class Allocator>
-void make_websocket_session(boost::beast::tcp_stream stream, boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>> req)
-{
-	std::make_shared<plain_websocket_session>(std::move(stream))->run(std::move(req));
-}
 
 template <class Body, class Allocator>
 void make_websocket_session(boost::beast::ssl_stream<boost::beast::tcp_stream> stream, boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>> req)

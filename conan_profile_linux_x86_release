@@ -1,0 +1,10 @@
+[settings]
+arch=x86
+build_type=Release
+compiler=gcc
+compiler.cppstd=20
+compiler.version=8.3
+os=Linux
+
+boost/*:compiler.libcxx=libstdc++11
+libpqxx/*:compiler.libcxx=libstdc++11

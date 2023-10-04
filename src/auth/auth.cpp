@@ -4,7 +4,7 @@
 
 #include "../base/http_request.hpp"
 #include "../base/http_response.hpp"
-#include "../webserver.hpp"
+#include "../WebServer.hpp"
 #include "../session_tracker.hpp"
 #include "../database/sql/sql_manager.hpp"
 #include "../database/mappers/accounts_mapper.hpp"

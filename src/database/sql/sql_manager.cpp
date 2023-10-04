@@ -31,7 +31,7 @@ void sql_manager::push_new_handle()
 	++m_sql_connection_total_handles;
 }
 
-thread_local std::weak_ptr<pqxx::connection> sql_manager::handle_of_thread{};
+thread_local std::weak_ptr<pqxx::connection> sql_manager::handle_of_thread{}; // since it is threadlocal, it should not need mutex access
 
 sql_handle sql_manager::acquire_handle() // threadsafe
 {
