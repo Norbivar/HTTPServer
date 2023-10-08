@@ -9,14 +9,15 @@
 #include "components/server/network_component.h"
 
 webserver::webserver() : webserver(
+	theConfig->files_root,
 	theConfig->doc_root,
 	boost::asio::ip::make_address(theConfig->bind_ip),
 	theConfig->port,
 	theConfig->threads)
 { }
 
-webserver::webserver(const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, const std::uint8_t numthreads) :
-	doc_root{ doc_root },
+webserver::webserver(const std::string& files_root, const std::string& doc_root, const boost::asio::ip::address& address, const uint16_t port, const std::uint8_t numthreads) :
+	doc_root{ files_root + doc_root },
 	server_status{ status::starting },
 	my_network_component{ std::make_unique<https_network_component>(address, port, numthreads) },
 	my_sql_manager{ std::make_unique<sql_manager>("Default Database", default_sql_provider{}) },

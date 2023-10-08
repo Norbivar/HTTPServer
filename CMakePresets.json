@@ -10,39 +10,53 @@
   },
   "configurePresets": [
     {
+      "hidden": true,
+      "name": "visual-studio-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "TARGET_SYSTEM": "Windows",
+        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      }
+    },
+    {
+      "hidden": true,
+      "name": "clang-base",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "TARGET_SYSTEM": "Windows",
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      }
+    },
+    ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    {
       "name": "visual-studio-release",
       "displayName": "VS Config Release",
       "description": "Release configure using VS",
-      "generator": "Visual Studio 17 2022",
-      "cacheVariables": {
-        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
-        "TARGET_SYSTEM" : "Windows"
-      },
+      "inherits": "visual-studio-base",
       "binaryDir": "${sourceDir}/build/msvc/release"
     },
     {
       "name": "visual-studio-debug",
       "displayName": "VS Config Debug",
       "description": "Debug configure using VS",
-      "generator": "Visual Studio 17 2022",
-      "cacheVariables": {
-        "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
-        "CMAKE_BUILD_TYPE": "Debug",
-        "TARGET_SYSTEM": "Windows"
-      },
+      "inherits": "visual-studio-base",
       "binaryDir": "${sourceDir}/build/msvc/debug"
     },
     {
       "name": "clang-release",
       "displayName": "Clang Compilation: Release",
       "description": "Release configure using Clang",
-      "generator": "Ninja Multi-Config",
-      "cacheVariables": {
-        "TARGET_SYSTEM": "Windows",
-        "CMAKE_C_COMPILER": "clang",
-        "CMAKE_CXX_COMPILER": "clang-cl"
-      },
+      "inherits": "clang-base",
       "binaryDir": "${sourceDir}/build/clang/release"
+    },
+    {
+      "name": "clang-debug",
+      "displayName": "Clang Compilation: Debug",
+      "description": "Debug configure using Clang",
+      "inherits": "clang-base",
+      "binaryDir": "${sourceDir}/build/clang/debug"
     }
   ],
   "buildPresets": [
@@ -60,6 +74,11 @@
       "name": "clang-release",
       "configurePreset": "clang-release",
       "configuration": "Release"
+    },
+    {
+      "name": "clang-debug",
+      "configurePreset": "clang-debug",
+      "configuration": "Debug"
     }
   ],
   "testPresets": [

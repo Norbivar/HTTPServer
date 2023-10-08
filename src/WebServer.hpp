@@ -32,7 +32,7 @@ public:
 	};
 
 	webserver();
-	webserver(const std::string& doc_root, const boost::asio::ip::address& address, const std::uint16_t port, const std::uint8_t numthreads);
+	webserver(const std::string& files_root, const std::string& doc_root, const boost::asio::ip::address& address, const std::uint16_t port, const std::uint8_t numthreads);
 	~webserver();
 
 	void bootstrap();

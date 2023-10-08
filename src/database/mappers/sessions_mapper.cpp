@@ -6,23 +6,6 @@
 #include <pqxx/result>
 #include "../sql/sql_handle.hpp"
 
-namespace
-{
-	std::vector<session_element> sessions_from_sql(const pqxx::result& res)
-	{
-		std::vector<session_element> elements;
-		elements.reserve(res.size());
-		for (const auto it : res)
-		{
-			session_element elem{ it[0].c_str(), it[1].as<std::uint32_t>() };
-			elem.session_creation_time = std::chrono::system_clock::time_point{ std::chrono::seconds{it[2].as<std::uint64_t>()} };
-			elem.last_request_time = std::chrono::system_clock::time_point{ std::chrono::seconds{it[3].as<std::uint64_t>()} };
-			elements.emplace_back(std::move(elem));
-		}
-		return elements;
-	}
-}
-
 std::string sessions_mapper::filter_t::to_string(const sql_handle& db) const
 {
 	std::vector<std::string> where;
@@ -46,6 +29,19 @@ std::vector<session_element> sessions_mapper::get_raw(const sql_handle& db, cons
 		filter.to_string(db),
 		limit_str)
 	);
+
+	const auto sessions_from_sql = [](const auto& res) {
+		std::vector<session_element> elements;
+		elements.reserve(res.size());
+		for (const auto it : res)
+		{
+			session_element elem{ it[0].c_str(), it[1].template as<std::uint32_t>() };
+			elem.session_creation_time = std::chrono::system_clock::time_point{ std::chrono::seconds{it[2].template as<std::uint64_t>()} };
+			elem.last_request_time = std::chrono::system_clock::time_point{ std::chrono::seconds{it[3].template as<std::uint64_t>()} };
+			elements.emplace_back(std::move(elem));
+		}
+		return elements;
+	};
 
 	return sessions_from_sql(res);
 }

@@ -4,6 +4,7 @@
 
 #include "../base/http_request.hpp"
 #include "../base/http_response.hpp"
+#include "../base/exceptions.hpp"
 #include "../WebServer.hpp"
 #include "../session_tracker.hpp"
 #include "../database/sql/sql_manager.hpp"
@@ -29,14 +30,14 @@ namespace
 void authentication::request_login(const http_request& req, http_response& resp)
 {
 	if (!req.sid.empty())
-		throw std::invalid_argument{ "Already logged in." };
+		throw user_invalid_argument{ "Already logged in." };
 
 	const auto user = req.get<std::string>("user");
 	const auto pass_encoded = req.get<std::string>("pass");
 	const auto obliterate_sessions = req.get<boost::optional<bool>>("obliterate_sessions");
 
 	if (user.empty() || pass_encoded.empty())
-		throw std::invalid_argument{ "Missing username/password!" };
+		throw user_invalid_argument{ "Missing username/password!" };
 
 	theLog->info("Login request received '{}'", user);
 
@@ -48,7 +49,7 @@ void authentication::request_login(const http_request& req, http_response& resp)
 
 	const auto accounts = accounts_mapper::get(db, filter);
 	if (accounts.size() != 1)
-		throw std::invalid_argument{ "Invalid username/password!" };
+		throw user_invalid_argument{ "Invalid username/password!" };
 
 	const auto& account = accounts.front();
 

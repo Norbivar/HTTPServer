@@ -42,7 +42,7 @@ void https_network_component::await_finish()
 
 bool https_network_component::load_certificate()
 {
-	const auto& cert_dir = theConfig->cert_dir;
+	const auto& cert_dir = theConfig->files_root + theConfig->cert_dir;
 	theLog->info("Loading cert from '{}'", cert_dir);
 
 	try {

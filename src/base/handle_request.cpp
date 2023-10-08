@@ -9,6 +9,7 @@
 #include "../session_tracker.hpp"
 #include "../routing_table.hpp"
 #include "http_session.hpp"
+#include "exceptions.hpp"
 
 boost::beast::string_view mime_type(boost::beast::string_view path)
 {
@@ -282,13 +283,21 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 			response.response_code(boost::beast::http::status::bad_request);
 			return resp_queue.process(std::move(response.prepare_release()));
 		}
+		catch (const user_invalid_argument& e) 
+		{
+			theLog->warn("User invalid argument error: {}", e.what());
+
+			http_response response{ req.version(), req.keep_alive() };
+			response.response_code(boost::beast::http::status::bad_request);
+			response["error_message"] = e.what();
+			return resp_queue.process(std::move(response.prepare_release()));
+		}
 		catch (const std::invalid_argument& e)
 		{
 			theLog->error("Invalid argument error: {}", e.what());
 
 			http_response response{ req.version(), req.keep_alive() };
 			response.response_code(boost::beast::http::status::bad_request);
-			response["error_message"] = e.what();
 			return resp_queue.process(std::move(response.prepare_release()));
 		}
 		catch (const std::runtime_error& e)

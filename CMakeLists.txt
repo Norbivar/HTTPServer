@@ -13,10 +13,11 @@ function(RERUN_CONAN_INSTALL VAR_CONAN_PROFILE VAR_BUILD_TYPE VAR_CONAN_OUTPUT_D
 		"--build=missing"
 		".")
 
+	string(REPLACE ";" " " CONAN_INSTALL_PARAMS_STRING "${CONAN_INSTALL_PARAMS}")
+	message(STATUS "Running Conan command: ${CONAN_INSTALL_COMMAND} ${CONAN_INSTALL_PARAMS_STRING}")
 	execute_process(COMMAND ${CONAN_INSTALL_COMMAND} ${CONAN_INSTALL_PARAMS}
 					WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 					RESULT_VARIABLE CONAN_INSTALL_RESULT
-					COMMAND_ECHO STDOUT 
 					OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 	#message("rv='${CONAN_INSTALL_RESULT}'")
@@ -55,6 +56,9 @@ else()
 endif()
 set(CONAN_PROFILE "conan_profile_${BUILD_PROFILE}")
 
+message(STATUS "Build type: ${CONAN_BUILD_TYPE_STR}")
+message(STATUS "Using Conan profile: ${CONAN_PROFILE}")
+
 SET(CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER "build/${CONAN_PROFILE}")
 set(CONAN_TOOLCHAIN_EXPECTED_PATH "${CMAKE_SOURCE_DIR}/${CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER}/")
 set(CONAN_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_EXPECTED_PATH}/conan_toolchain.cmake")
@@ -81,15 +85,11 @@ endif()
 unset(CMAKE_GENERATOR_PLATFORM CACHE)
 unset(CMAKE_GENERATOR_TOOLSET CACHE)
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-	if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # TODO: create the equivalent for other compilers?
-		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG:FULL /OPT:REF /OPT:ICF")
-	endif()
-endif()
-
 message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # TODO: create the equivalent for other compilers?
+	set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} /DEBUG:FULL /OPT:REF /OPT:ICF")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(Boost_COMPILER gcc)
 endif()
 
@@ -122,7 +122,7 @@ add_executable(HTTPServer
 "src/database/mappers/sessions_mapper.cpp" 
 "src/database/session_element.cpp" 
 "src/components/server/network_component.cpp"
-"src/components/server/task_runner_component.cpp")
+"src/components/server/task_runner_component.cpp" "src/base/websocket_session.cpp")
 	
 include_directories(BEFORE
 	${CMAKE_INCLUDE_PATH}
