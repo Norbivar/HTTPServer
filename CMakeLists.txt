@@ -3,10 +3,17 @@ cmake_minimum_required(VERSION 3.16)
 project(HTTPServer LANGUAGES CXX)
 
 function(RERUN_CONAN_INSTALL VAR_CONAN_PROFILE VAR_BUILD_TYPE VAR_CONAN_OUTPUT_DIR)
-	# Try building it
+	
+	set(TOOLCHAIN_USED "")
+	if(DEFINED CMAKE_TOOLCHAIN_FILE)
+		set (TOOLCHAIN_USED "-c" "tools.cmake.cmaketoolchain:user_toolchain=['${CMAKE_TOOLCHAIN_FILE}']")
+	endif()
+
 	set(CONAN_INSTALL_COMMAND "conan")
 	set(CONAN_INSTALL_PARAMS 
 		"install" 
+		"-c" "tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}"
+		${TOOLCHAIN_USED}
 		"-s" "build_type=${VAR_BUILD_TYPE}"
 		"-pr:h" "./${VAR_CONAN_PROFILE}"
 		"--output-folder=${VAR_CONAN_OUTPUT_DIR}"
@@ -20,7 +27,6 @@ function(RERUN_CONAN_INSTALL VAR_CONAN_PROFILE VAR_BUILD_TYPE VAR_CONAN_OUTPUT_D
 					RESULT_VARIABLE CONAN_INSTALL_RESULT
 					OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-	#message("rv='${CONAN_INSTALL_RESULT}'")
 	if(${CONAN_INSTALL_RESULT} EQUAL 1)
 		message(FATAL_ERROR "Error while handling Conan, stopping build!")
 	endif()
@@ -40,6 +46,8 @@ if(UNIX)
     set(BUILD_PROFILE "linux")
 elseif(WIN32)
     set(BUILD_PROFILE "windows")
+else()
+	message(ERROR "Unsupported target architecture (cannot decide on Conan files to use)!")
 endif()
 if(IS64BIT)
 	set(BUILD_PROFILE "${BUILD_PROFILE}_x64")
@@ -59,7 +67,7 @@ set(CONAN_PROFILE "conan_profile_${BUILD_PROFILE}")
 message(STATUS "Build type: ${CONAN_BUILD_TYPE_STR}")
 message(STATUS "Using Conan profile: ${CONAN_PROFILE}")
 
-SET(CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER "build/${CONAN_PROFILE}")
+set(CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER "build/${CONAN_PROFILE}")
 set(CONAN_TOOLCHAIN_EXPECTED_PATH "${CMAKE_SOURCE_DIR}/${CONAN_TOOLCHAIN_OUTPUT_BUILD_FOLDER}/")
 set(CONAN_TOOLCHAIN_FILE "${CONAN_TOOLCHAIN_EXPECTED_PATH}/conan_toolchain.cmake")
 
