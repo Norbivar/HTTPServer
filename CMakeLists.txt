@@ -1,36 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(HTTPServer LANGUAGES CXX)
+include("CMakeFuncs.txt")
 
-function(RERUN_CONAN_INSTALL VAR_CONAN_PROFILE VAR_BUILD_TYPE VAR_CONAN_OUTPUT_DIR)
-	
-	set(TOOLCHAIN_USED "")
-	if(DEFINED CMAKE_TOOLCHAIN_FILE)
-		set (TOOLCHAIN_USED "-c" "tools.cmake.cmaketoolchain:user_toolchain=['${CMAKE_TOOLCHAIN_FILE}']")
-	endif()
-
-	set(CONAN_INSTALL_COMMAND "conan")
-	set(CONAN_INSTALL_PARAMS 
-		"install" 
-		"-c" "tools.cmake.cmaketoolchain:generator=${CMAKE_GENERATOR}"
-		${TOOLCHAIN_USED}
-		"-s" "build_type=${VAR_BUILD_TYPE}"
-		"-pr:h" "./${VAR_CONAN_PROFILE}"
-		"--output-folder=${VAR_CONAN_OUTPUT_DIR}"
-		"--build=missing"
-		".")
-
-	string(REPLACE ";" " " CONAN_INSTALL_PARAMS_STRING "${CONAN_INSTALL_PARAMS}")
-	message(STATUS "Running Conan command: ${CONAN_INSTALL_COMMAND} ${CONAN_INSTALL_PARAMS_STRING}")
-	execute_process(COMMAND ${CONAN_INSTALL_COMMAND} ${CONAN_INSTALL_PARAMS}
-					WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-					RESULT_VARIABLE CONAN_INSTALL_RESULT
-					OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-	if(${CONAN_INSTALL_RESULT} EQUAL 1)
-		message(FATAL_ERROR "Error while handling Conan, stopping build!")
-	endif()
-endfunction()
+project(Main)
 
 #######################################################################################################
 
@@ -102,65 +74,9 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 ###########################################################################
-find_package(openssl REQUIRED)
-find_package(boost REQUIRED)
-find_package(libpqxx REQUIRED)
 
-add_definitions(-DFMT_HEADER_ONLY)
+SET(MAIN_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
-add_executable(HTTPServer 
-"src/main.cpp"
-"libs/Config.cpp"
-"libs/Logger.cpp"
-"src/webserver.cpp"
-"src/auth/auth.cpp"
-"src/base/handle_request.cpp"
-"src/base/http_session.cpp"
-"src/base/listener.cpp"
-"src/database/mappers/accounts_mapper.cpp"
-"src/base/http_request.cpp"
-"src/base/http_response.cpp"
-"src/main.cpp"
-"src/routing_table.cpp"
-"src/session_tracker.cpp"
-"src/database/sql/sql_handle.cpp"
-"src/database/sql/sql_provider.cpp"
-"src/database/sql/sql_manager.cpp"
-"src/database/mappers/accounts_mapper.cpp"
-"src/database/mappers/sessions_mapper.cpp" 
-"src/database/session_element.cpp" 
-"src/components/server/network_component.cpp"
-"src/components/server/task_runner_component.cpp" "src/base/websocket_session.cpp")
-	
-include_directories(BEFORE
-	${CMAKE_INCLUDE_PATH}
-	"libs"
-	"src") 
-
-target_link_libraries(HTTPServer
-	PRIVATE
-	boost::boost
-	openssl::openssl
-	libpqxx::pqxx
-)
-
-# Set the binary extension
-set(BINARY_SUFFIX "")
-
-set_property(TARGET HTTPServer PROPERTY CXX_STANDARD 20)
-if(UNIX)
-    target_link_libraries(HTTPServer pthread)
-    set(BINARY_SUFFIX ".out")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-psabi")
-elseif(WIN32)
-    set(BINARY_SUFFIX ".exe")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /D_WIN32_WINNT=0x0601 /wd4996 /wd4702 /utf-8")
-	string(REGEX REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-	string(REGEX REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-	string(REGEX REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-endif()
-
-message("Compile flags: ${CMAKE_CXX_FLAGS}")
-
-set_target_properties(HTTPServer PROPERTIES SUFFIX ${BINARY_SUFFIX})
-message("Target extension is: ${BINARY_SUFFIX}")
+add_subdirectory("libs")
+add_subdirectory("src/server")
+add_subdirectory("src/load_balancer")

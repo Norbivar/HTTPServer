@@ -31,7 +31,7 @@ namespace Libs
 
 	config::~config()
 	{
-		save_all(); // A config should not really require saving
+		save_all();
 	}
 
 	void config::save_all()

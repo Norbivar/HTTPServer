@@ -38,12 +38,12 @@ void webserver::bootstrap()
 	my_session_tracker->load_from_db(dbh);
 
 	if (my_network_component->load_certificate())
-		theLog->info("-> Certificates loaded ✓");
+		theLog->info("-> Certificates loaded DONE");
 	else
 		throw std::runtime_error{ "Failed to load certificate" };
 
 	my_routing_table->register_all();
-	theLog->info("-> Path mapping set up ✓");
+	theLog->info("-> Path mapping set up DONE");
 	my_routing_table->print_stats();
 }
 

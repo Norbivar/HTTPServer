@@ -5,11 +5,10 @@
 
 #include <Logging>
 #include <Config>
-#include "WebServer.hpp"
 
 int main(int /*argc*/, char* /*argv*/[])
 {
-	theLog->info("Startup in progress");
+	theLog->info("Load Balancer starting up...");
 	try
 	{
 		theLog->set_file_logging(theConfig->log_to_file);
@@ -30,9 +29,7 @@ int main(int /*argc*/, char* /*argv*/[])
 			std::abort();
 		});
 
-		auto& server = webserver::instance();
-		server.bootstrap();
-		return server.run();
+		return 0;
 	}
 	catch (const std::exception& e)
 	{

@@ -31,7 +31,7 @@ void https_network_component::setup_run()
 	for (auto i = 0; i < desired_thread_number; ++i)
 		threads.emplace_back([this] { ioc.run(); });
 
-	theLog->info("-> HTTPS request handling is runnning on port: {}, threads running: {} ✓", port, threads.size());
+	theLog->info("-> HTTPS request handling is runnning on port: {}, threads running: {} DONE", port, threads.size());
 }
 
 void https_network_component::await_finish()
