@@ -3,8 +3,6 @@
 #include "spdlog/fmt/ostr.h"
 #include "LibSettings.hpp"
 
-#include "Config"
-
 namespace Libs
 {
 	class Logger

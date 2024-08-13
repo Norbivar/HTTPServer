@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Config.hpp"
+#include <Config.hpp>
 
 namespace Configs
 {
 #define DEFINE_CONFIG_OPTIONAL(name, type, cstr, defaultval) const type name = read<type>(cstr, defaultval);
 #define DEFINE_CONFIG(name, type, cstr) const type name = read<type>(cstr);
 
-	class list : public Libs::config::list_base
+	class server_config_list : public list_base
 	{
 	public:
-		list(std::map<std::string, std::string>&& map) : Libs::config::list_base{ std::move(map) } {}
+		server_config_list(std::map<std::string, std::string>&& map) : list_base{ std::move(map) } {}
 
 		DEFINE_CONFIG_OPTIONAL(log_to_file, bool, "log_to_file", true);
 		DEFINE_CONFIG_OPTIONAL(log_level, std::uint8_t, "log_level", 0);

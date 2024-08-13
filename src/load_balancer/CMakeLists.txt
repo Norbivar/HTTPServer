@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(LoadBalancer LANGUAGES CXX)
 
-find_package(openssl REQUIRED)
-find_package(boost REQUIRED)
-
 add_definitions(-DFMT_HEADER_ONLY)
 
 add_executable(LoadBalancer 

@@ -4,8 +4,6 @@ include("CMakeFuncs.txt")
 
 project(Main)
 
-#######################################################################################################
-
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(BUILD_PROFILE "")
@@ -76,6 +74,10 @@ endif()
 ###########################################################################
 
 SET(MAIN_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+
+find_package(openssl REQUIRED)
+find_package(boost REQUIRED)
+find_package(libpqxx REQUIRED)
 
 add_subdirectory("libs")
 add_subdirectory("src/server")

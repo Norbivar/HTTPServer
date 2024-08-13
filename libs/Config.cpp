@@ -1,71 +1,45 @@
-#include <fstream>
 #include "Config.hpp"
-#include "ConfigList.hpp"
 
-namespace Libs
+Configs::list_base::list_base(std::map<std::string, std::string>&& map) :
+	settings_map{ std::move(map) }
+{}
+
+Configs::config_base::~config_base()
 {
-	config::list_base::list_base(std::map<std::string, std::string>&& map) :
-		settings_map{ std::move(map) }
-	{}
+	save_all();
+}
 
-	config& config::get_config()
+bool Configs::config_base::read_file(const char* filename, std::map<std::string, std::string>& output) const
+{
+	std::ifstream input(filename);
+	if (input.good())
 	{
-		static config c{};
-		return c;
-	}
-
-	config::config()
-	{
-		reload();
-	}
-
-	void config::reload()
-	{
-		std::map<std::string, std::string> config_list;
-		for (const auto& name : Libs::ConfigSettings::cConfigFilesToReadInOrder)
-			read_file(name, config_list);
-
-		m_ConfigListSwap = std::make_unique<Configs::list>(std::move(config_list));
-		m_ConfigListSwap.swap(m_ConfigList);
-	}
-
-	config::~config()
-	{
-		save_all();
-	}
-
-	void config::save_all()
-	{
-		if (ConfigSettings::cConfigFilesToReadInOrder.empty())
-			return;
-
-		std::ofstream output(ConfigSettings::cConfigFilesToReadInOrder.front(), std::ios::out);
-		if (output.good())
+		std::string line;
+		while (std::getline(input, line))
 		{
-			for (const auto& roots : m_ConfigList->settings_map)
-				output << roots.first.c_str() << "=" << roots.second.c_str() << "\n";
-		}
-	}
-
-	bool config::read_file(const char* filename, std::map<std::string, std::string>& output) const
-	{
-		std::ifstream input(filename);
-		if (input.good())
-		{
-			std::string line;
-			while (std::getline(input, line))
+			if (std::regex_match(line, Libs::ConfigSettings::cConfigValidLineRegex))
 			{
-				if (std::regex_match(line, ConfigSettings::cConfigValidLineRegex))
-				{
-					const auto eqpos = line.find_first_of('=');
-					const std::string key = line.substr(0, eqpos);
-					const std::string valueText = line.substr(eqpos + 1);
+				const auto eqpos = line.find_first_of('=');
+				const std::string key = line.substr(0, eqpos);
+				const std::string valueText = line.substr(eqpos + 1);
 
-					output[key] = valueText;
-				}
+				output[key] = valueText;
 			}
-			return true;
 		}
-		return false;
+		return true;
+	}
+	return false;
+}
+
+void Configs::config_base::save_all()
+{
+	if (Libs::ConfigSettings::cConfigFilesToReadInOrder.empty())
+		return;
+
+	std::ofstream output(Libs::ConfigSettings::cConfigFilesToReadInOrder.front(), std::ios::out);
+	if (output.good())
+	{
+		for (const auto& roots : m_ConfigList->settings_map)
+			output << roots.first.c_str() << "=" << roots.second.c_str() << "\n";
 	}
 }

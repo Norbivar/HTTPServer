@@ -3,6 +3,8 @@
 #include <boost/asio/ip/address.hpp>
 
 #include <Logging>
+#include <Config>
+
 #include "base/listener.hpp"
 
 https_network_component::https_network_component(const boost::asio::ip::address& address, std::uint16_t port, std::uint8_t desired_thread_number) :
