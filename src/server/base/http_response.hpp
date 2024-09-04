@@ -15,7 +15,7 @@ public:
 	boost::beast::http::status response_code() const { return _base.result(); }
 	void response_code(const boost::beast::http::status res) { _base.result(res); }
 	
-	// Creates a 'Set-Cookie' flag on the HTTP Response, so the browser will set the defined cookie
+	// Creates a 'Set-Cookie' flag on the HTTP Response, so the browser will set the defined cookie.
 	void set_cookie(const std::string& cookie) { _base.set("Set-Cookie", cookie); }
 
 	// Sets the response json to the specified.

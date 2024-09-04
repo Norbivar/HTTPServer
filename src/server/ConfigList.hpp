@@ -17,7 +17,7 @@ namespace Configs
 
 		// Everything that is file related. This is the base directory for doc_root, cert_dir, etc...
 		// Mainy used to enable "out-of-the-box" debugging
-		DEFINE_CONFIG_OPTIONAL(files_root, std::string, "files_root", "../../../");
+		DEFINE_CONFIG_OPTIONAL(files_root, std::string, "files_root", "../../../../");
 		// The directory from which the html and other files are served
 		DEFINE_CONFIG_OPTIONAL(doc_root, std::string, "doc_root", "web/");
 		// Directory of the HTTPS cert

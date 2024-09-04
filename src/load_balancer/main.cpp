@@ -1,9 +1,4 @@
-﻿#include <memory>
-#include <iostream>
-
-#include <boost/asio/ip/address.hpp>
-
-#include <Logging>
+﻿#include <Logging>
 #include <Config>
 
 int main(int /*argc*/, char* /*argv*/[])

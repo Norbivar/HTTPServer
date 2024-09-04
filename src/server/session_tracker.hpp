@@ -57,6 +57,8 @@ public:
 	std::pair<bool, session_by_account_iterator> find_by_account_id(const id::account account_id) const;
 
 private:
+	static constexpr const uint8_t max_session_for_account = 5;
+
 	session_map m_session_container;
 
 	std::pair<bool, session_by_sid_iterator> find_by_session_id_impl(const id::session& sid) const;

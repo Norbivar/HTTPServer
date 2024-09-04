@@ -1,10 +1,6 @@
-﻿#include <memory>
-#include <iostream>
-
-#include <boost/asio/ip/address.hpp>
-
-#include <Logging>
+﻿#include <Logging>
 #include <Config>
+
 #include "WebServer.hpp"
 
 int main(int /*argc*/, char* /*argv*/[])
@@ -32,6 +28,7 @@ int main(int /*argc*/, char* /*argv*/[])
 
 		auto& server = webserver::instance();
 		server.bootstrap();
+
 		return server.run();
 	}
 	catch (const std::exception& e)

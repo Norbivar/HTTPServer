@@ -9,6 +9,17 @@
 #include "LibSettings.hpp"
 
 namespace Configs {
+	struct config_not_found_exception : public std::runtime_error
+	{
+		config_not_found_exception(const std::string& str) : std::runtime_error{ str } {}
+	};
+
+	struct config_save_exception : public std::runtime_error
+	{
+		config_save_exception(const std::string& str) : std::runtime_error{ str } {}
+	};
+
+
 	class list_base
 	{
 		friend class config_base;
@@ -16,29 +27,16 @@ namespace Configs {
 		list_base(std::map<std::string, std::string>&& map);
 
 		template<typename T>
-		T read(const char* configname, T defaultval)
+		T save(const char* configname, T defaultval)
 		{
-			const auto& node = settings_map.find(configname);
-			if (node != settings_map.end())
-			{
-				if constexpr (std::is_same<T, std::uint8_t>::value)
-					return static_cast<T>(boost::lexical_cast<std::uint16_t>(node->second));
-				else if constexpr (std::is_same<T, std::int8_t>::value)
-					return static_cast<T>(boost::lexical_cast<std::int16_t>(node->second));
-				else
-					return boost::lexical_cast<T>(node->second);
-			}
+			if constexpr (std::is_same<T, std::uint8_t>::value)
+				settings_map[configname] = boost::lexical_cast<std::string, std::uint16_t>(defaultval);
+			else if constexpr (std::is_same<T, std::int8_t>::value)
+				settings_map[configname] = boost::lexical_cast<std::string, std::int16_t>(defaultval);
 			else
-			{
-				if constexpr (std::is_same<T, std::uint8_t>::value)
-					settings_map[configname] = boost::lexical_cast<std::string, std::uint16_t>(defaultval);
-				else if constexpr (std::is_same<T, std::int8_t>::value)
-					settings_map[configname] = boost::lexical_cast<std::string, std::int16_t>(defaultval);
-				else
-					settings_map[configname] = boost::lexical_cast<std::string>(defaultval);
+				settings_map[configname] = boost::lexical_cast<std::string>(defaultval);
 
-				return defaultval;
-			}
+			return read<T>(configname);
 		}
 
 		template<typename T>
@@ -55,7 +53,18 @@ namespace Configs {
 					return boost::lexical_cast<T>(node->second);
 			}
 
-			throw std::runtime_error(std::string{ "Could not find config : " + std::string(configname) });
+			throw config_not_found_exception(std::string{ "Could not find config : " } + std::string{ configname });
+		}
+
+		template<typename T>
+		T read(const char* configname, T defaultval)
+		{
+			try {
+				return read<T>(configname);
+			}
+			catch (const config_not_found_exception& ex) {
+				return save(configname, defaultval);
+			}
 		}
 
 		std::map<std::string, std::string> settings_map;

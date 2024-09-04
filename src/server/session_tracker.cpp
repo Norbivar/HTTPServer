@@ -63,7 +63,10 @@ session_tracker::~session_tracker()
 	theLog->info("Session tracker shut down.");
 }
 
-std::pair<bool, session_map::iterator> session_tracker::create_new_session(const std::string& ip_address, const id::account account_id, bool delete_other_for_account)
+std::pair<bool, session_map::iterator> session_tracker::create_new_session(
+	const std::string& ip_address,
+	const id::account account_id,
+	bool delete_other_for_account)
 {
 	std::unique_lock lock{ m_mutex };
 
@@ -87,7 +90,15 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(const
 		return { false, nullptr };
 
 	if (delete_other_for_account)
+	{
 		m_session_container.get<1>().erase(account_id);
+	}
+	else
+	{
+		const auto number_of_active_sessions = m_session_container.get<1>().count(account_id);
+		if (number_of_active_sessions > max_session_for_account)
+			return { false, nullptr };
+	}
 
 	session_element new_sess{ new_session_id, account_id };
 	new_sess.session_creation_time = std::chrono::system_clock::now();

@@ -1,0 +1,4 @@
+#pragma once
+
+#include "ConfigList.hpp"
+#define theConfig Configs::config<Configs::load_balancer_config_list>::get_config()

@@ -63,7 +63,6 @@ endif()
 unset(CMAKE_GENERATOR_PLATFORM CACHE)
 unset(CMAKE_GENERATOR_TOOLSET CACHE)
 
-message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS}")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # TODO: create the equivalent for other compilers?
 	set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} /DEBUG:FULL /OPT:REF /OPT:ICF")
@@ -80,5 +79,5 @@ find_package(boost REQUIRED)
 find_package(libpqxx REQUIRED)
 
 add_subdirectory("libs")
-add_subdirectory("src/server")
-add_subdirectory("src/load_balancer")
+add_subdirectory("src/server" "server")
+add_subdirectory("src/load_balancer" "load_balancer")

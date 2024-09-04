@@ -52,28 +52,19 @@ void authentication::request_login(const http_request& req, http_response& resp)
 		throw user_invalid_argument{ "Invalid username/password!" };
 
 	const auto& account = accounts.front();
-
 	auto& session_tracker = theServer.get_session_tracker();
-	const auto [exists, it] = session_tracker.find_by_account_id(account.id);
-	if (exists)
+
+	const auto [success, new_it] = session_tracker.create_new_session(req.address, account.id, obliterate_sessions.get_value_or(false));
+	if (success) 
 	{
-		if (obliterate_sessions.get_value_or(false))
-		{
-			const auto destroyed = session_tracker.obliterate_sessions_by_account_id(account.id);
-			theLog->info("Obliterated {} sessions with account id {}.", destroyed, account.id);
-		}
-		else
-		{
-			resp["exists"] = true;
-			return;
-		}
-	}
-
-	const auto [success, new_it] = session_tracker.create_new_session(req.address, account.id);
-	theLog->info("Account ID {} logged in successfully.", new_it->account_id);
-
-	if (success)
+		theLog->info("Account ID {} logged in successfully.", new_it->account_id);
 		resp.set_cookie(fmt::format("SID={};", new_it->session_id));
+	}
+	else
+	{
+		theLog->error("Account ID {} failed to log in.", new_it->account_id);
+		throw user_invalid_argument{ "Invalid username/password!" };
+	}
 }
 
 void authentication::request_register(const http_request& req, http_response& resp)
