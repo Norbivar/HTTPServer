@@ -1,0 +1,683 @@
+2024/09/22 18:26:35 [notice] 36712#37772: using the "select" event method
+2024/09/22 18:26:35 [notice] 36712#37772: using the "select" event method
+2024/09/22 18:26:35 [notice] 36712#37772: nginx/1.26.2
+2024/09/22 18:26:35 [notice] 36712#37772: nginx/1.26.2
+2024/09/22 18:26:35 [info] 36712#37772: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:26:35 [notice] 36712#37772: start worker processes
+2024/09/22 18:26:35 [notice] 36712#37772: start worker processes
+2024/09/22 18:26:35 [notice] 36712#37772: start worker process 19320
+2024/09/22 18:26:35 [notice] 36712#37772: start worker process 19320
+2024/09/22 18:26:44 [alert] 36712#37772: the event "ngx_master_36712" was not signaled for 5s
+2024/09/22 18:26:44 [alert] 36712#37772: the event "ngx_master_36712" was not signaled for 5s
+2024/09/22 18:26:44 [alert] 36712#37772: the event "ngx_master_36712" was not signaled for 5s
+2024/09/22 18:27:02 [notice] 10224#35676: signal process started
+2024/09/22 18:27:02 [error] 10224#35676: OpenEvent("Global\ngx_stop_36712") failed (2: The system cannot find the file specified)
+2024/09/22 18:27:06 [notice] 32496#13524: using the "select" event method
+2024/09/22 18:27:06 [notice] 32496#13524: using the "select" event method
+2024/09/22 18:27:06 [notice] 32496#13524: nginx/1.26.2
+2024/09/22 18:27:06 [notice] 32496#13524: nginx/1.26.2
+2024/09/22 18:27:06 [info] 32496#13524: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:27:06 [notice] 32496#13524: start worker processes
+2024/09/22 18:27:06 [notice] 32496#13524: start worker processes
+2024/09/22 18:27:06 [notice] 32496#13524: start worker process 28324
+2024/09/22 18:27:06 [notice] 32496#13524: start worker process 28324
+2024/09/22 18:27:14 [alert] 32496#13524: the event "ngx_master_32496" was not signaled for 5s
+2024/09/22 18:27:14 [alert] 32496#13524: the event "ngx_master_32496" was not signaled for 5s
+2024/09/22 18:27:14 [alert] 32496#13524: the event "ngx_master_32496" was not signaled for 5s
+2024/09/22 18:28:55 [notice] 30300#40584: signal process started
+2024/09/22 18:28:55 [error] 30300#40584: OpenEvent("Global\ngx_stop_32496") failed (2: The system cannot find the file specified)
+2024/09/22 18:29:04 [notice] 24844#39332: signal process started
+2024/09/22 18:29:04 [error] 24844#39332: OpenEvent("Global\ngx_quit_32496") failed (2: The system cannot find the file specified)
+2024/09/22 18:29:15 [notice] 27568#15268: using the "select" event method
+2024/09/22 18:29:15 [notice] 27568#15268: using the "select" event method
+2024/09/22 18:29:15 [notice] 27568#15268: nginx/1.26.2
+2024/09/22 18:29:15 [notice] 27568#15268: nginx/1.26.2
+2024/09/22 18:29:15 [info] 27568#15268: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:29:15 [notice] 27568#15268: start worker processes
+2024/09/22 18:29:15 [notice] 27568#15268: start worker processes
+2024/09/22 18:29:15 [notice] 27568#15268: start worker process 31444
+2024/09/22 18:29:15 [notice] 27568#15268: start worker process 31444
+2024/09/22 18:29:23 [alert] 27568#15268: the event "ngx_master_27568" was not signaled for 5s
+2024/09/22 18:29:23 [alert] 27568#15268: the event "ngx_master_27568" was not signaled for 5s
+2024/09/22 18:29:23 [alert] 27568#15268: the event "ngx_master_27568" was not signaled for 5s
+2024/09/22 18:31:25 [notice] 34752#9544: signal process started
+2024/09/22 18:31:25 [error] 34752#9544: OpenEvent("Global\ngx_quit_27568") failed (2: The system cannot find the file specified)
+2024/09/22 18:31:26 [notice] 27448#31828: signal process started
+2024/09/22 18:31:26 [error] 27448#31828: OpenEvent("Global\ngx_quit_27568") failed (2: The system cannot find the file specified)
+2024/09/22 18:31:28 [notice] 1232#40116: using the "select" event method
+2024/09/22 18:31:28 [notice] 1232#40116: using the "select" event method
+2024/09/22 18:31:28 [notice] 1232#40116: nginx/1.26.2
+2024/09/22 18:31:28 [notice] 1232#40116: nginx/1.26.2
+2024/09/22 18:31:28 [info] 1232#40116: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:31:28 [notice] 1232#40116: start worker processes
+2024/09/22 18:31:28 [notice] 1232#40116: start worker processes
+2024/09/22 18:31:28 [notice] 1232#40116: start worker process 11356
+2024/09/22 18:31:28 [notice] 1232#40116: start worker process 11356
+2024/09/22 18:31:28 [notice] 11356#11060: nginx/1.26.2
+2024/09/22 18:31:28 [notice] 11356#11060: nginx/1.26.2
+2024/09/22 18:31:28 [info] 11356#11060: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 9760
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 9760
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 27896
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 27896
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 26280
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 26280
+2024/09/22 18:31:44 [error] 11356#9760: *1 CreateFile() "G:\Documents\Projects\HTTPServer\src\resource_server/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "http://norbinet.asuscomm.com/"
+2024/09/22 18:31:44 [error] 11356#9760: *1 CreateFile() "G:\Documents\Projects\HTTPServer\src\resource_server/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "http://norbinet.asuscomm.com/"
+2024/09/22 18:31:44 [error] 11356#9760: *1 CreateFile() "G:\Documents\Projects\HTTPServer\src\resource_server/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "http://norbinet.asuscomm.com/"
+2024/09/22 18:34:19 [notice] 8364#2628: signal process started
+2024/09/22 18:34:25 [notice] 27236#36900: using the "select" event method
+2024/09/22 18:34:25 [notice] 27236#36900: using the "select" event method
+2024/09/22 18:34:25 [notice] 27236#36900: nginx/1.26.2
+2024/09/22 18:34:25 [notice] 27236#36900: nginx/1.26.2
+2024/09/22 18:34:25 [info] 27236#36900: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:34:25 [notice] 27236#36900: start worker processes
+2024/09/22 18:34:25 [notice] 27236#36900: start worker processes
+2024/09/22 18:34:25 [notice] 27236#36900: start worker process 39364
+2024/09/22 18:34:25 [notice] 27236#36900: start worker process 39364
+2024/09/22 18:34:25 [notice] 39364#37924: nginx/1.26.2
+2024/09/22 18:34:25 [notice] 39364#37924: nginx/1.26.2
+2024/09/22 18:34:25 [info] 39364#37924: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:34:25 [notice] 39364#37924: create thread 22256
+2024/09/22 18:34:25 [notice] 39364#37924: create thread 22256
+2024/09/22 18:34:25 [notice] 39364#37924: create thread 17372
+2024/09/22 18:34:25 [notice] 39364#37924: create thread 17372
+2024/09/22 18:34:25 [notice] 39364#37924: create thread 8056
+2024/09/22 18:34:25 [notice] 39364#37924: create thread 8056
+2024/09/22 18:36:03 [notice] 37936#39368: signal process started
+2024/09/22 18:36:03 [notice] 27236#36900: shutting down
+2024/09/22 18:36:03 [notice] 27236#36900: shutting down
+2024/09/22 18:36:03 [notice] 39364#37924: gracefully shutting down
+2024/09/22 18:36:03 [notice] 39364#37924: gracefully shutting down
+2024/09/22 18:36:03 [notice] 39364#17372: exiting
+2024/09/22 18:36:03 [notice] 39364#17372: exiting
+2024/09/22 18:36:03 [notice] 39364#22256: exiting
+2024/09/22 18:36:03 [notice] 39364#22256: exiting
+2024/09/22 18:36:03 [notice] 39364#37924: exit
+2024/09/22 18:36:03 [notice] 39364#37924: exit
+2024/09/22 18:36:03 [notice] 27236#36900: worker process 39364 exited with code 0
+2024/09/22 18:36:03 [notice] 27236#36900: worker process 39364 exited with code 0
+2024/09/22 18:36:03 [notice] 27236#36900: exit
+2024/09/22 18:36:03 [notice] 27236#36900: exit
+2024/09/22 18:38:21 [emerg] 10384#15852: cannot load certificate "G:\Documents\Projects\HTTPServer\web/conf/../../cert/dhparam.pem": PEM_read_bio_X509_AUX() failed (SSL: error:0480006C:PEM routines::no start line:Expecting: TRUSTED CERTIFICATE)
+2024/09/22 18:38:26 [emerg] 17256#10964: cannot load certificate "G:\Documents\Projects\HTTPServer\web/conf/../../cert/dhparam.pem": PEM_read_bio_X509_AUX() failed (SSL: error:0480006C:PEM routines::no start line:Expecting: TRUSTED CERTIFICATE)
+2024/09/22 18:40:48 [notice] 31140#23992: signal process started
+2024/09/22 18:40:48 [error] 31140#23992: CreateFile() "G:\Documents\Projects\HTTPServer\web/logs/nginx.pid" failed (2: The system cannot find the file specified)
+2024/09/22 18:40:55 [notice] 23908#38780: using the "select" event method
+2024/09/22 18:40:55 [notice] 23908#38780: using the "select" event method
+2024/09/22 18:40:55 [notice] 23908#38780: nginx/1.26.2
+2024/09/22 18:40:55 [notice] 23908#38780: nginx/1.26.2
+2024/09/22 18:40:55 [info] 23908#38780: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:40:55 [notice] 23908#38780: start worker processes
+2024/09/22 18:40:55 [notice] 23908#38780: start worker processes
+2024/09/22 18:40:55 [notice] 23908#38780: start worker process 24692
+2024/09/22 18:40:55 [notice] 23908#38780: start worker process 24692
+2024/09/22 18:41:03 [alert] 23908#38780: the event "ngx_master_23908" was not signaled for 5s
+2024/09/22 18:41:03 [alert] 23908#38780: the event "ngx_master_23908" was not signaled for 5s
+2024/09/22 18:41:03 [alert] 23908#38780: the event "ngx_master_23908" was not signaled for 5s
+2024/09/22 18:46:12 [notice] 3416#40104: signal process started
+2024/09/22 18:46:12 [error] 3416#40104: OpenEvent("Global\ngx_reload_23908") failed (2: The system cannot find the file specified)
+2024/09/22 18:46:17 [notice] 16436#6952: signal process started
+2024/09/22 18:46:17 [error] 16436#6952: OpenEvent("Global\ngx_reload_23908") failed (2: The system cannot find the file specified)
+2024/09/22 18:47:15 [emerg] 15444#14064: unknown log format "main" in G:\Documents\Projects\HTTPServer\web/conf/nginx.conf:54
+2024/09/22 18:47:17 [emerg] 11084#31420: unknown log format "main" in G:\Documents\Projects\HTTPServer\web/conf/nginx.conf:54
+2024/09/22 18:51:36 [notice] 26768#8680: using the "select" event method
+2024/09/22 18:51:36 [notice] 26768#8680: using the "select" event method
+2024/09/22 18:51:36 [notice] 26768#8680: nginx/1.26.2
+2024/09/22 18:51:36 [notice] 26768#8680: nginx/1.26.2
+2024/09/22 18:51:36 [info] 26768#8680: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:51:36 [notice] 26768#8680: start worker processes
+2024/09/22 18:51:36 [notice] 26768#8680: start worker processes
+2024/09/22 18:51:36 [notice] 26768#8680: start worker process 5632
+2024/09/22 18:51:36 [notice] 26768#8680: start worker process 5632
+2024/09/22 18:51:44 [alert] 26768#8680: the event "ngx_master_26768" was not signaled for 5s
+2024/09/22 18:51:44 [alert] 26768#8680: the event "ngx_master_26768" was not signaled for 5s
+2024/09/22 18:51:44 [alert] 26768#8680: the event "ngx_master_26768" was not signaled for 5s
+2024/09/22 18:53:05 [notice] 17448#20988: using the "select" event method
+2024/09/22 18:53:05 [notice] 17448#20988: using the "select" event method
+2024/09/22 18:53:05 [notice] 17448#20988: nginx/1.26.2
+2024/09/22 18:53:05 [notice] 17448#20988: nginx/1.26.2
+2024/09/22 18:53:05 [info] 17448#20988: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:53:05 [notice] 17448#20988: start worker processes
+2024/09/22 18:53:05 [notice] 17448#20988: start worker processes
+2024/09/22 18:53:05 [notice] 17448#20988: start worker process 37420
+2024/09/22 18:53:05 [notice] 17448#20988: start worker process 37420
+2024/09/22 18:53:13 [alert] 17448#20988: the event "ngx_master_17448" was not signaled for 5s
+2024/09/22 18:53:13 [alert] 17448#20988: the event "ngx_master_17448" was not signaled for 5s
+2024/09/22 18:53:13 [alert] 17448#20988: the event "ngx_master_17448" was not signaled for 5s
+2024/09/22 18:58:56 [emerg] 40828#35156: cannot load certificate key "G:\Documents\Projects\HTTPServer\web/conf/../../cert/key.key": PEM_read_bio_PrivateKey() failed (SSL: error:1C800064:Provider routines::bad decrypt error:04800065:PEM routines::bad decrypt)
+2024/09/22 18:59:00 [emerg] 33156#1680: cannot load certificate key "G:\Documents\Projects\HTTPServer\web/conf/../../cert/key.key": PEM_read_bio_PrivateKey() failed (SSL: error:1C800064:Provider routines::bad decrypt error:04800065:PEM routines::bad decrypt)
+2024/09/22 18:59:04 [emerg] 36364#20892: cannot load certificate key "G:\Documents\Projects\HTTPServer\web/conf/../../cert/key.key": PEM_read_bio_PrivateKey() failed (SSL: error:1C800064:Provider routines::bad decrypt error:04800065:PEM routines::bad decrypt)
+2024/09/22 18:59:06 [emerg] 39840#14504: cannot load certificate key "G:\Documents\Projects\HTTPServer\web/conf/../../cert/key.key": PEM_read_bio_PrivateKey() failed (SSL: error:1C800064:Provider routines::bad decrypt error:04800065:PEM routines::bad decrypt)
+2024/09/22 18:59:09 [notice] 40524#40044: using the "select" event method
+2024/09/22 18:59:09 [notice] 40524#40044: using the "select" event method
+2024/09/22 18:59:09 [notice] 40524#40044: nginx/1.26.2
+2024/09/22 18:59:09 [notice] 40524#40044: nginx/1.26.2
+2024/09/22 18:59:09 [info] 40524#40044: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:59:09 [notice] 40524#40044: start worker processes
+2024/09/22 18:59:09 [notice] 40524#40044: start worker processes
+2024/09/22 18:59:09 [notice] 40524#40044: start worker process 12608
+2024/09/22 18:59:09 [notice] 40524#40044: start worker process 12608
+2024/09/22 18:59:16 [alert] 40524#40044: the event "ngx_master_40524" was not signaled for 5s
+2024/09/22 18:59:16 [alert] 40524#40044: the event "ngx_master_40524" was not signaled for 5s
+2024/09/22 18:59:16 [alert] 40524#40044: the event "ngx_master_40524" was not signaled for 5s
+2024/09/22 19:13:47 [notice] 34552#36616: signal process started
+2024/09/22 19:13:47 [error] 34552#36616: OpenEvent("Global\ngx_quit_40524") failed (2: The system cannot find the file specified)
+2024/09/22 19:13:55 [notice] 27444#6760: using the "select" event method
+2024/09/22 19:13:55 [notice] 27444#6760: using the "select" event method
+2024/09/22 19:13:55 [notice] 27444#6760: nginx/1.26.2
+2024/09/22 19:13:55 [notice] 27444#6760: nginx/1.26.2
+2024/09/22 19:13:55 [info] 27444#6760: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:13:55 [notice] 27444#6760: start worker processes
+2024/09/22 19:13:55 [notice] 27444#6760: start worker processes
+2024/09/22 19:13:55 [notice] 27444#6760: start worker process 16080
+2024/09/22 19:13:55 [notice] 27444#6760: start worker process 16080
+2024/09/22 19:13:55 [notice] 16080#17372: nginx/1.26.2
+2024/09/22 19:13:55 [notice] 16080#17372: nginx/1.26.2
+2024/09/22 19:13:55 [info] 16080#17372: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:13:55 [notice] 16080#17372: create thread 23188
+2024/09/22 19:13:55 [notice] 16080#17372: create thread 23188
+2024/09/22 19:13:55 [notice] 16080#17372: create thread 39380
+2024/09/22 19:13:55 [notice] 16080#17372: create thread 39380
+2024/09/22 19:13:55 [notice] 16080#17372: create thread 35112
+2024/09/22 19:13:55 [notice] 16080#17372: create thread 35112
+2024/09/22 19:15:16 [notice] 37604#17588: signal process started
+2024/09/22 19:15:16 [notice] 27444#6760: shutting down
+2024/09/22 19:15:16 [notice] 27444#6760: shutting down
+2024/09/22 19:15:16 [notice] 16080#17372: gracefully shutting down
+2024/09/22 19:15:16 [notice] 16080#17372: gracefully shutting down
+2024/09/22 19:15:16 [notice] 16080#39380: exiting
+2024/09/22 19:15:16 [notice] 16080#39380: exiting
+2024/09/22 19:15:16 [notice] 16080#23188: exiting
+2024/09/22 19:15:16 [notice] 16080#23188: exiting
+2024/09/22 19:15:16 [notice] 16080#17372: exit
+2024/09/22 19:15:16 [notice] 16080#17372: exit
+2024/09/22 19:15:16 [notice] 27444#6760: worker process 16080 exited with code 0
+2024/09/22 19:15:16 [notice] 27444#6760: worker process 16080 exited with code 0
+2024/09/22 19:15:16 [notice] 27444#6760: exit
+2024/09/22 19:15:16 [notice] 27444#6760: exit
+2024/09/22 19:15:19 [notice] 27284#37456: using the "select" event method
+2024/09/22 19:15:19 [notice] 27284#37456: using the "select" event method
+2024/09/22 19:15:19 [notice] 27284#37456: nginx/1.26.2
+2024/09/22 19:15:19 [notice] 27284#37456: nginx/1.26.2
+2024/09/22 19:15:19 [info] 27284#37456: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:15:19 [notice] 27284#37456: start worker processes
+2024/09/22 19:15:19 [notice] 27284#37456: start worker processes
+2024/09/22 19:15:19 [notice] 27284#37456: start worker process 25900
+2024/09/22 19:15:19 [notice] 27284#37456: start worker process 25900
+2024/09/22 19:15:19 [notice] 25900#8600: nginx/1.26.2
+2024/09/22 19:15:19 [notice] 25900#8600: nginx/1.26.2
+2024/09/22 19:15:19 [info] 25900#8600: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:15:19 [notice] 25900#8600: create thread 39720
+2024/09/22 19:15:19 [notice] 25900#8600: create thread 39720
+2024/09/22 19:15:19 [notice] 25900#8600: create thread 23016
+2024/09/22 19:15:19 [notice] 25900#8600: create thread 23016
+2024/09/22 19:15:19 [notice] 25900#8600: create thread 27928
+2024/09/22 19:15:19 [notice] 25900#8600: create thread 27928
+2024/09/22 19:15:25 [info] 25900#39720: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:15:27 [info] 25900#39720: *2 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:15:27 [info] 25900#39720: *4 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:15:27 [info] 25900#39720: *5 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:15:27 [info] 25900#39720: *7 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:15:28 [info] 25900#39720: *9 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:16:27 [info] 25900#39720: *8 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:26:04 [info] 25900#39720: *11 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:26:04 [error] 25900#39720: *12 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:26:04 [error] 25900#39720: *12 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:26:04 [error] 25900#39720: *12 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:27:12 [notice] 34612#22280: signal process started
+2024/09/22 19:27:12 [notice] 27284#37456: reconfiguring
+2024/09/22 19:27:12 [notice] 27284#37456: reconfiguring
+2024/09/22 19:27:12 [notice] 27284#37456: using the "select" event method
+2024/09/22 19:27:12 [notice] 27284#37456: using the "select" event method
+2024/09/22 19:27:12 [notice] 27284#37456: start worker processes
+2024/09/22 19:27:12 [notice] 27284#37456: start worker processes
+2024/09/22 19:27:12 [notice] 27284#37456: start worker process 8172
+2024/09/22 19:27:12 [notice] 27284#37456: start worker process 8172
+2024/09/22 19:27:12 [notice] 8172#18724: nginx/1.26.2
+2024/09/22 19:27:12 [notice] 8172#18724: nginx/1.26.2
+2024/09/22 19:27:12 [info] 8172#18724: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:27:12 [notice] 25900#8600: gracefully shutting down
+2024/09/22 19:27:12 [notice] 25900#8600: gracefully shutting down
+2024/09/22 19:27:12 [notice] 8172#18724: create thread 34532
+2024/09/22 19:27:12 [notice] 8172#18724: create thread 34532
+2024/09/22 19:27:12 [notice] 25900#23016: exiting
+2024/09/22 19:27:12 [notice] 25900#23016: exiting
+2024/09/22 19:27:12 [notice] 8172#18724: create thread 28152
+2024/09/22 19:27:12 [notice] 8172#18724: create thread 28152
+2024/09/22 19:27:12 [notice] 8172#18724: create thread 35104
+2024/09/22 19:27:12 [notice] 8172#18724: create thread 35104
+2024/09/22 19:27:13 [notice] 25900#39720: exiting
+2024/09/22 19:27:13 [notice] 25900#39720: exiting
+2024/09/22 19:27:13 [notice] 25900#8600: exit
+2024/09/22 19:27:13 [notice] 25900#8600: exit
+2024/09/22 19:27:13 [notice] 27284#37456: worker process 25900 exited with code 0
+2024/09/22 19:27:13 [notice] 27284#37456: worker process 25900 exited with code 0
+2024/09/22 19:27:15 [info] 8172#34532: *13 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:27:18 [error] 8172#34532: *14 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:27:18 [error] 8172#34532: *14 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:27:18 [error] 8172#34532: *14 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:27:36 [error] 8172#34532: *14 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:27:36 [error] 8172#34532: *14 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:27:36 [error] 8172#34532: *14 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:28:18 [notice] 35820#17968: signal process started
+2024/09/22 19:28:18 [notice] 27284#37456: shutting down
+2024/09/22 19:28:18 [notice] 27284#37456: shutting down
+2024/09/22 19:28:18 [notice] 8172#18724: gracefully shutting down
+2024/09/22 19:28:18 [notice] 8172#18724: gracefully shutting down
+2024/09/22 19:28:18 [notice] 8172#28152: exiting
+2024/09/22 19:28:18 [notice] 8172#28152: exiting
+2024/09/22 19:28:18 [notice] 8172#34532: exiting
+2024/09/22 19:28:18 [notice] 8172#34532: exiting
+2024/09/22 19:28:18 [notice] 8172#18724: exit
+2024/09/22 19:28:18 [notice] 8172#18724: exit
+2024/09/22 19:28:18 [notice] 27284#37456: worker process 8172 exited with code 0
+2024/09/22 19:28:18 [notice] 27284#37456: worker process 8172 exited with code 0
+2024/09/22 19:28:18 [notice] 27284#37456: exit
+2024/09/22 19:28:18 [notice] 27284#37456: exit
+2024/09/22 19:28:23 [notice] 24152#3912: using the "select" event method
+2024/09/22 19:28:23 [notice] 24152#3912: using the "select" event method
+2024/09/22 19:28:23 [notice] 24152#3912: nginx/1.26.2
+2024/09/22 19:28:23 [notice] 24152#3912: nginx/1.26.2
+2024/09/22 19:28:23 [info] 24152#3912: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:28:23 [notice] 24152#3912: start worker processes
+2024/09/22 19:28:23 [notice] 24152#3912: start worker processes
+2024/09/22 19:28:23 [notice] 24152#3912: start worker process 2588
+2024/09/22 19:28:23 [notice] 24152#3912: start worker process 2588
+2024/09/22 19:28:23 [notice] 2588#25900: nginx/1.26.2
+2024/09/22 19:28:23 [notice] 2588#25900: nginx/1.26.2
+2024/09/22 19:28:23 [info] 2588#25900: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:28:23 [notice] 2588#25900: create thread 3956
+2024/09/22 19:28:23 [notice] 2588#25900: create thread 3956
+2024/09/22 19:28:23 [notice] 2588#25900: create thread 22336
+2024/09/22 19:28:23 [notice] 2588#25900: create thread 22336
+2024/09/22 19:28:23 [notice] 2588#25900: create thread 35100
+2024/09/22 19:28:23 [notice] 2588#25900: create thread 35100
+2024/09/22 19:28:25 [info] 2588#3956: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:28:28 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:28:28 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:28:28 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:29:12 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:29:12 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:29:12 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:29:42 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:29:42 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:29:42 [error] 2588#3956: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/login" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:30:48 [info] 2588#3956: *3 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:30:48 [info] 2588#3956: *4 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:30:48 [info] 2588#3956: *6 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:30:48 [info] 2588#3956: *7 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:31:01 [error] 2588#3956: *5 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/api/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:31:01 [error] 2588#3956: *5 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/api/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:31:01 [error] 2588#3956: *5 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/api/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:31:01 [warn] 2588#3956: *5 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/api/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:31:01 [warn] 2588#3956: *5 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/api/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:31:48 [info] 2588#3956: *8 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:31:48 [info] 2588#3956: *9 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:31:55 [info] 2588#3956: *12 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:31:55 [info] 2588#3956: *13 client 192.168.1.1 closed keepalive connection
+2024/09/22 19:33:23 [notice] 39864#33032: signal process started
+2024/09/22 19:33:23 [notice] 24152#3912: shutting down
+2024/09/22 19:33:23 [notice] 24152#3912: shutting down
+2024/09/22 19:33:23 [notice] 2588#25900: gracefully shutting down
+2024/09/22 19:33:23 [notice] 2588#25900: gracefully shutting down
+2024/09/22 19:33:23 [notice] 2588#22336: exiting
+2024/09/22 19:33:23 [notice] 2588#22336: exiting
+2024/09/22 19:33:23 [notice] 2588#3956: exiting
+2024/09/22 19:33:23 [notice] 2588#3956: exiting
+2024/09/22 19:33:23 [notice] 2588#25900: exit
+2024/09/22 19:33:23 [notice] 2588#25900: exit
+2024/09/22 19:33:23 [notice] 24152#3912: worker process 2588 exited with code 0
+2024/09/22 19:33:23 [notice] 24152#3912: worker process 2588 exited with code 0
+2024/09/22 19:33:23 [notice] 24152#3912: exit
+2024/09/22 19:33:23 [notice] 24152#3912: exit
+2024/09/22 19:33:25 [notice] 30412#40852: using the "select" event method
+2024/09/22 19:33:25 [notice] 30412#40852: using the "select" event method
+2024/09/22 19:33:25 [notice] 30412#40852: nginx/1.26.2
+2024/09/22 19:33:25 [notice] 30412#40852: nginx/1.26.2
+2024/09/22 19:33:25 [info] 30412#40852: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:33:25 [notice] 30412#40852: start worker processes
+2024/09/22 19:33:25 [notice] 30412#40852: start worker processes
+2024/09/22 19:33:25 [notice] 30412#40852: start worker process 36988
+2024/09/22 19:33:25 [notice] 30412#40852: start worker process 36988
+2024/09/22 19:33:25 [notice] 36988#39412: nginx/1.26.2
+2024/09/22 19:33:25 [notice] 36988#39412: nginx/1.26.2
+2024/09/22 19:33:25 [info] 36988#39412: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:33:25 [notice] 36988#39412: create thread 3760
+2024/09/22 19:33:25 [notice] 36988#39412: create thread 3760
+2024/09/22 19:33:25 [notice] 36988#39412: create thread 40596
+2024/09/22 19:33:25 [notice] 36988#39412: create thread 40596
+2024/09/22 19:33:25 [notice] 36988#39412: create thread 40644
+2024/09/22 19:33:25 [notice] 36988#39412: create thread 40644
+2024/09/22 19:33:27 [info] 36988#3760: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:33:27 [error] 36988#3760: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/api/login" failed (3: The system cannot find the path specified), client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:33:27 [error] 36988#3760: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/api/login" failed (3: The system cannot find the path specified), client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:33:27 [error] 36988#3760: *2 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/api/login" failed (3: The system cannot find the path specified), client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:39:45 [info] 36988#3760: *3 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:39:46 [info] 36988#3760: *5 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:39:48 [error] 36988#3760: *4 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/api/login" failed (3: The system cannot find the path specified), client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:39:48 [error] 36988#3760: *4 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/api/login" failed (3: The system cannot find the path specified), client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:39:48 [error] 36988#3760: *4 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/api/login" failed (3: The system cannot find the path specified), client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:43:32 [notice] 8952#29028: signal process started
+2024/09/22 19:43:32 [notice] 30412#40852: shutting down
+2024/09/22 19:43:32 [notice] 30412#40852: shutting down
+2024/09/22 19:43:32 [notice] 36988#39412: gracefully shutting down
+2024/09/22 19:43:32 [notice] 36988#39412: gracefully shutting down
+2024/09/22 19:43:32 [notice] 36988#40596: exiting
+2024/09/22 19:43:32 [notice] 36988#40596: exiting
+2024/09/22 19:43:32 [notice] 36988#3760: exiting
+2024/09/22 19:43:32 [notice] 36988#3760: exiting
+2024/09/22 19:43:32 [notice] 36988#39412: exit
+2024/09/22 19:43:32 [notice] 36988#39412: exit
+2024/09/22 19:43:32 [notice] 30412#40852: worker process 36988 exited with code 0
+2024/09/22 19:43:32 [notice] 30412#40852: worker process 36988 exited with code 0
+2024/09/22 19:43:32 [notice] 30412#40852: exit
+2024/09/22 19:43:32 [notice] 30412#40852: exit
+2024/09/22 19:43:33 [notice] 30472#36396: using the "select" event method
+2024/09/22 19:43:33 [notice] 30472#36396: using the "select" event method
+2024/09/22 19:43:33 [notice] 30472#36396: nginx/1.26.2
+2024/09/22 19:43:33 [notice] 30472#36396: nginx/1.26.2
+2024/09/22 19:43:33 [info] 30472#36396: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:43:33 [notice] 30472#36396: start worker processes
+2024/09/22 19:43:33 [notice] 30472#36396: start worker processes
+2024/09/22 19:43:33 [notice] 30472#36396: start worker process 24972
+2024/09/22 19:43:33 [notice] 30472#36396: start worker process 24972
+2024/09/22 19:43:33 [notice] 24972#176: nginx/1.26.2
+2024/09/22 19:43:33 [notice] 24972#176: nginx/1.26.2
+2024/09/22 19:43:33 [info] 24972#176: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:43:33 [notice] 24972#176: create thread 38136
+2024/09/22 19:43:33 [notice] 24972#176: create thread 38136
+2024/09/22 19:43:33 [notice] 24972#176: create thread 15456
+2024/09/22 19:43:33 [notice] 24972#176: create thread 15456
+2024/09/22 19:43:33 [notice] 24972#176: create thread 38088
+2024/09/22 19:43:33 [notice] 24972#176: create thread 38088
+2024/09/22 19:43:39 [info] 24972#38136: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:43:43 [error] 24972#38136: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:43:43 [error] 24972#38136: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:43:43 [error] 24972#38136: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:43:43 [warn] 24972#38136: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:43:43 [warn] 24972#38136: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:44:55 [error] 24972#38136: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:44:55 [error] 24972#38136: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:44:55 [error] 24972#38136: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:44:55 [warn] 24972#38136: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:44:55 [warn] 24972#38136: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:45:55 [warn] 24972#38136: *2 upstream server temporarily disabled while reading response header from upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://127.0.0.1:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:45:55 [warn] 24972#38136: *2 upstream server temporarily disabled while reading response header from upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://127.0.0.1:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:45:55 [error] 24972#38136: *2 upstream timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while reading response header from upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://127.0.0.1:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:45:55 [error] 24972#38136: *2 upstream timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while reading response header from upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://127.0.0.1:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:45:55 [error] 24972#38136: *2 upstream timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while reading response header from upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://127.0.0.1:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:49:07 [notice] 31644#39136: signal process started
+2024/09/22 19:49:07 [notice] 30472#36396: shutting down
+2024/09/22 19:49:07 [notice] 30472#36396: shutting down
+2024/09/22 19:49:07 [notice] 24972#176: gracefully shutting down
+2024/09/22 19:49:07 [notice] 24972#176: gracefully shutting down
+2024/09/22 19:49:07 [notice] 24972#15456: exiting
+2024/09/22 19:49:07 [notice] 24972#15456: exiting
+2024/09/22 19:49:07 [notice] 24972#38136: exiting
+2024/09/22 19:49:07 [notice] 24972#38136: exiting
+2024/09/22 19:49:07 [notice] 24972#176: exit
+2024/09/22 19:49:07 [notice] 24972#176: exit
+2024/09/22 19:49:07 [notice] 30472#36396: worker process 24972 exited with code 0
+2024/09/22 19:49:07 [notice] 30472#36396: worker process 24972 exited with code 0
+2024/09/22 19:49:07 [notice] 30472#36396: exit
+2024/09/22 19:49:07 [notice] 30472#36396: exit
+2024/09/22 19:49:08 [notice] 39832#8080: using the "select" event method
+2024/09/22 19:49:08 [notice] 39832#8080: using the "select" event method
+2024/09/22 19:49:08 [notice] 39832#8080: nginx/1.26.2
+2024/09/22 19:49:08 [notice] 39832#8080: nginx/1.26.2
+2024/09/22 19:49:08 [info] 39832#8080: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:49:08 [notice] 39832#8080: start worker processes
+2024/09/22 19:49:08 [notice] 39832#8080: start worker processes
+2024/09/22 19:49:08 [notice] 39832#8080: start worker process 16172
+2024/09/22 19:49:08 [notice] 39832#8080: start worker process 16172
+2024/09/22 19:49:08 [notice] 16172#14156: nginx/1.26.2
+2024/09/22 19:49:08 [notice] 16172#14156: nginx/1.26.2
+2024/09/22 19:49:08 [info] 16172#14156: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:49:08 [notice] 16172#14156: create thread 40804
+2024/09/22 19:49:08 [notice] 16172#14156: create thread 40804
+2024/09/22 19:49:08 [notice] 16172#14156: create thread 14500
+2024/09/22 19:49:08 [notice] 16172#14156: create thread 14500
+2024/09/22 19:49:08 [notice] 16172#14156: create thread 39728
+2024/09/22 19:49:08 [notice] 16172#14156: create thread 39728
+2024/09/22 19:49:11 [info] 16172#40804: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:49:13 [error] 16172#40804: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:49:13 [error] 16172#40804: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:49:13 [error] 16172#40804: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:49:13 [warn] 16172#40804: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:49:13 [warn] 16172#40804: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:51:22 [notice] 10192#10300: signal process started
+2024/09/22 19:51:22 [notice] 39832#8080: shutting down
+2024/09/22 19:51:22 [notice] 39832#8080: shutting down
+2024/09/22 19:51:22 [notice] 16172#14156: gracefully shutting down
+2024/09/22 19:51:22 [notice] 16172#14156: gracefully shutting down
+2024/09/22 19:51:22 [notice] 16172#14500: exiting
+2024/09/22 19:51:22 [notice] 16172#14500: exiting
+2024/09/22 19:51:22 [notice] 16172#40804: exiting
+2024/09/22 19:51:22 [notice] 16172#40804: exiting
+2024/09/22 19:51:22 [notice] 16172#14156: exit
+2024/09/22 19:51:22 [notice] 16172#14156: exit
+2024/09/22 19:51:22 [notice] 39832#8080: worker process 16172 exited with code 0
+2024/09/22 19:51:22 [notice] 39832#8080: worker process 16172 exited with code 0
+2024/09/22 19:51:22 [notice] 39832#8080: exit
+2024/09/22 19:51:22 [notice] 39832#8080: exit
+2024/09/22 19:51:23 [notice] 20344#21444: using the "select" event method
+2024/09/22 19:51:23 [notice] 20344#21444: using the "select" event method
+2024/09/22 19:51:23 [notice] 20344#21444: nginx/1.26.2
+2024/09/22 19:51:23 [notice] 20344#21444: nginx/1.26.2
+2024/09/22 19:51:23 [info] 20344#21444: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:51:23 [notice] 20344#21444: start worker processes
+2024/09/22 19:51:23 [notice] 20344#21444: start worker processes
+2024/09/22 19:51:23 [notice] 20344#21444: start worker process 28456
+2024/09/22 19:51:23 [notice] 20344#21444: start worker process 28456
+2024/09/22 19:51:23 [notice] 28456#34732: nginx/1.26.2
+2024/09/22 19:51:23 [notice] 28456#34732: nginx/1.26.2
+2024/09/22 19:51:23 [info] 28456#34732: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:51:23 [notice] 28456#34732: create thread 30076
+2024/09/22 19:51:23 [notice] 28456#34732: create thread 30076
+2024/09/22 19:51:23 [notice] 28456#34732: create thread 16396
+2024/09/22 19:51:23 [notice] 28456#34732: create thread 16396
+2024/09/22 19:51:23 [notice] 28456#34732: create thread 39508
+2024/09/22 19:51:23 [notice] 28456#34732: create thread 39508
+2024/09/22 19:51:25 [info] 28456#30076: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:51:29 [error] 28456#30076: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:51:29 [error] 28456#30076: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:51:29 [error] 28456#30076: *2 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:51:29 [warn] 28456#30076: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:51:29 [warn] 28456#30076: *2 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:56:02 [notice] 36680#7336: signal process started
+2024/09/22 19:56:02 [notice] 20344#21444: shutting down
+2024/09/22 19:56:02 [notice] 20344#21444: shutting down
+2024/09/22 19:56:02 [notice] 28456#34732: gracefully shutting down
+2024/09/22 19:56:02 [notice] 28456#34732: gracefully shutting down
+2024/09/22 19:56:02 [notice] 28456#16396: exiting
+2024/09/22 19:56:02 [notice] 28456#16396: exiting
+2024/09/22 19:56:02 [notice] 28456#30076: exiting
+2024/09/22 19:56:02 [notice] 28456#30076: exiting
+2024/09/22 19:56:02 [notice] 28456#34732: exit
+2024/09/22 19:56:02 [notice] 28456#34732: exit
+2024/09/22 19:56:02 [notice] 20344#21444: worker process 28456 exited with code 0
+2024/09/22 19:56:02 [notice] 20344#21444: worker process 28456 exited with code 0
+2024/09/22 19:56:02 [notice] 20344#21444: exit
+2024/09/22 19:56:02 [notice] 20344#21444: exit
+2024/09/22 19:56:07 [notice] 12056#7704: using the "select" event method
+2024/09/22 19:56:07 [notice] 12056#7704: using the "select" event method
+2024/09/22 19:56:07 [notice] 12056#7704: nginx/1.26.2
+2024/09/22 19:56:07 [notice] 12056#7704: nginx/1.26.2
+2024/09/22 19:56:07 [info] 12056#7704: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:56:07 [notice] 12056#7704: start worker processes
+2024/09/22 19:56:07 [notice] 12056#7704: start worker processes
+2024/09/22 19:56:07 [notice] 12056#7704: start worker process 8148
+2024/09/22 19:56:07 [notice] 12056#7704: start worker process 8148
+2024/09/22 19:56:07 [notice] 8148#12276: nginx/1.26.2
+2024/09/22 19:56:07 [notice] 8148#12276: nginx/1.26.2
+2024/09/22 19:56:07 [info] 8148#12276: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 19:56:07 [notice] 8148#12276: create thread 21516
+2024/09/22 19:56:07 [notice] 8148#12276: create thread 21516
+2024/09/22 19:56:07 [notice] 8148#12276: create thread 1936
+2024/09/22 19:56:07 [notice] 8148#12276: create thread 1936
+2024/09/22 19:56:07 [notice] 8148#12276: create thread 33124
+2024/09/22 19:56:07 [notice] 8148#12276: create thread 33124
+2024/09/22 19:56:11 [info] 8148#21516: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:56:11 [info] 8148#21516: *2 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:56:11 [info] 8148#21516: *5 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:56:11 [info] 8148#21516: *4 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:56:11 [info] 8148#21516: *7 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:56:11 [info] 8148#21516: *8 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:56:17 [error] 8148#21516: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:56:17 [error] 8148#21516: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:56:17 [error] 8148#21516: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:56:17 [warn] 8148#21516: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:56:17 [warn] 8148#21516: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 19:57:11 [info] 8148#21516: *9 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:58:51 [info] 8148#21516: *12 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 19:59:21 [info] 8148#21516: *15 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:00:08 [error] 8148#21516: *13 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:00:08 [error] 8148#21516: *13 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:00:08 [error] 8148#21516: *13 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:00:08 [warn] 8148#21516: *13 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:00:08 [warn] 8148#21516: *13 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:01:31 [notice] 40788#37980: signal process started
+2024/09/22 20:01:31 [notice] 12056#7704: shutting down
+2024/09/22 20:01:31 [notice] 12056#7704: shutting down
+2024/09/22 20:01:31 [notice] 8148#12276: gracefully shutting down
+2024/09/22 20:01:31 [notice] 8148#12276: gracefully shutting down
+2024/09/22 20:01:31 [notice] 8148#1936: exiting
+2024/09/22 20:01:31 [notice] 8148#1936: exiting
+2024/09/22 20:01:31 [notice] 8148#21516: exiting
+2024/09/22 20:01:31 [notice] 8148#21516: exiting
+2024/09/22 20:01:31 [notice] 8148#12276: exit
+2024/09/22 20:01:31 [notice] 8148#12276: exit
+2024/09/22 20:01:31 [notice] 12056#7704: worker process 8148 exited with code 0
+2024/09/22 20:01:31 [notice] 12056#7704: worker process 8148 exited with code 0
+2024/09/22 20:01:31 [notice] 12056#7704: exit
+2024/09/22 20:01:31 [notice] 12056#7704: exit
+2024/09/22 20:01:32 [notice] 27048#35900: using the "select" event method
+2024/09/22 20:01:32 [notice] 27048#35900: using the "select" event method
+2024/09/22 20:01:32 [notice] 27048#35900: nginx/1.26.2
+2024/09/22 20:01:32 [notice] 27048#35900: nginx/1.26.2
+2024/09/22 20:01:32 [info] 27048#35900: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 20:01:32 [notice] 27048#35900: start worker processes
+2024/09/22 20:01:32 [notice] 27048#35900: start worker processes
+2024/09/22 20:01:32 [notice] 27048#35900: start worker process 9904
+2024/09/22 20:01:32 [notice] 27048#35900: start worker process 9904
+2024/09/22 20:01:32 [notice] 9904#25916: nginx/1.26.2
+2024/09/22 20:01:32 [notice] 9904#25916: nginx/1.26.2
+2024/09/22 20:01:32 [info] 9904#25916: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 20:01:32 [notice] 9904#25916: create thread 34832
+2024/09/22 20:01:32 [notice] 9904#25916: create thread 34832
+2024/09/22 20:01:32 [notice] 9904#25916: create thread 18900
+2024/09/22 20:01:32 [notice] 9904#25916: create thread 18900
+2024/09/22 20:01:32 [notice] 9904#25916: create thread 39316
+2024/09/22 20:01:32 [notice] 9904#25916: create thread 39316
+2024/09/22 20:01:39 [info] 9904#34832: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:01:39 [info] 9904#34832: *2 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:01:40 [info] 9904#34832: *4 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:01:40 [info] 9904#34832: *5 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:01:40 [info] 9904#34832: *8 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:01:40 [info] 9904#34832: *9 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:01:52 [error] 9904#34832: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:01:52 [error] 9904#34832: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:01:52 [error] 9904#34832: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:01:52 [warn] 9904#34832: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:01:52 [warn] 9904#34832: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:08:28 [notice] 39476#22740: signal process started
+2024/09/22 20:08:28 [notice] 27048#35900: shutting down
+2024/09/22 20:08:28 [notice] 27048#35900: shutting down
+2024/09/22 20:08:28 [notice] 9904#25916: gracefully shutting down
+2024/09/22 20:08:28 [notice] 9904#25916: gracefully shutting down
+2024/09/22 20:08:28 [notice] 9904#18900: exiting
+2024/09/22 20:08:28 [notice] 9904#18900: exiting
+2024/09/22 20:08:29 [notice] 9904#34832: exiting
+2024/09/22 20:08:29 [notice] 9904#34832: exiting
+2024/09/22 20:08:29 [notice] 9904#25916: exit
+2024/09/22 20:08:29 [notice] 9904#25916: exit
+2024/09/22 20:08:29 [notice] 27048#35900: worker process 9904 exited with code 0
+2024/09/22 20:08:29 [notice] 27048#35900: worker process 9904 exited with code 0
+2024/09/22 20:08:29 [notice] 27048#35900: exit
+2024/09/22 20:08:29 [notice] 27048#35900: exit
+2024/09/22 20:08:37 [notice] 2148#40292: using the "select" event method
+2024/09/22 20:08:37 [notice] 2148#40292: using the "select" event method
+2024/09/22 20:08:37 [notice] 2148#40292: nginx/1.26.2
+2024/09/22 20:08:37 [notice] 2148#40292: nginx/1.26.2
+2024/09/22 20:08:37 [info] 2148#40292: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 20:08:37 [notice] 2148#40292: start worker processes
+2024/09/22 20:08:37 [notice] 2148#40292: start worker processes
+2024/09/22 20:08:37 [notice] 2148#40292: start worker process 35728
+2024/09/22 20:08:37 [notice] 2148#40292: start worker process 35728
+2024/09/22 20:08:37 [notice] 35728#36588: nginx/1.26.2
+2024/09/22 20:08:37 [notice] 35728#36588: nginx/1.26.2
+2024/09/22 20:08:37 [info] 35728#36588: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 20:08:37 [notice] 35728#36588: create thread 7752
+2024/09/22 20:08:37 [notice] 35728#36588: create thread 7752
+2024/09/22 20:08:37 [notice] 35728#36588: create thread 38544
+2024/09/22 20:08:37 [notice] 35728#36588: create thread 38544
+2024/09/22 20:08:37 [notice] 35728#36588: create thread 16256
+2024/09/22 20:08:37 [notice] 35728#36588: create thread 16256
+2024/09/22 20:08:38 [info] 35728#7752: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:08:39 [info] 35728#7752: *2 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:08:39 [info] 35728#7752: *4 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:08:39 [info] 35728#7752: *5 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:08:39 [info] 35728#7752: *7 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:08:39 [info] 35728#7752: *8 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:08:44 [error] 35728#7752: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:08:44 [error] 35728#7752: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:08:44 [error] 35728#7752: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:08:44 [warn] 35728#7752: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:08:44 [warn] 35728#7752: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:09:03 [error] 35728#7752: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:09:03 [error] 35728#7752: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:09:03 [error] 35728#7752: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:09:03 [warn] 35728#7752: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:09:03 [warn] 35728#7752: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:09:39 [info] 35728#7752: *10 client timed out (10060: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond) while waiting for request, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:19:58 [notice] 34584#16476: signal process started
+2024/09/22 20:19:58 [notice] 2148#40292: shutting down
+2024/09/22 20:19:58 [notice] 2148#40292: shutting down
+2024/09/22 20:19:58 [notice] 35728#36588: gracefully shutting down
+2024/09/22 20:19:58 [notice] 35728#36588: gracefully shutting down
+2024/09/22 20:19:58 [notice] 35728#38544: exiting
+2024/09/22 20:19:58 [notice] 35728#38544: exiting
+2024/09/22 20:19:58 [notice] 35728#7752: exiting
+2024/09/22 20:19:58 [notice] 35728#7752: exiting
+2024/09/22 20:19:58 [notice] 35728#36588: exit
+2024/09/22 20:19:58 [notice] 35728#36588: exit
+2024/09/22 20:19:58 [notice] 2148#40292: worker process 35728 exited with code 0
+2024/09/22 20:19:58 [notice] 2148#40292: worker process 35728 exited with code 0
+2024/09/22 20:19:58 [notice] 2148#40292: exit
+2024/09/22 20:19:58 [notice] 2148#40292: exit
+2024/09/22 20:20:01 [notice] 22688#37736: using the "select" event method
+2024/09/22 20:20:01 [notice] 22688#37736: using the "select" event method
+2024/09/22 20:20:01 [notice] 22688#37736: nginx/1.26.2
+2024/09/22 20:20:01 [notice] 22688#37736: nginx/1.26.2
+2024/09/22 20:20:01 [info] 22688#37736: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 20:20:01 [notice] 22688#37736: start worker processes
+2024/09/22 20:20:01 [notice] 22688#37736: start worker processes
+2024/09/22 20:20:01 [notice] 22688#37736: start worker process 36608
+2024/09/22 20:20:01 [notice] 22688#37736: start worker process 36608
+2024/09/22 20:20:01 [notice] 36608#40504: nginx/1.26.2
+2024/09/22 20:20:01 [notice] 36608#40504: nginx/1.26.2
+2024/09/22 20:20:01 [info] 36608#40504: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 20:20:01 [notice] 36608#40504: create thread 14500
+2024/09/22 20:20:01 [notice] 36608#40504: create thread 14500
+2024/09/22 20:20:01 [notice] 36608#40504: create thread 1996
+2024/09/22 20:20:01 [notice] 36608#40504: create thread 1996
+2024/09/22 20:20:01 [notice] 36608#40504: create thread 1648
+2024/09/22 20:20:01 [notice] 36608#40504: create thread 1648
+2024/09/22 20:20:08 [info] 36608#14500: *1 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:20:08 [info] 36608#14500: *2 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:20:08 [info] 36608#14500: *4 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:20:08 [info] 36608#14500: *5 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:20:16 [error] 36608#14500: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:20:16 [error] 36608#14500: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:20:16 [error] 36608#14500: *6 connect() failed (10061: No connection could be made because the target machine actively refused it) while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:20:16 [warn] 36608#14500: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:20:16 [warn] 36608#14500: *6 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.1, server: localhost, request: "POST /api/login HTTP/1.1", upstream: "https://[::1]:8080/login", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:22:28 [info] 36608#14500: *10 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:22:42 [info] 36608#14500: *11 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:22:45 [info] 36608#14500: *12 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:23:11 [info] 36608#14500: *13 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:25:09 [info] 36608#14500: *16 SSL_do_handshake() failed (SSL: error:0A000416:SSL routines::sslv3 alert certificate unknown:SSL alert number 46) while SSL handshaking, client: 192.168.1.1, server: 0.0.0.0:443
+2024/09/22 20:25:09 [error] 36608#14500: *17 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/test_session" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /test_session HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:25:09 [error] 36608#14500: *17 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/test_session" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /test_session HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"
+2024/09/22 20:25:09 [error] 36608#14500: *17 CreateFile() "G:\Documents\Projects\HTTPServer\web/html/test_session" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "POST /test_session HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "https://norbinet.asuscomm.com/"

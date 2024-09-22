@@ -62,10 +62,6 @@ void response_queue::process(beast_response&& msg)
 {
 	add(std::make_unique<work_impl<beast_response>>(self_, std::move(msg)));
 }
-void response_queue::process_file(beast_response_file&& msg)
-{
-	add(std::make_unique<work_impl<beast_response_file>>(self_, std::move(msg)));
-}
 
 void response_queue::add(std::unique_ptr<work>&& item)
 {

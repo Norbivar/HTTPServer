@@ -60,7 +60,7 @@ async function sha256(message) {
  function login() 
  {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url + "/login", true);
+    xhr.open("POST", url + "/api/login", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function () {
        if (xhr.readyState === 4 && xhr.status === 200) {
@@ -80,7 +80,7 @@ async function sha256(message) {
  function register() 
  {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url + "/register", true);
+    xhr.open("POST", url + "/api/register", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function () {
        if (xhr.readyState === 4 && xhr.status === 200) {

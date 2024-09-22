@@ -41,7 +41,6 @@ public:
 	// Returns `true` if the caller should initiate a read
 	bool on_write();
 	void process(beast_response&& msg);
-	void process_file(beast_response_file&& msg);
 private:
 	void add(std::unique_ptr<work>&& item);
 };

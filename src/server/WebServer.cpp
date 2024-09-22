@@ -13,19 +13,16 @@
 
 webserver::webserver() : webserver(
 	theConfig->files_root,
-	theConfig->doc_root,
 	boost::asio::ip::make_address(theConfig->bind_ip),
 	theConfig->port,
 	theConfig->https_handler_threads)
 { }
 
 webserver::webserver(const std::string& files_root, 
-	const std::string& doc_root, 
 	const boost::asio::ip::address& address, 
 	const uint16_t port, 
 	const std::uint8_t https_threads) 
 	:
-	doc_root{ files_root + doc_root },
 	server_status{ status::starting },
 	my_sql_manager{ std::make_unique<sql_manager>("Default Database", default_sql_provider{}) },
 	my_session_tracker{ std::make_unique<session_tracker>() },

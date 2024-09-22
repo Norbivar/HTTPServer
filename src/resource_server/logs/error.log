@@ -1,0 +1,81 @@
+2024/09/22 18:26:35 [notice] 36712#37772: using the "select" event method
+2024/09/22 18:26:35 [notice] 36712#37772: using the "select" event method
+2024/09/22 18:26:35 [notice] 36712#37772: nginx/1.26.2
+2024/09/22 18:26:35 [notice] 36712#37772: nginx/1.26.2
+2024/09/22 18:26:35 [info] 36712#37772: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:26:35 [notice] 36712#37772: start worker processes
+2024/09/22 18:26:35 [notice] 36712#37772: start worker processes
+2024/09/22 18:26:35 [notice] 36712#37772: start worker process 19320
+2024/09/22 18:26:35 [notice] 36712#37772: start worker process 19320
+2024/09/22 18:26:44 [alert] 36712#37772: the event "ngx_master_36712" was not signaled for 5s
+2024/09/22 18:26:44 [alert] 36712#37772: the event "ngx_master_36712" was not signaled for 5s
+2024/09/22 18:26:44 [alert] 36712#37772: the event "ngx_master_36712" was not signaled for 5s
+2024/09/22 18:27:02 [notice] 10224#35676: signal process started
+2024/09/22 18:27:02 [error] 10224#35676: OpenEvent("Global\ngx_stop_36712") failed (2: The system cannot find the file specified)
+2024/09/22 18:27:06 [notice] 32496#13524: using the "select" event method
+2024/09/22 18:27:06 [notice] 32496#13524: using the "select" event method
+2024/09/22 18:27:06 [notice] 32496#13524: nginx/1.26.2
+2024/09/22 18:27:06 [notice] 32496#13524: nginx/1.26.2
+2024/09/22 18:27:06 [info] 32496#13524: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:27:06 [notice] 32496#13524: start worker processes
+2024/09/22 18:27:06 [notice] 32496#13524: start worker processes
+2024/09/22 18:27:06 [notice] 32496#13524: start worker process 28324
+2024/09/22 18:27:06 [notice] 32496#13524: start worker process 28324
+2024/09/22 18:27:14 [alert] 32496#13524: the event "ngx_master_32496" was not signaled for 5s
+2024/09/22 18:27:14 [alert] 32496#13524: the event "ngx_master_32496" was not signaled for 5s
+2024/09/22 18:27:14 [alert] 32496#13524: the event "ngx_master_32496" was not signaled for 5s
+2024/09/22 18:28:55 [notice] 30300#40584: signal process started
+2024/09/22 18:28:55 [error] 30300#40584: OpenEvent("Global\ngx_stop_32496") failed (2: The system cannot find the file specified)
+2024/09/22 18:29:04 [notice] 24844#39332: signal process started
+2024/09/22 18:29:04 [error] 24844#39332: OpenEvent("Global\ngx_quit_32496") failed (2: The system cannot find the file specified)
+2024/09/22 18:29:15 [notice] 27568#15268: using the "select" event method
+2024/09/22 18:29:15 [notice] 27568#15268: using the "select" event method
+2024/09/22 18:29:15 [notice] 27568#15268: nginx/1.26.2
+2024/09/22 18:29:15 [notice] 27568#15268: nginx/1.26.2
+2024/09/22 18:29:15 [info] 27568#15268: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:29:15 [notice] 27568#15268: start worker processes
+2024/09/22 18:29:15 [notice] 27568#15268: start worker processes
+2024/09/22 18:29:15 [notice] 27568#15268: start worker process 31444
+2024/09/22 18:29:15 [notice] 27568#15268: start worker process 31444
+2024/09/22 18:29:23 [alert] 27568#15268: the event "ngx_master_27568" was not signaled for 5s
+2024/09/22 18:29:23 [alert] 27568#15268: the event "ngx_master_27568" was not signaled for 5s
+2024/09/22 18:29:23 [alert] 27568#15268: the event "ngx_master_27568" was not signaled for 5s
+2024/09/22 18:31:25 [notice] 34752#9544: signal process started
+2024/09/22 18:31:25 [error] 34752#9544: OpenEvent("Global\ngx_quit_27568") failed (2: The system cannot find the file specified)
+2024/09/22 18:31:26 [notice] 27448#31828: signal process started
+2024/09/22 18:31:26 [error] 27448#31828: OpenEvent("Global\ngx_quit_27568") failed (2: The system cannot find the file specified)
+2024/09/22 18:31:28 [notice] 1232#40116: using the "select" event method
+2024/09/22 18:31:28 [notice] 1232#40116: using the "select" event method
+2024/09/22 18:31:28 [notice] 1232#40116: nginx/1.26.2
+2024/09/22 18:31:28 [notice] 1232#40116: nginx/1.26.2
+2024/09/22 18:31:28 [info] 1232#40116: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:31:28 [notice] 1232#40116: start worker processes
+2024/09/22 18:31:28 [notice] 1232#40116: start worker processes
+2024/09/22 18:31:28 [notice] 1232#40116: start worker process 11356
+2024/09/22 18:31:28 [notice] 1232#40116: start worker process 11356
+2024/09/22 18:31:28 [notice] 11356#11060: nginx/1.26.2
+2024/09/22 18:31:28 [notice] 11356#11060: nginx/1.26.2
+2024/09/22 18:31:28 [info] 11356#11060: OS: 260200 build:9200, "", suite:100, type:1
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 9760
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 9760
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 27896
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 27896
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 26280
+2024/09/22 18:31:28 [notice] 11356#11060: create thread 26280
+2024/09/22 18:31:44 [error] 11356#9760: *1 CreateFile() "G:\Documents\Projects\HTTPServer\src\resource_server/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "http://norbinet.asuscomm.com/"
+2024/09/22 18:31:44 [error] 11356#9760: *1 CreateFile() "G:\Documents\Projects\HTTPServer\src\resource_server/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "http://norbinet.asuscomm.com/"
+2024/09/22 18:31:44 [error] 11356#9760: *1 CreateFile() "G:\Documents\Projects\HTTPServer\src\resource_server/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "norbinet.asuscomm.com", referrer: "http://norbinet.asuscomm.com/"
+2024/09/22 18:34:19 [notice] 1232#40116: shutting down
+2024/09/22 18:34:19 [notice] 1232#40116: shutting down
+2024/09/22 18:34:19 [notice] 11356#11060: gracefully shutting down
+2024/09/22 18:34:19 [notice] 11356#11060: gracefully shutting down
+2024/09/22 18:34:19 [notice] 11356#27896: exiting
+2024/09/22 18:34:19 [notice] 11356#27896: exiting
+2024/09/22 18:34:19 [notice] 11356#9760: exiting
+2024/09/22 18:34:19 [notice] 11356#9760: exiting
+2024/09/22 18:34:19 [notice] 11356#11060: exit
+2024/09/22 18:34:19 [notice] 11356#11060: exit
+2024/09/22 18:34:19 [notice] 1232#40116: worker process 11356 exited with code 0
+2024/09/22 18:34:19 [notice] 1232#40116: worker process 11356 exited with code 0
+2024/09/22 18:34:19 [notice] 1232#40116: exit
+2024/09/22 18:34:19 [notice] 1232#40116: exit

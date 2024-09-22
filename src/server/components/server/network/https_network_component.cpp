@@ -48,18 +48,18 @@ bool https_network_component::load_certificate()
 	theLog->info("Loading cert from '{}'", cert_dir);
 
 	try {
-		ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
-			return "asdfghjk";
-		});
+		//ctx.set_password_callback([](std::size_t, boost::asio::ssl::context_base::password_purpose) {
+		//	return "asdfghjk";
+		//});
 
 		ctx.set_options(
 			boost::asio::ssl::context::default_workarounds |
 			boost::asio::ssl::context::no_sslv2 |
 			boost::asio::ssl::context::single_dh_use);
 
-		ctx.use_certificate_chain_file(cert_dir + "certificate.crt");
-		ctx.use_private_key_file(cert_dir + "key.key", boost::asio::ssl::context::file_format::pem);
-		ctx.use_tmp_dh_file(cert_dir + "dhparam.pem");
+		ctx.use_certificate_chain_file(cert_dir + "server.crt");
+		ctx.use_private_key_file(cert_dir + "server.key", boost::asio::ssl::context::file_format::pem);
+		//ctx.use_tmp_dh_file(cert_dir + "dhparam.pem");
 	}
 	catch (const std::exception& ex) {
 		theLog->error(ex);
