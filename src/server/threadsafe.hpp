@@ -22,7 +22,10 @@ namespace threadsafe
 
 	public:
 		template<typename... Args>
-		element(Args&&... args) : m_data(std::forward<Args>(args)...) {}
+		element(Args&&... args) : m_data{ std::forward<Args>(args)... } {}
+
+		element(const T& item) : m_data{item} {}
+		element(T&& item) : m_data{ std::move(item) } {}
 
 		template<typename Func>
 		void modify(const Func& f) { std::unique_lock<std::shared_mutex> lock(m_mutex); f(m_data); }

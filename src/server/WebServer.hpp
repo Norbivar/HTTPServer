@@ -11,6 +11,7 @@
 
 class routing_table;
 class session_tracker;
+class websocket_tracker;
 class sql_manager;
 class network_component;
 
@@ -32,7 +33,12 @@ public:
 	};
 
 	webserver();
-	webserver(const std::string& files_root, const std::string& doc_root, const boost::asio::ip::address& address, const std::uint16_t port, const std::uint8_t numthreads);
+	webserver(const std::string& files_root, 
+		const std::string& doc_root, 
+		const boost::asio::ip::address& address, 
+		const std::uint16_t port, 
+		const std::uint8_t https_threads);
+
 	~webserver();
 
 	void bootstrap();
@@ -43,6 +49,9 @@ public:
 
 	auto& get_session_tracker() { return *my_session_tracker; }
 	const auto& get_session_tracker() const { return *my_session_tracker; }
+
+	auto& get_websocket_tracker() { return *my_websocket_tracker; }
+	const auto& get_websocket_tracker() const { return *my_websocket_tracker; }
 
 	auto& get_sql_manager() { return *my_sql_manager; }
 	const auto& get_sql_manager() const { return *my_sql_manager; }
@@ -57,8 +66,10 @@ private:
 
 	const std::string doc_root;
 
-	std::unique_ptr<network_component> my_network_component;
 	std::unique_ptr<sql_manager> my_sql_manager;
-	std::unique_ptr<routing_table> my_routing_table;
 	std::unique_ptr<session_tracker> my_session_tracker;
+	std::unique_ptr<websocket_tracker> my_websocket_tracker;
+	std::unique_ptr<routing_table> my_routing_table;
+	std::unique_ptr<network_component> my_https_network_component;
+	//std::unique_ptr<network_component> my_websocket_network_component;
 };

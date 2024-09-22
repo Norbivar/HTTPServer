@@ -330,5 +330,5 @@ void handle_request(std::string&& from_addr, beast_request&& req, response_queue
 
 void handle_websocket_request()
 {
-
+	theLog->info("handle_websocket_request");
 }

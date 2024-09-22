@@ -34,23 +34,23 @@ id::session generate_http_session_id()
 
 void session_tracker::load_from_db(const sql_handle& db)
 {
-	std::unique_lock lock{ m_mutex }; // This is probably not needed because it's the constructor, but hey...
+	std::unique_lock lock{ session_mutex }; // This is probably not needed because it's the constructor, but hey...
 
-	m_session_container.clear();
+	session_container.clear();
 	auto all_saved_sessions = sessions_mapper::get_all(db);
 
-	m_session_container.reserve(all_saved_sessions.size());
+	session_container.reserve(all_saved_sessions.size());
 	for (auto& saved_sess : all_saved_sessions)
 		emplace_session(std::move(saved_sess));
 
-	theLog->info("Loaded {} sessions. ", m_session_container.size());
+	theLog->info("Loaded {} sessions. ", session_container.size());
 }
 
 session_tracker::~session_tracker()
 {
-	std::shared_lock lock{ m_mutex };
+	std::shared_lock lock{ session_mutex };
 
-	const auto datas = m_session_container
+	const auto datas = session_container
 		| boost::adaptors::transformed([](const auto& s) { return s.session->acquire(); }) // TODO: force-lock / ignore if cannot take?
 		| boost::adaptors::filtered([](const auto& s) { return !s->deactivated; })
 		| boost::adaptors::transformed([](const auto& s) { return s.data(); });
@@ -68,7 +68,7 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(
 	const id::account account_id,
 	bool delete_other_for_account)
 {
-	std::unique_lock lock{ m_mutex };
+	std::unique_lock lock{ session_mutex };
 
 	id::session new_session_id{};
 	for (auto tries = 1; tries <= session_id_generation_max_attempts; ++tries)
@@ -91,11 +91,11 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(
 
 	if (delete_other_for_account)
 	{
-		m_session_container.get<1>().erase(account_id);
+		session_container.get<1>().erase(account_id);
 	}
 	else
 	{
-		const auto number_of_active_sessions = m_session_container.get<1>().count(account_id);
+		const auto number_of_active_sessions = session_container.get<1>().count(account_id);
 		if (number_of_active_sessions > max_session_for_account)
 			return { false, nullptr };
 	}
@@ -109,26 +109,26 @@ std::pair<bool, session_map::iterator> session_tracker::create_new_session(
 
 std::size_t session_tracker::obliterate_sessions_by_account_id(const id::account& sid)
 {
-	std::unique_lock lock{ m_mutex };
-	return m_session_container.get<1>().erase(sid);
+	std::unique_lock lock{ session_mutex };
+	return session_container.get<1>().erase(sid);
 }
 
 std::pair<bool, session_map::nth_index<0>::type::iterator> session_tracker::find_by_session_id(const id::session& sid) const
 {
-	std::shared_lock lock{ m_mutex };
+	std::shared_lock lock{ session_mutex };
 	return find_by_session_id_impl(sid);
 }
 
 std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find_by_account_id(const id::account account_id) const
 {
-	std::shared_lock lock{ m_mutex };
+	std::shared_lock lock{ session_mutex };
 	return find_by_account_id_impl(account_id);
 }
 
 std::pair<bool, session_map::nth_index<0>::type::iterator> session_tracker::find_by_session_id_impl(const id::session& sid) const
 {
 	std::pair<bool, session_map::nth_index<0>::type::iterator> result{ false, nullptr };
-	const auto& cont = m_session_container.get<0>();
+	const auto& cont = session_container.get<0>();
 	const auto it = cont.find(sid);
 
 	if (it != cont.end())
@@ -142,7 +142,7 @@ std::pair<bool, session_map::nth_index<0>::type::iterator> session_tracker::find
 std::pair<bool, session_map::nth_index<1>::type::iterator> session_tracker::find_by_account_id_impl(const id::account account_id) const
 {
 	std::pair<bool, session_map::nth_index<1>::type::iterator> result{ false, nullptr };
-	const auto& cont = m_session_container.get<1>();
+	const auto& cont = session_container.get<1>();
 	const auto it = cont.find(account_id);
 	if (it != cont.end())
 	{
@@ -159,6 +159,6 @@ std::pair<bool, session_map::iterator> session_tracker::emplace_session(session_
 
 	auto new_session_ptr = std::make_shared<threadsafe::element<session_element>>(std::move(session));
 
-	auto [it, inserted] = m_session_container.emplace(std::move(sid), std::move(account_id), std::move(new_session_ptr));
+	auto [it, inserted] = session_container.emplace(std::move(sid), std::move(account_id), std::move(new_session_ptr));
 	return { inserted, it };
 }

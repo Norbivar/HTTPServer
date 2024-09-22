@@ -21,16 +21,22 @@ const std::string extract_cookie(const boost::beast::string_view& cookie, const 
 	return {};
 }
 
+const std::string extract_cookie(const beast_request& req, const std::string& label)
+{
+	const auto cookies = req.find(boost::beast::http::field::cookie);
+	if (cookies != req.end())
+	{
+		return extract_cookie(cookies->value(), label);
+	}
+	return {};
+}
+
 http_request::http_request(std::uint64_t id, beast_request&& b, const std::string& addr) :
 	id{ id },
 	_base{ std::move(b) },
 	address{ addr }
 {
-	const auto cookies = _base.find(boost::beast::http::field::cookie);
-	if (cookies != _base.end())
-	{
-		sid = extract_cookie(cookies->value(), "SID");
-	}
+	sid = extract_cookie(_base, "SID");
 
 	auto req_target_stripped = _base.target();
 	if (_base.method() == boost::beast::http::verb::get)

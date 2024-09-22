@@ -8,7 +8,8 @@ add_definitions(-DFMT_HEADER_ONLY)
 
 add_library(Libraries 
 "Config.cpp"
-"Logger.cpp")
+"Logger.cpp" 
+"utils/shared_mutex_write_prefered.cpp")
 
 target_link_libraries(Libraries
 	PRIVATE

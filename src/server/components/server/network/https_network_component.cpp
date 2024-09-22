@@ -1,4 +1,4 @@
-#include "network_component.h"
+#include "https_network_component.hpp"
 
 #include <boost/asio/ip/address.hpp>
 

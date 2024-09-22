@@ -24,7 +24,7 @@ namespace Configs
 		DEFINE_CONFIG_OPTIONAL(cert_dir, std::string, "cert_dir", "cert/");
 		DEFINE_CONFIG_OPTIONAL(bind_ip, std::string, "bind_ip", "0.0.0.0");
 		DEFINE_CONFIG_OPTIONAL(port, std::uint16_t, "port", 443);
-		DEFINE_CONFIG_OPTIONAL(threads, std::uint8_t, "threads", 3);
+		DEFINE_CONFIG_OPTIONAL(https_handler_threads, std::uint8_t, "threads", 8);
 
 		DEFINE_CONFIG_OPTIONAL(sql_address, std::string, "sql_address", "localhost");
 		DEFINE_CONFIG_OPTIONAL(sql_port, std::uint16_t, "sql_port", 5432);

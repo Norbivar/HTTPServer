@@ -53,6 +53,7 @@ bool response_queue::on_write()
 	items_.erase(items_.begin());
 	if (!items_.empty())
 		(*items_.front())();
+
 	return was_full;
 }
 

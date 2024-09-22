@@ -34,6 +34,9 @@ namespace nlohmann // small, non-intrusive extension to the json lib
 	T get(const http_request& req, const char* name);
 }
 
+const std::string extract_cookie(const boost::beast::string_view& cookie, const std::string& label);
+const std::string extract_cookie(const beast_request& req, const std::string& label);
+
 class http_request
 {
 public:

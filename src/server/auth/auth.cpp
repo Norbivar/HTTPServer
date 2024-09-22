@@ -29,8 +29,14 @@ namespace
 
 void authentication::request_login(const http_request& req, http_response& resp)
 {
+	auto& session_tracker = theServer.get_session_tracker();
+	
 	if (!req.sid.empty())
-		throw user_invalid_argument{ "Already logged in." };
+	{
+		const auto [exists, _] = session_tracker.find_by_session_id(req.sid);
+		if (exists)
+			throw user_invalid_argument{ "Already logged in." };
+	}
 
 	const auto user = req.get<std::string>("user");
 	const auto pass_encoded = req.get<std::string>("pass");
@@ -52,7 +58,6 @@ void authentication::request_login(const http_request& req, http_response& resp)
 		throw user_invalid_argument{ "Invalid username/password!" };
 
 	const auto& account = accounts.front();
-	auto& session_tracker = theServer.get_session_tracker();
 
 	const auto [success, new_it] = session_tracker.create_new_session(req.address, account.id, obliterate_sessions.get_value_or(false));
 	if (success) 
@@ -120,6 +125,9 @@ void from_json(const nlohmann::json& j, testermester& p) {
 	j.at("s").get_to(p.s);
 }
 
+#include "websocket_tracker.hpp"
+#include "base/websocket_session.hpp"
+
 void authentication::test_session(const http_request& req, http_response& resp)
 {
 	/*theLog->info("heyho!");
@@ -141,4 +149,14 @@ void authentication::test_session(const http_request& req, http_response& resp)
 	std::this_thread::sleep_for(std::chrono::seconds{ 5 });
 	theLog->error("VN: DONE");
 
+
+	theLog->error("VN: Getting websocket...");
+	const auto sockets = theServer.get_websocket_tracker().find_sockets(req.sid);
+
+	theLog->error("VN: Found {} sockets", sockets.size());
+	if (sockets.size()) {
+		theLog->error("VN: Sending message through first socket");
+
+		sockets[0]->send("asd");
+	}
 }

@@ -22,9 +22,11 @@ add_executable(HTTPServer
 "database/mappers/accounts_mapper.cpp"
 "database/mappers/sessions_mapper.cpp" 
 "database/session_element.cpp" 
-"components/server/network_component.cpp"
+"components/server/network/https_network_component.cpp"
+"components/server/network/websocket_network_component.cpp"
 "components/server/task_runner_component.cpp" 
-"base/websocket_session.cpp")
+"base/websocket_session.cpp" 
+"websocket_tracker.cpp")
 
 include_directories(BEFORE
 	SYSTEM
