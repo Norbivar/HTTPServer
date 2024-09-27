@@ -62,6 +62,8 @@ int webserver::run()
 	//my_websocket_network_component->setup_run();
 	server_status = status::running;
 
+	theLog->info("Awaiting connections!");
+
 	my_https_network_component->await_finish();
 	//my_websocket_network_component->await_finish();
 	server_status = status::stopping;

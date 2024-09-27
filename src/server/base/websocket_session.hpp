@@ -11,7 +11,6 @@
 class ssl_websocket_session : public std::enable_shared_from_this<ssl_websocket_session>
 {
 public:
-	//ssl_websocket_session();
 	explicit ssl_websocket_session(boost::beast::ssl_stream<boost::beast::tcp_stream>&& stream);
 
 	~ssl_websocket_session();
@@ -32,6 +31,7 @@ private:
 
 	std::string name{ "Unnamed" }; // maybe an enum?
 	std::chrono::system_clock::time_point ws_creation_time{ std::chrono::system_clock::now() };
+	bool verified{ false };
 
 	void on_accept(boost::beast::error_code ec);
 	void on_close(boost::beast::error_code ec);

@@ -18,6 +18,7 @@ void routing_table::register_all()
 
 	register_path(method::post, "/login", authentication::request_login, {}, false);
 	register_path(method::post, "/register", authentication::request_register, {}, false);
+	register_path(method::post, "/new_websocket", authentication::request_websocket, {}, true);
 
 	register_path(method::post, "/test_session", authentication::test_session, {}, true);
 

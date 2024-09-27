@@ -54,7 +54,7 @@ bool https_network_component::load_certificate()
 
 		ctx.set_options(
 			boost::asio::ssl::context::default_workarounds |
-			boost::asio::ssl::context::no_sslv2 |
+			//boost::asio::ssl::context::no_sslv2 |
 			boost::asio::ssl::context::single_dh_use);
 
 		ctx.use_certificate_chain_file(cert_dir + "server.crt");

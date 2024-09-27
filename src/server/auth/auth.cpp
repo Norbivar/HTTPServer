@@ -9,6 +9,7 @@
 #include "../session_tracker.hpp"
 #include "../database/sql/sql_manager.hpp"
 #include "../database/mappers/accounts_mapper.hpp"
+#include "../websocket_tracker.hpp"
 
 namespace
 {
@@ -108,6 +109,17 @@ void authentication::request_register(const http_request& req, http_response& re
 		throw std::invalid_argument{ "Invalid username/password!" };
 
 	theLog->info("New account created: {}", user);
+}
+
+void authentication::request_websocket(const http_request& req, http_response& resp)
+{
+	const auto [found, _] = theServer.get_session_tracker().find_by_session_id(req.sid);
+	if (found)
+	{
+		auto new_handshake_code = theServer.get_websocket_tracker().get_new_handshake_code(req.sid);
+		if (!new_handshake_code.empty())
+			resp["handshake"] = new_handshake_code;
+	}
 }
 
 struct testermester

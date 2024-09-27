@@ -45,6 +45,8 @@ namespace Libs
 		{
 			if (RotatedTxtLogger)
 				RotatedTxtLogger->flush();
+			if (ConsoleLogger)
+				ConsoleLogger->flush();
 		}
 
 		void set_log_level(spdlog::level::level_enum level)

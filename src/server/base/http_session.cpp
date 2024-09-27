@@ -132,14 +132,10 @@ void ssl_http_session::on_read(boost::beast::error_code ec, std::size_t bytes_tr
 	// See if it is a WebSocket Upgrade
 	if (boost::beast::websocket::is_upgrade(parser_->get()))
 	{
-		theLog->info("Upgrading to WebSocket");
-
-		// Disable the timeout.
-		// The websocket::stream uses its own timeout settings.
+		// Disable the timeout. The websocket::stream uses its own timeout settings.
 		boost::beast::get_lowest_layer(stream_).expires_after(std::chrono::minutes{30});
 
-		// Create a websocket session, transferring ownership
-		// of both the socket and the HTTP request.
+		// Create a websocket session, transferring ownership  of both the socket and the HTTP request.
 		make_websocket_session(release_stream(), parser_->release());
 		return;
 	}
