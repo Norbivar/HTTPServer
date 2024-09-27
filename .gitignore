@@ -42,3 +42,7 @@ CMakeFiles/
 # Conan things
 conan.lock
 graph_info.json
+
+# nginx - at least as long as they are inside the folder
+web/logs/
+web/temp/
